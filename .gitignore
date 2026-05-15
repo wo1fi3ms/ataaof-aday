@@ -1,6 +1,9 @@
 # Claude session files
 .claude/
 
+# Project instructions (contains local paths)
+CLAUDE.md
+
 # Raw extraction intermediates (not needed in repo)
 *_raw_questions.json
 *_celiskili_cevaplar.json
