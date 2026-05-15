@@ -66,6 +66,12 @@ DERS_CONFIG = {
         "emoji":   "🗂️",
         "pdf_dir": "1_sinif/bahar/pdfs/Dosyalama_ve_Arsivleme",
     },
+    "İlk Yardım ve Acil Sağlık Hizmetleri": {
+        "excel":   "1_sinif/bahar/Ilk_Yardim_ve_Acil_Saglik_Hizmetleri_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Ilk_Yardim_ve_Acil_Saglik_Hizmetleri_Soru_Bankasi.html",
+        "emoji":   "🚑",
+        "pdf_dir": "1_sinif/bahar/pdfs/Ilk_Yardim_ve_Acil_Saglik_Hizmetleri",
+    },
     "Algoritmalar ve Programlamaya Giriş": {
         "excel":  "Data/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.xlsx",
         "output": "1_sinif/bahar/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.html",
