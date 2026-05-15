@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Dosyalama ve Arşivleme – Soru Havuzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ATA-AÖF ana lacivert — UI chrome */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* Vurgu yeşili — geri bildirim / başarı */
+  --accent:#00CB54;--accent-dk:#009e40;--accent-lt:#e6faf0;
+  --gold:#e1b77e;
+  --wine:#7b1d34;--wine-dk:#5c1526;
+  --banko:#c0392b;--banko-dk:#922b21;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --opt-bg:#fafafa;--opt-border:#e4e4e7;
+  --muted:#606065;
+}
+body.dark-mode{
+  /* UI chrome — okunabilir lacivert-lavanta */
+  --green:#8899ee;--green-dk:#c0caff;--green-lt:#131c42;
+  /* Geri bildirim yeşili */
+  --accent:#00CB54;--accent-dk:#4ade80;--accent-lt:#012a14;
+  --gold:#e1b77e;
+  /* Daha ölçülü wine ve banko */
+  --wine:#a05868;--wine-dk:#7d4052;
+  --banko:#c06060;--banko-dk:#9a4848;
+  --bg:#08091e;--card-bg:#0f1230;--text:#d8daec;--border:#252d60;
+  --opt-bg:#111830;--opt-border:#252d60;
+}
+*{box-sizing:border-box;}
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0 0 48px;line-height:1.65;transition:background .25s,color .25s;}
+
+/* ── topbar ── */
+.site-topbar{position:sticky;top:0;z-index:200;background:var(--green-dk);display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-home{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;transition:all .2s;white-space:nowrap;}
+.topbar-home:hover{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-uni{font-size:.75em;color:rgba(255,255,255,.45);letter-spacing:.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-course{font-size:.88em;font-weight:700;color:#fff;}
+.dark-mode-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;transition:all .2s;color:#fff;line-height:1;}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── hero header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:32px 24px 28px;text-align:center;border-bottom:4px solid var(--gold);box-shadow:0 3px 14px rgba(0,0,0,.2);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 16px;font-size:.77em;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.92);margin-bottom:14px;text-transform:uppercase;}
+.header h1{margin:0 0 8px;font-size:1.9em;font-weight:700;letter-spacing:-.01em;}
+.header-subtitle{margin:0;font-size:.93em;color:var(--gold);font-weight:600;letter-spacing:.03em;}
+
+/* ── layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.page-layout{display:flex;gap:22px;align-items:flex-start;margin-top:24px;}
+#quiz-container{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:18px;animation:fadeIn .3s ease-in-out;}
+#quiz-container>*{min-width:0;}
+@media(max-width:900px){#quiz-container{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── sidebar ── */
+.sidebar{width:192px;flex-shrink:0;position:sticky;top:48px;display:flex;flex-direction:column;gap:8px;background:var(--card-bg);padding:14px 12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sidebar-label{font-size:.68em;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.07em;margin-top:2px;}
+.sidebar-home{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 11px;background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);border-radius:7px;font-size:.82em;font-weight:700;text-decoration:none;transition:all .2s;}
+.sidebar-home:hover{background:var(--green-lt);}
+.tabs{display:flex;flex-direction:column;gap:5px;}
+.tab-btn{background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);padding:8px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:all .2s;text-align:left;width:100%;}
+.tab-btn:hover{background:var(--green-lt);}
+.tab-btn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 3px 8px rgba(13,20,96,.28);}
+.tab-btn.tab-banko{background:#fde8e8;color:var(--banko);border-color:var(--banko);}
+.tab-btn.tab-banko:hover,.tab-btn.tab-banko.active{background:var(--banko);color:#fff;}
+body.dark-mode .tab-btn.tab-banko{background:#1e0808;color:#e08080;border-color:#7a3030;}
+body.dark-mode .tab-btn.tab-banko:hover,body.dark-mode .tab-btn.tab-banko.active{background:#7a3030;color:#fff;}
+.toggle-all-btn{background:var(--wine);color:#fff;border:none;padding:10px 11px;font-size:.84em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;box-shadow:0 3px 8px rgba(123,29,52,.28);transition:all .2s;width:100%;text-align:center;}
+.toggle-all-btn:hover{background:var(--wine-dk);transform:translateY(-1px);}
+.stats-bar{text-align:center;font-size:.77em;color:#666;font-weight:600;}
+.stats-bar>span{display:inline-block;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2px 9px;}
+.stats-short{display:none;}
+.score-panel{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.score-item{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.91em;font-weight:700;border-radius:8px;padding:7px 10px;}
+.score-item span{font-size:1.3em;font-weight:800;min-width:24px;text-align:center;}
+.score-correct-item{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+.score-wrong-item{background:#fde8e8;color:#c0392b;border:1px solid #f87171;}
+body.dark-mode .score-correct-item{background:#012a14;color:#4ade80;border-color:#025a28;}
+body.dark-mode .score-wrong-item{background:#2a0808;color:#f08888;border-color:#5a1818;}
+.sidebar-meta{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:#aaa;}
+.tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
+.tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
+body.dark-mode .tab-btn.tab-review{color:#c8963a;border-color:#7a5010;background:#1a1000;}
+body.dark-mode .tab-btn.tab-review:hover{background:#2a1a00;color:#e0b050;}
+body.dark-mode .tab-btn.tab-review.active{background:#7a5010!important;color:#fff!important;border-color:#7a5010!important;box-shadow:0 3px 8px rgba(120,80,16,.4)!important;}
+.review-info-btn{position:absolute;top:4px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;background:none;font-size:.6em;font-weight:900;line-height:13px;text-align:center;cursor:pointer;padding:0;color:inherit;opacity:.65;font-family:inherit;display:none;}
+.review-tooltip{display:none;position:absolute;top:calc(100% + 6px);right:0;width:220px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.75em;font-weight:400;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:200;text-align:left;line-height:1.5;pointer-events:none;}
+@media(min-width:721px){
+  .review-info-btn{display:block;}
+  .review-info-btn:hover+.review-tooltip,.review-info-btn:focus+.review-tooltip{display:block;}
+}
+.progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.75em;font-weight:700;color:var(--text);}
+.progress-reset{background:none;border:none;font-size:.7em;color:#aaa;cursor:pointer;padding:0;font-family:inherit;transition:color .2s;}
+.progress-reset:hover{color:var(--banko);}
+.progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+.q-prev{font-size:.8em;font-weight:700;padding:2px 7px;border-radius:4px;line-height:1.4;}
+.q-prev-correct{background:#d1fae5;color:#065f46;}
+.q-prev-wrong{background:#fde8e8;color:#c0392b;}
+body.dark-mode .q-prev-correct{background:#012a14;color:#4ade80;border:1px solid #025a28;}
+body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #5a1818;}
+
+/* ── mobile sidebar ── */
+@media(max-width:720px){
+  .page-layout{flex-direction:column;margin-top:8px;}
+  .header{display:none;}
+  .sidebar{position:fixed;top:48px;left:0;right:0;z-index:100;flex-direction:column;gap:5px;padding:8px 12px;border-radius:0;border:none;border-bottom:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.13);width:100vw!important;max-width:100vw;overflow-x:hidden;box-sizing:border-box;}
+  .sidebar-home,.sidebar-label{display:none;}
+  .tabs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:5px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:7px 12px;font-size:.8em;}
+  .sidebar-meta{flex-direction:row;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .sidebar-meta::-webkit-scrollbar{display:none;}
+  .stats-bar{flex-shrink:0;font-size:.73em;white-space:nowrap;text-align:left;}
+  .stats-bar>span{padding:2px 7px;}
+  .score-panel{flex-direction:row;gap:4px;margin-top:0;flex-shrink:0;}
+  .score-item{padding:4px 6px;font-size:.74em;gap:3px;white-space:nowrap;}
+  .score-item span{font-size:1em;min-width:14px;}
+  .stats-full{display:none;}
+  .stats-short{display:inline;}
+  .toggle-all-btn{width:100%;padding:7px 10px;font-size:.8em;}
+  .sidebar.scroll-collapsed{flex-direction:row;align-items:center;gap:6px;padding:5px 12px;}
+  .sidebar.scroll-collapsed .tab-btn:not(.active){display:none;}
+  .sidebar.scroll-collapsed nav.tabs{flex-shrink:0;overflow:visible;}
+  .sidebar.scroll-collapsed .sidebar-meta{flex:1;min-width:0;gap:5px;overflow-x:auto;}
+  .sidebar.scroll-collapsed .score-item{padding:3px 5px;}
+  .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
+  .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
+  .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
+  .sidebar.scroll-collapsed .prog-label{display:none;}
+  .sidebar.scroll-collapsed .score-label{display:none;}
+  .sidebar.scroll-collapsed .stats-full{display:none;}
+  .sidebar.scroll-collapsed .stats-short{display:inline;}
+  #quiz-container{grid-template-columns:1fr;}
+}
+
+/* ── question cards ── */
+.question-card{background:var(--card-bg);border-radius:9px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:22px 24px;border-left:5px solid var(--green);transition:box-shadow .2s;display:flex;flex-direction:column;}
+.question-card:hover{box-shadow:0 5px 18px rgba(13,20,96,.12);}
+.question-card .btn-toggle{margin-top:auto;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;border-bottom:1px solid var(--border);padding-bottom:10px;gap:10px;}
+.q-meta{display:flex;flex-direction:column;gap:3px;}
+.q-num{color:var(--green-dk);font-size:.86em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.exam-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.exam-tag{padding:2px 8px;border-radius:4px;font-size:.73em;font-weight:700;letter-spacing:.02em;}
+.uc-tag{background:#ede9fe;color:#4c1d95;}
+.vize-tag{background:#dbeafe;color:#1e3a8a;}
+.fin-tag{background:#d1fae5;color:#065f46;}
+.but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+.yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+.freq-tag{background:var(--banko);color:#fff;}
+.exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
+.exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
+.question-card.tag-hidden{display:none;}
+.sidebar.tag-filter-active .tabs,.sidebar.tag-filter-active .sidebar-home,.sidebar.tag-filter-active .sidebar-label,.sidebar.tag-filter-active .toggle-all-btn{opacity:.28;pointer-events:none;user-select:none;}
+.sidebar.tag-filter-active #tag-filter-indicator{opacity:1!important;pointer-events:auto!important;}
+#tag-filter-indicator{display:none;border-radius:7px;padding:8px 10px;font-size:.82em;font-weight:700;align-items:center;gap:6px;}
+#tag-filter-indicator.visible{display:flex;}
+#tag-filter-indicator .tfi-label{flex:1;line-height:1.3;}
+#tag-filter-indicator .tfi-close{background:none;border:none;cursor:pointer;font-size:1.1em;padding:0 2px;font-weight:900;opacity:.65;line-height:1;font-family:inherit;}
+#tag-filter-indicator .tfi-close:hover{opacity:1;}
+#tag-filter-indicator.tfi-fin{background:#d1fae5;color:#065f46;}
+#tag-filter-indicator.tfi-vize{background:#dbeafe;color:#1e3a8a;}
+#tag-filter-indicator.tfi-but{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+#tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
+#tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+#tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
+.question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
+.neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
+.q-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 12px;}
+.q-table{border-collapse:collapse!important;width:100%!important;margin:0!important;font-size:.88em;font-weight:400;white-space:normal!important;table-layout:auto;word-break:break-word;}
+.q-table th,.q-table td{border:1px solid var(--border)!important;padding:5px 9px!important;vertical-align:middle!important;}
+.q-table th{background:var(--green-lt)!important;color:var(--green-dk)!important;font-weight:700!important;text-align:center!important;}
+.q-table td{text-align:left;}
+.q-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;font-size:.95em;}
+.q-table tr:nth-child(even) td{background:var(--opt-bg);}
+.q-table tfoot td,.q-table tr:last-child td[style*="font-weight"]{font-weight:700;background:var(--green-lt);}
+body.dark-mode .q-table th{background:#1a2060!important;color:#c0caff!important;}
+body.dark-mode .options li.wrong-highlight{background:#2a0808;border-color:#7a3030;color:#f08888;}
+body.dark-mode .options li.correct-highlight{background:#012a14;border-color:#025a28;color:#4ade80;}
+@media(max-width:600px){.q-table{font-size:.78em!important;}.q-table th,.q-table td{padding:4px 6px!important;}}
+.options{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;}
+.options li{background:var(--opt-bg);padding:9px 14px;border-radius:7px;border:1px solid var(--opt-border);font-size:.96em;transition:background .22s,border-color .22s;cursor:pointer;user-select:none;color:var(--text);}
+.options li.correct-highlight{background:var(--accent-lt);border-color:var(--accent);font-weight:700;color:var(--accent-dk);}
+.options li.wrong-highlight{background:#fde8e8;border-color:#e74c3c;font-weight:700;color:#c0392b;}
+.btn-toggle{background:var(--green);color:#fff;border:none;padding:10px 0;width:100%;font-size:.96em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:background .2s;}
+.btn-toggle:hover{background:var(--green-dk);}
+.answer-area{display:none;margin-top:13px;padding:14px 16px;background:var(--accent-lt);border-left:4px solid var(--accent);border-radius:0 7px 7px 0;}
+.correct-ans{font-size:1.04em;color:var(--accent-dk);margin:0 0 7px;font-weight:700;}
+.exp-text{margin:0;color:var(--text);line-height:1.55;font-size:.92em;}
+
+/* ── PDF button & modal ── */
+.pdf-open-btn{display:none;background:var(--green);color:#fff;border:none;padding:9px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;width:100%;text-align:center;transition:background .2s;}
+.pdf-open-btn:hover{background:var(--green-dk);}
+.pdf-open-btn.visible{display:block;}
+.pdf-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);padding:16px;align-items:stretch;}
+.pdf-modal.open{display:flex;flex-direction:column;}
+.pdf-modal-inner{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.pdf-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-dk);color:#fff;font-weight:700;font-size:.9em;gap:8px;}
+.pdf-modal-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-modal-close{background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;line-height:1;padding:0 4px;opacity:.8;}
+.pdf-modal-close:hover{opacity:1;}
+.pdf-nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.1em;cursor:pointer;border-radius:5px;padding:2px 10px;line-height:1.6;transition:background .15s;}
+.pdf-nav-btn:hover{background:rgba(255,255,255,.35);}
+.pdf-nav-btn:disabled{opacity:.3;cursor:default;}
+.pdf-nav-counter{font-size:.8em;opacity:.85;white-space:nowrap;}
+#pdfModalFrames{display:flex;flex-direction:column;flex:1;min-height:0;}
+#pdfModalFrames iframe{flex:1;width:100%;border:none;min-height:0;}
+
+/* ── footer ── */
+.page-footer{text-align:center;margin-top:44px;padding:16px;font-size:.77em;color:#888;border-top:2px solid var(--border);}
+.page-footer strong{color:var(--green-dk);}
+</style>
+</head>
+<body>
+
+<div class="site-topbar">
+  <div class="topbar-left">
+    <a href="../../index.html" class="topbar-home">← Ana Sayfa</a>
+    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-course">🗂️ Dosyalama ve Arşivleme</span>
+    <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-badge">🗂️ AUZEF Soru Havuzu</div>
+  <h1>Dosyalama ve Arşivleme</h1>
+  <p class="header-subtitle">Eksiksiz Çıkmış Sorular · 📙 Final · 📗 Bütünleme · ☀️ Yaz Okulu</p>
+</div>
+
+<div class="container">
+  <div class="page-layout">
+    <div id="quiz-container"></div>
+
+    <aside class="sidebar">
+      <a href="../../index.html" class="sidebar-home">⌂ Ana Sayfa</a>
+
+      <span class="sidebar-label">Filtrele</span>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="filterQuestions('all',this)">Tüm Sorular</button>
+        <button class="tab-btn" onclick="filterQuestions('Final',this)">📙 Final</button>
+        <button class="tab-btn" onclick="filterQuestions('Bütünleme',this)">📗 Bütünleme</button>
+        <button class="tab-btn" onclick="filterQuestions('Yaz Okulu',this)">☀️ Yaz Okulu</button>
+        <button class="tab-btn tab-banko" onclick="filterQuestions('banko',this)">🔥 Çok Çıkanlar</button>
+        <button class="tab-btn tab-review" onclick="toggleReview(this)">🔄 Devam Et
+          <span class="review-info-btn" onclick="event.stopPropagation()" tabindex="0">ℹ</span>
+          <div class="review-tooltip">Daha önce doğru cevapladığın sorular çıkarılarak teste devam eder.</div>
+        </button>
+      </nav>
+
+      <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div id="tag-filter-indicator">
+        <span class="tfi-label"></span>
+        <button class="tfi-close" onclick="clearTagFilter()">✕</button>
+      </div>
+      <button id="pdfOpenBtn" class="pdf-open-btn" onclick="openPdfModal()">📄 Sınav PDF Göster</button>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span><span id="prog-done">0</span> / <span id="prog-total">0</span><span class="prog-label"> tamamlandı</span></span>
+          <button class="progress-reset" onclick="resetProgress()" title="İlerlemeyi sıfırla">sıfırla</button>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="score-panel">
+          <div class="score-item score-correct-item">✓ <span id="score-correct">0</span><span class="score-label"> Doğru</span></div>
+          <div class="score-item score-wrong-item">✗ <span id="score-wrong">0</span><span class="score-label"> Yanlış</span></div>
+        </div>
+      </div>
+      <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+    </aside>
+  </div>
+
+  <div class="page-footer">
+    <strong>Dosyalama ve Arşivleme</strong> · Çıkmış Sorular Soru Havuzu · 124 Soru
+  </div>
+</div>
+
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <div class="pdf-modal-header">
+      <span class="pdf-modal-title" id="pdfModalTitle">Sınav Kağıdı</span>
+      <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfNav(-1)">&#8249;</button>
+      <span class="pdf-nav-counter" id="pdfCounter"></span>
+      <button class="pdf-nav-btn" id="pdfNext" onclick="pdfNav(1)">&#8250;</button>
+      <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    </div>
+    <div id="pdfModalFrames"></div>
+  </div>
+</div>
+
+<script>
+const sorular=[
+{id:0,q:"Genel olarak federal devletler tarandan kullanılan arşivleme sisteminde, birbirlerinden bağımsız olarak faaliyet gösteren arşivler aşağıdakilerden hangisidir?",options:["A) Dağınık arşiv", "B) Merkeziyetçi arşiv", "C) Birim arşivi", "D) Kurum arşivi", "E) Şehir arşivi tarandan kullanılan arşivleme sisteminde, birbirlerinden bağımsız olarak faaliyet gösteren arşivler dağınık arşivlerdir."],ans:"A) Dağınık arşiv",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2023-2024 Final", "2024-2025 Final", "4 Kez Çıktı!"]},
+{id:1,q:"Arşivin her yerinde uygun alanlarda higrometre bulundurmak sureyle, rutuben …………. arasında tutulmasının sağlanması gerekmektedir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) %25-30", "B) %30-40", "C) %40-50", "D) %50-60", "E) %60-70 alanlarda higrometre bulundurmak sureyle, rutuben %50-60 arasında tutulmasının sağlanması gerekmektedir."],ans:"D) %50-60",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2024-2025 Bütünleme", "3 Kez Çıktı!"]},
+{id:2,q:"Aşağıdakilerden hangisi arşivlerde tasniflemede uygulanan aşamalardan biri değildir?",options:["A) Asli düzen kontrolü", "B) Özetleme", "C) İmha", "D) Damgalama", "E) Belge numarası verme gerçekleşrilen bir faaliyet değildir."],ans:"C) İmha",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:3,q:"Aşağıdakilerden hangisi dosyalama ve arşivleme bölümü personelinin dikkat etmesi gereken ek ilkelerden biri değildir?",options:["A) Görevi nedeniyle sahip olduğu işletme ve kişilere yönelik resmî ve gizli olması gerekli bilgileri açıklamaz ve kimsenin kullanımına bu bilgileri sunmaz.", "B) Yapğı hizmetlerde ve yerine gerdiği görevlerde özveri ile çalışarak yüksek performans gösterir.", "C) Hiçbir şekilde tarafsızlığından ödün vermez.", "D) Aldıkları kararlarda ve tüm hareketlerinde sorumluluk bilinci ile hareket eder.", "E) Dosyalama ve arşivleme bölümüne ait çalışma ortamının düzenli ve temiz tutulması işine karışmaz. CEVAP AN"],ans:"E) Dosyalama ve arşivleme bölümüne ait çalışma ortamının düzenli ve temiz tutulması işine karışmaz. CEVAP AN",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:4,q:"Aşağıdakilerden hangisi geleneksel arşivleme sürecinde yer almaz?",options:["A) Arşivlenecek dosya ve belgenin belirlenmesi", "B) Arşiv yerinin seçimi", "C) Arşivlenmiş dosyalardan faydalanılması", "D) Dosyaların birleşrilmesi", "E) Arşivlenmiş dokümanların imha edilmesi"],ans:"D) Dosyaların birleşrilmesi",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2024-2025 Final", "3 Kez Çıktı!"]},
+{id:5,q:"Aşağıdakilerden hangisi saklama süreleri açısından arşiv dosyalarını sınıflandırma kapsamında yer almaz?",options:["A) Kanunlar gereğince belirli süre ile saklanması zorunlu olanlar", "B) Kanunen korunması yasak olanlar", "C) Korunma süresi belirsiz olanlar", "D) Korunmasına ihyaç olmayanlar", "E) Daima korunması gereken belgeler"],ans:"B) Kanunen korunması yasak olanlar",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:6,q:"Aşağıdakilerden hangisi standart dosya planına göre dosya ekende bulunacak bilgiler arasında yer almaz?",options:["A) Kurum ünvanı", "B) Birim kodu", "C) Dosya numarası", "D) Arşiv kodu", "E) Dosya konusu almaz."],ans:"D) Arşiv kodu",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:7,q:"I. Fotoğraf II. Video III. Sunum IV. Veri tabanları Aşağıdaki uzanlardan hangisinin karşılığı olan dosya türü yukarıda verilenler arasında yoktur?",options:["A) .mp3", "B) .mdb", "C) .ppt", "D) .mp4", "E) .jpg"],ans:"A) .mp3",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2024-2025 Bütünleme", "3 Kez Çıktı!"]},
+{id:8,q:"Kurumların gerçek veya tüzel kişilerin faaliyetleri sonucunda meydana gelen; idari, hukuksal, tanıklık, kurumsal değeri olan ya da tekrar kullanılmak üzere ürelen her türlü görsel, yazılı ve elektronik bilgilerinin muhafaza edildiği yere ne ad verilir?",options:["A) Kodlama", "B) Dosyalama", "C) Arşivleme", "D) Arşiv", "E) Evrak"],ans:"C) Arşivleme",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Final", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:9,q:"Arşiv belgelerinin önceden tespit edilmiş çeşitli konulara ayrılması ve ayrıldıkları bölümlerde tarih sırasına konulması esasına dayanan metot aşağıdakilerden hangisidir?",options:["A) Sistemak Metot", "B) Kronoloik Metot", "C) Analik Metot", "D) Proveniencia Metot", "E) Sıralı Metot"],ans:"A) Sistemak Metot",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:10,q:"Arşiv malzemesinin işlem gördüğü tarihlerdeki asli düzeni içerisinde fonların parçalanmadan korunup tasnif edilmesine ne ad verilir?",options:["A) Sistemak Metot", "B) Analik Metot", "C) Kronolojik Metot", "D) Proveniencia Metot", "E) Sıralı Metot"],ans:"D) Proveniencia Metot",exp:"",exams:["2021-2022 Bütünleme", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:11,q:"Aşağıdaki kurumlardan hangisi saklama, imha ve ayıklama işlemleri kendi mevzuana tabi olanlar içinde yer almaz?",options:["A) T.C. Cumhurbaşkanlığı", "B) Türkiye Büyük Millet Meclisi", "C) Üniversiteler", "D) Genel Kurmay Başkanlığı", "E) İçişleri Bakanlığı"],ans:"C) Üniversiteler",exp:"",exams:["2021-2022 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:12,q:"Aşağıdakilerden hangisi EBYS (Elektronik Belge Yönem Sistemi)'nin özelliklerinden biri değildir?",options:["A) Yetki seviyeleri vardır.", "B) Dosya tasnif planları bulunur.", "C) Sisteme giriş serbesr.", "D) Belgeler standart bir şablon içerisinde oluşturulur.", "E) Belgelere meta-data tanımlaması yapılır."],ans:"C) Sisteme giriş serbesr.",exp:"",exams:["2023-2024 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:13,q:"Aşağıdakilerden hangisi arşiv dosyalarının saklama süresine göre sınıflandırılmasında yer almaz?",options:["A) Korunma durumu arşiv görevlisinin takdirine bırakılan belgeler", "B) Korunmasına ihyaç olmayan dosyalar", "C) Korunma süresi belirsiz olan dosyalar", "D) Daima korunması gereken belgeler", "E) Kanun gereği belli bir süre saklanması zorunlu olan dosyalar"],ans:"A) Korunma durumu arşiv görevlisinin takdirine bırakılan belgeler",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:14,q:"Aşağıdakilerden hangisi dosyalama sistemleri türlerinden biri değildir?",options:["A) Sayısal dosyalama sistemi", "B) Coğrafi dosyalama sistemi", "C) Hiyerarşik dosyalama sistemi", "D) Kronolojik dosyalama sistemi", "E) Elektronik dosyalama sistemi dosyalama sistemleri arasında yer almamaktadır."],ans:"C) Hiyerarşik dosyalama sistemi",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:15,q:"Aşağıdakilerden hangisi e-belgeyle ilgili dezavantajlardan biri değildir?",options:["A) Telif konusunda sorun yaşanması", "B) Doğru olmayan bilgilerin fazlalığı", "C) Evrak onay ve gönderim süreçlerini hızlandırması", "D) Uygun teknolojik sisteme sahip olmadan kullanılamayışı", "E) Kötü amaçlı yazılımlar yüzünden e-belgenin kaybolabilmesi"],ans:"C) Evrak onay ve gönderim süreçlerini hızlandırması",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:16,q:"Aşağıdakilerden hangisi evrak yönemi süreçlerinden biri değildir?",options:["A) Planlama", "B) Düzenleme", "C) Malzeme seçimi", "D) Yöneltme", "E) Kullanım/koruma prosedürleri"],ans:"D) Yöneltme",exp:"",exams:["2021-2022 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:17,q:"Aşağıdakilerden hangisi form yazıların taşıması gereken özelliklerden biri değildir?",options:["A) Belirli bir şekil ve içerik ile standardize edilmelidir.", "B) Formun kullanımı ve doldurulması ile ilgili gerekli bilgilere yer verilmelidir.", "C) Sorular detaylandırılmalı ve uzun olmalıdır.", "D) Kullanım amacına uygun olarak hazırlanmalıdır.", "E) Formun kayıt edilmesi ve gerekli bilgilerin yazılabilmesi için boş alanlar içermelidir. kısa olmalıdır. CEVAP AN"],ans:"C) Sorular detaylandırılmalı ve uzun olmalıdır.",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:18,q:"Aşağıdakilerden hangisi kurum içi ve dışından gelen evrakların teslim prosedürünü oluşturmaktadır?",options:["A) Sirküler deerleri", "B) Gelen evrak deerleri", "C) Zimmet deerleri", "D) Arşiv deerleri", "E) Giden evrak deerleri"],ans:"C) Zimmet deerleri",exp:"",exams:["2023-2024 Yaz Okulu", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:19,q:"Aşağıdakilerden hangisi stratejinin tanımıdır?",options:["A) Yol gösterme ve belirlenmiş amaçlara ulaşmak için izlenen yol veya genel plandır.", "B) Amaçlara ulaşmak için araçlar ve yolların kararlaşrılması, yani neyin, nasıl yapılacağının belirlenmesidir.", "C) Polikaların uygulanış şeklinin belirlenmesidir.", "D) Bir amaca ulaşabilmek için eylem birliği sağlama ve düzenleme sanadır.", "E) İşletmenin kaynaklarını en etkili biçimde kullanabilmek için değişen durumlara ilişkin kısa dönemli alınan kararlardır."],ans:"D) Bir amaca ulaşabilmek için eylem birliği sağlama ve düzenleme sanadır.",exp:"",exams:["2023-2024 Yaz Okulu", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:20,q:"Aşağıdakilerden hangisi verimliliğin arrılması amacıyla gelişme imkânı sağlamak için, belirli bir işi maliyet ve etkinlik açısından etkileyen tüm unsurları araşrmaya yönelik teknikler için kullanılan genel bir terimdir?",options:["A) Değer analizi yoluyla yönem", "B) İş ölçümü", "C) Pareto analizi", "D) Hareket analizi", "E) İş etüdü"],ans:"E) İş etüdü",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:21,q:"Aşağıdakilerden hangisi çalışan verimliliğine etki eden psikososyal faktörlerden biri değildir?",options:["A) İleşim", "B) Primli ücret", "C) Movasyonu", "D) İş rotasyonu", "E) Eğim"],ans:"B) Primli ücret",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2 Kez Çıktı!"]},
+{id:22,q:"Etkili bir ücret veya maaş yönemi ile aşağıdakilerden hangisine ulaşılması amaçlanmaz?",options:["A) Daha fazla iş tatmini sağlama", "B) Daha çok iş başvurusu alma", "C) Daha az işten ayrılmayı sağlama", "D) İş performansı arşı sağlama", "E) İşe daha az devamsızlık yapılmasını sağlama"],ans:"B) Daha çok iş başvurusu alma",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:23,q:"Taşra, bölge ve yurt dışı kuruluşlarda mükelleflere ait bilgilerin tutulduğu arşiv türü aşağıdakilerden hangisidir?",options:["A) Kurum arşivi", "B) Özel arşiv", "C) Birim arşivi", "D) Mükellef arşivi", "E) Genel arşiv kuruluşlarındaki arşivleri birim arşivi sayılır. Mükellef arşivi ve genel arşiv bulunmamaktadır."],ans:"C) Birim arşivi",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:24,q:"…………………………………………… kategorisindeki dosyalar içinde değerli türden evrakların bulunmadığı dosyalardır. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Hemen kaldırılacak olan", "B) 1 yıl sonra kaldırılacak olan", "C) Kaç yıl saklanacağı belli olan", "D) 5 yıl saklanacak olan", "E) Daimi olarak saklanacak olan"],ans:"A) Hemen kaldırılacak olan",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:25,q:"\"Bir örgüe, planlara, yönergelere ve kurallara uygunluğu sağlamak amacıyla tespitler yapılması, zayıf ve hatalı yönlerin düzellmesi'' yönemin hangi fonksiyonunu tanımlar?",options:["A) Yöneltme", "B) Eşgüdüm", "C) Koordinasyon", "D) Denem", "E) Planlama"],ans:"D) Denem",exp:"",exams:["2023-2024 Final"]},
+{id:26,q:"ACA-ABC-ACC-ABE Yukarıda verilen dosya kodlarının alfabek olarak sıralanışı aşağıdakilerden hangisidir?",options:["A) ACA-ABE-ABC-ACC", "B) ABC-ABE-ACA-ACC", "C) ABC-ACA-ABE-ACC", "D) ACC-ABC-ABE-ACA", "E) ABE-ACA-ABC-ACC sıralanışı ABC-ABE-ACA-ACC şeklindedir."],ans:"B) ABC-ABE-ACA-ACC",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:27,q:"Alfabek dosyalama sistemleriyle ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Dosya isimleri esas alınarak dosyaların alfabedeki harf sırasına göre sıralanmasına dayanır.", "B) Aynı soyadı taşıyan kişiler fazla ise dosyalamada soyadın tamamı yazılır.", "C) Seperatör denilen rehberler kullanılır.", "D) Kişilerin isimleri yerine, soyadları esas alınır.", "E) İki harf arasına rehberler konularak dosyalara erişim kolaylaşrılır."],ans:"B) Aynı soyadı taşıyan kişiler fazla ise dosyalamada soyadın tamamı yazılır.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:28,q:"Arşiv malzemesi devir-teslim ve envanter formu düzenlemekle ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) \"Sayı\" bölümüne, evraka verilen sayı yazılır.", "B) \"Türü\" bölümüne, hangi türden bir kurumdan geldiği yazılır.", "C) \"Birimi\" bölümüne, arşiv malzemesini devreden birimin adı yazılır.", "D) \"İşlem tarihi\" bölümüne, evrakın gün/ay/yıl olarak aldığı tarih yazılır.", "E) \"İşlem yılı\" bölümüne, arşiv malzemesinin teşekkül eği yıl yazılır."],ans:"B) \"Türü\" bölümüne, hangi türden bir kurumdan geldiği yazılır.",exp:"",exams:["2023-2024 Final"]},
+{id:29,q:"Arşiv malzemesi ile cari işlemleri devresinde bir değere sahip olduğu hâlde hukuki kıymeni ve bir delil olma vasnı kaybetmiş, ileride kullanılmasına ve muhafazasına lüzum görülmeyen her türlü malzemenin birbirinden ayırımı ile ileride arşiv malzemesi vasnı kazanacak olan arşivlik malzemenin tespi işlemine ne ad verilir?",options:["A) Depolama", "B) Arşivleme", "C) Birleşrme", "D) İmha", "E) Ayıklama"],ans:"E) Ayıklama",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:30,q:"Arşivleme işlemlerinde ayıklama ve imha işlemlerinin gerçekleşrilebilmesi için belirli bilgi ve tecrübeye sahip temsilcilerden oluşacak 5 kişilik bir …………………………… kurulmalıdır. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) kurum komisyonu", "B) kurum arşivi düzenleme komisyonu", "C) kurum arşivi komisyonu", "D) kurum arşivi ayıklama komisyonu", "E) kurum arşivi ayıklama ve imha komisyonu"],ans:"D) kurum arşivi ayıklama komisyonu",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:31,q:"Ayıklama ve imha komisyonlarının çalışma esaslarına göre, komisyonlar, her yılın hangi ayında çalışmaya başlar?",options:["A) Ocak", "B) Şubat", "C) Mart", "D) Nisan", "E) Mayıs başında çalışmaya başlar."],ans:"C) Mart",exp:"",exams:["2021-2022 Final"]},
+{id:32,q:"Aşağıda verilen form yazı özelliklerinden hangisi yanlışr?",options:["A) Formda yazılar daima dikey olarak yazılmalıdır.", "B) Form belirli bir şekil ve içerik ile standardize edilmelidir.", "C) Formda yer alan sorular belirli bir sıra ile sorulmalı, gerekğinde sorular gruplandırılmalıdır.", "D) Formun üst kısmında, form isim ve numarası ile formu hazırlayan kuruluşun unvanı, alt kısmında ise kullanıma başladığı tarih, stok numarası ve basım adedi yer almalıdır.", "E) Formların çizilmesinde estek ve form tekniklerine eşit oranda önem verilmelidir. CEVAP AN"],ans:"A) Formda yazılar daima dikey olarak yazılmalıdır.",exp:"",exams:["2023-2024 Final"]},
+{id:33,q:"Aşağıdaki arşiv tasnif sistemlerinden hangisinde arşivden kolaylıkla yararlanabilmek için aranan belgenin mutlaka tarihini bilmek gerekir?",options:["A) Kronolojik yöntem", "B) Sistemak yöntem", "C) Organik yöntem", "D) Provenance sistemi", "E) Hollanda-Prusya sistemi"],ans:"A) Kronolojik yöntem",exp:"",exams:["2023-2024 Final"]},
+{id:34,q:"Aşağıdaki form yazı özelliklerinden hangisi yanlışr?",options:["A) Formların çizilmesinde estek ve form tekniklerine eşit oranda önem verilmelidir.", "B) Formda yazılar daima dikey olarak yazılmalıdır.", "C) Form belirli bir şekil ve içerik ile standardize edilmelidir.", "D) Formda yer alan sorular belirli bir sıra ile sorulmalı, gerekğinde sorular gruplandırılmalıdır.", "E) Formun üst kısmında, form isim ve numarası ile formu hazırlayan kuruluşun unvanı, alt kısmında ise kullanıma başladığı tarih, stok numarası ve basım adedi yer almalıdır."],ans:"B) Formda yazılar daima dikey olarak yazılmalıdır.",exp:"",exams:["2024-2025 Final"]},
+{id:35,q:"Aşağıdaki kurumlardan hangisi kendi mevzuana tabi olmak kaydıyla Türkiye'de uygulanmakta olan arşiv mevzua kapsamında yer almaz?",options:["A) Millî Savunma Bakanlığı", "B) Yükseköğrem Kurulu", "C) Cumhurbaşkanlığı", "D) Türkiye Büyük Millet Meclisi", "E) Genel Kurmay Başkanlığı"],ans:"B) Yükseköğrem Kurulu",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:36,q:"Aşağıdaki personel yönemi fonksiyonlarından hangisi personel ya da insan gücü kaynakları planlaması, şimdiki ve gelecekteki insan gücü gereksiniminin tespi ile ilgilenir?",options:["A) Personelin eğimi ve gelişrilmesi", "B) Personel ihyacının planlanması", "C) İşçi sağlığı ve iş güvenliği", "D) Ücret ve maaş yönemi", "E) Sosyal yardım ve hizmetler"],ans:"B) Personel ihyacının planlanması",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:37,q:"Aşağıdakilerden hangisi EBYS (Elektronik Belge Yönem Sistemi)'nin özelliklerinden biri değildir?",options:["A) Şablon oluşturma ve kullanma özelliği yoktur.", "B) Belgelere ek yapmak mümkündür.", "C) Sistemde Dinamik Raporlama özelliği vardır.", "D) Belgeler üzerinde tam men araması yapılabilmektedir.", "E) Belgeler arasında hiyerarşi ve ilişki mevcuur."],ans:"A) Şablon oluşturma ve kullanma özelliği yoktur.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:38,q:"Aşağıdakilerden hangisi TÜBİTAK'ın gelişrdiği bir sistemdir?",options:["A) E-BELGEM", "B) Öğrenci Bilgi Sistemi", "C) E-Nabız", "D) E-Devlet", "E) E-Okul"],ans:"A) E-BELGEM",exp:"",exams:["2024-2025 Final"]},
+{id:39,q:"Aşağıdakilerden hangisi arşiv türlerinden biri değildir?",options:["A) Okul arşivleri", "B) Kartografik Arşivler", "C) Hastane arşivleri", "D) Odyo-Vizüel Arşivler", "E) Özel arşivler"],ans:"A) Okul arşivleri",exp:"",exams:["2023-2024 Final"]},
+{id:40,q:"Aşağıdakilerden hangisi arşivlerin görev ve fonksiyonları arasında yer almaz?",options:["A) İlgili arşiv malzemelerinin tespit edilmesi", "B) Arşive kaldırılan malzemelerin sınıflandırılması", "C) Arşiv malzemelerinin kayba uğramalarının önüne geçilmesi", "D) Arşiv malzemelerinin uygun ortamlarda ve şartlarda saklanması", "E) Arşiv malzemelerinin en üst amirin onayına sunulması fonksiyonları aşağıdaki gibi sıralanabilir. •İlgili arşiv malzemelerinin tespit edilmesi, •Arşive kaldırılan malzemelerin sınıflandırılması, •Arşiv malzemelerinin ayırılması, •Arşiv malzemelerinin kayba uğramalarının önüne geçilmesi"],ans:"C) Arşiv malzemelerinin kayba uğramalarının önüne geçilmesi",exp:"",exams:["2021-2022 Final"]},
+{id:41,q:"Aşağıdakilerden hangisi belge yönem sisteminin ilk adımını oluşturmaktadır?",options:["A) Evrak takip sistemi", "B) Gelen evrak sistemi", "C) Giden evrak sistemi", "D) Arşivleme sistemi", "E) Dosyalama sistemi"],ans:"A) Evrak takip sistemi",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:42,q:"Aşağıdakilerden hangisi bilgi ve ileşim teknolojilerinin gelişimine göre büro faaliyetlerinin düzenlemesinin esas alındığı yönem yaklaşımıdır?",options:["A) Geleneksel Büro Yönemi Yaklaşımı", "B) Bilimsel Büro Yönemi Yaklaşımı", "C) Çağdaş Büro Yönemi Yaklaşımı", "D) Elektronik Büro Yönemi Yaklaşımı", "E) Bilgisayara Dayalı Büro Yönemi Yaklaşımı"],ans:"C) Çağdaş Büro Yönemi Yaklaşımı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:43,q:"Aşağıdakilerden hangisi bir yönem bilgi sistemidir?",options:["A) e-Arşiv", "B) e-Belgem", "C) e-Devlet", "D) e-Okul", "E) e-Fatura"],ans:"D) e-Okul",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:44,q:"Aşağıdakilerden hangisi bürolardaki masaüstü verimliliğe katkı sağlayan ABÜD Yöntemi'nin bir uygulamasıdır?",options:["A) A-An", "B) A-Alın", "C) D-Dosyalamayın", "D) Ü-Üzerini örtün", "E) B-Bırakın"],ans:"A) A-An",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:45,q:"Aşağıdakilerden hangisi dosya ve evrakların dağınıklığa sebep olmaması için yapılması gereken gruplandırmalar arasında yer almaz?",options:["A) El alnda bulunması gerekenler", "B) Başvuru için hemen bulunması gerekenler", "C) Arşivlenecek evrak ve dosyalar", "D) Çöpe alması gereken evraklar", "E) Nokta yöntemi alınışında köşesine bir nokta koymayı içerir. Böylece bir evrakın gereksiz yere kaç defa ele aldığı kolaylıkla görülebilir. CEVAP AN"],ans:"E) Nokta yöntemi alınışında köşesine bir nokta koymayı içerir. Böylece bir evrakın gereksiz yere kaç defa ele aldığı kolaylıkla görülebilir. CEVAP AN",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:46,q:"Aşağıdakilerden hangisi dosyalama hareketleri süreci içinde yer almaz?",options:["A) Evrakın oluşturulması", "B) Dosya açma", "C) Fihrist hazırlama", "D) Dosya imhası", "E) Dosyanın ödünç verilmesi ve takibi yeni evrak oluşturulmaz. Oluşturulmuş evrakların dosyalama işlemlerine ve oluşturulmuş dosyalara ait süreci kapsamaktadır."],ans:"A) Evrakın oluşturulması",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:47,q:"Aşağıdakilerden hangisi dosyalama sistemlerinden biri değildir?",options:["A) Coğrafi Dosyalama Sistemi", "B) Karma Dosyalama Sistemi", "C) Alfabek Dosyalama Sistemi", "D) Örgütsel Dosyalama Sistemi", "E) Kronolojik Dosyalama Sistemi CEVAP AN"],ans:"D) Örgütsel Dosyalama Sistemi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:48,q:"Aşağıdakilerden hangisi dosyalama ve arşivleme bölümü personelinin dikkat etmesi gereken ek ilkeler arasında yer almaz?",options:["A) Dosyalama ve arşivleme bölümüne ait çalışma ortamının düzenli ve temiz tutulması", "B) Aldıkları kararlarda ve tüm hareketlerinde sorumluluk bilinci ile hareket etmeleri", "C) Hiçbir şekilde tarafsızlıklarından ödün vermemeleri", "D) Doğruluk ve dürüstlüğü kişisel çıkarların üstünde tutmaları", "E) Evrak postalama ve gönderme işlerini düzenli bir şekilde yürütmeleri personeli işletme içerisinde aşağıdaki işlemleri gerçekleşrir: Evraklardaki postalama ve gönderme işlerini düzenli bir şekilde yürütmek,"],ans:"E) Evrak postalama ve gönderme işlerini düzenli bir şekilde yürütmeleri personeli işletme içerisinde aşağıdaki işlemleri gerçekleşrir: Evraklardaki postalama ve gönderme işlerini düzenli bir şekilde yürütmek,",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:49,q:"Aşağıdakilerden hangisi dosyalama yöneminde planlama sürecinin özellikleri arasında yer almaz?",options:["A) Esnek ve dinamik olmalı", "B) Seçim ve tercih süreçlerinden geçmeli", "C) Bir karar verme süreci olmalı", "D) Geleceğe dönük bir süreç olmalı", "E) Düşük maliyete sahip olmalı aşamasında maliyet ana kriterler arasında yer almaz."],ans:"E) Düşük maliyete sahip olmalı aşamasında maliyet ana kriterler arasında yer almaz.",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:50,q:"Aşağıdakilerden hangisi dosyalama yöneminin özelliklerindendir?",options:["A) Dosyalama yönemi işletmenin sadece bir bölümüyle ilgilidir.", "B) Dosyalama yöneminde çalışan personelin çabaları dosyalama için yeterlidir.", "C) Dosyalama yönemi işletmenin bütün bölüm ve birimleriyle ilgilidir.", "D) Dosyalama yönemi sadece gelen ve giden evrakları bir yerlerde muhafaza etmekle sorumludur.", "E) Dosyalamayı yapan iş gören sadece önceden belirlenmiş kurallara uyan kişidir."],ans:"A) Dosyalama yönemi işletmenin sadece bir bölümüyle ilgilidir.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:51,q:"Aşağıdakilerden hangisi dosyalamada kullanılan araçlardan biri değildir?",options:["A) Cepli dosya", "B) Klasör", "C) Dosya dolabı", "D) Belge", "E) Kutu klasör materyaldir. Bu nedenle dosyalamada kullanılan bir araç değildir."],ans:"D) Belge",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:52,q:"Aşağıdakilerden hangisi e-belge dosyası oluşturmak için sıklıkla kullanılan Adobe Acrobat kelime işlem yazılımının oluşturduğu genel dosya biçimidir?",options:["A) DOC", "B) XLS", "C) PPT", "D) TXT", "E) PDF yazılımının oluşturduğu genel dosya biçimi PDF dir."],ans:"E) PDF yazılımının oluşturduğu genel dosya biçimi PDF dir.",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:53,q:"Aşağıdakilerden hangisi elektronik belgenin dezavantajlarından biridir?",options:["A) Evrak onay ve gönderim süreçlerini hızlandırması", "B) Evrak kontrolünü hızlandırması", "C) Kolaylıkla çoğallabilmesi", "D) Depolama aracı olarak birden fazla aracın tercih edilebilmesi", "E) Sistemlerde uyumluluk problemlerinin ortaya çıkması birisi, Sistemlerde uyumluluk problemleri ortaya çıkmaktadır."],ans:"E) Sistemlerde uyumluluk problemlerinin ortaya çıkması birisi, Sistemlerde uyumluluk problemleri ortaya çıkmaktadır.",exp:"",exams:["2021-2022 Final"]},
+{id:54,q:"Aşağıdakilerden hangisi elektronik belgenin içinde bulunabileceği materyaller arasına girmez?",options:["A) Sabit Disk", "B) CD", "C) DVD", "D) Kaset", "E) USB"],ans:"D) Kaset",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:55,q:"Aşağıdakilerden hangisi elektronik dosyalama sisteminin avantajları arasında değerlendirilemez?",options:["A) Kâğıt kullanımını en aza indirir.", "B) Veri güvenliği sağlar.", "C) Belgelere çabuk ulaşılır ve verimliliği arrır.", "D) Zamandan ve dosyalama için gerekli birçok malzemeden tasarruf erir.", "E) Yedekleme programına ihyaç duymaz."],ans:"E) Yedekleme programına ihyaç duymaz.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:56,q:"Aşağıdakilerden hangisi evrak kodunda olması gereken unsurlardan biridir?",options:["A) Haberleşme numarası", "B) Yazının yazıldığı kurum", "C) Yazıyı yazan birey", "D) Yazının ait olduğu dosya ismi", "E) Yazının çoğallma sayısı CEVAP AN"],ans:"A) Haberleşme numarası",exp:"",exams:["2021-2022 Final"]},
+{id:57,q:"Aşağıdakilerden hangisi geleneksel arşivleme faaliyetleri arasında yer almaz?",options:["A) Arşivlenecek malzemelerin dosya planına uygun arşivlenmesi", "B) Arşiv malzemelerinin kimsenin erişip herhangi bir şekilde yararlanamayacağı biçimde saklanması", "C) Arşiv malzemelerinin konulacağı yerlerin tespit edilmesi", "D) Arşivlenecek dosya ve belgelerin belirlenmesi", "E) Arşiv indekslerinin saklama ve bulma işlemlerini kolaylaşracak şekilde hazırlanması"],ans:"B) Arşiv malzemelerinin kimsenin erişip herhangi bir şekilde yararlanamayacağı biçimde saklanması",exp:"",exams:["2023-2024 Final"]},
+{id:58,q:"Aşağıdakilerden hangisi hareket analizine göre işlerin tasarımında dikkat edilecek kurallar arasında yer almaz?",options:["A) Sık kullanılan malzemelerin, en kolay ulaşılacak yere konulması", "B) El ve ayakların kolayca hareket etmesinin sağlanması", "C) İşlerin yürütülmesinde gerekli malzemeye sahip olunması", "D) İşlerin gereksiz prosedürlerden arındırılması", "E) İşlerin daha yüksek bir maliyetle yapılması daha az maliyetle, daha kısa sürede ve daha kolay bir şekilde yapılmasını sağlamak amacıyla tüm faaliyetlerin sistemak bir şekilde incelenmesi ve gelişrilmesidir."],ans:"E) İşlerin daha yüksek bir maliyetle yapılması daha az maliyetle, daha kısa sürede ve daha kolay bir şekilde yapılmasını sağlamak amacıyla tüm faaliyetlerin sistemak bir şekilde incelenmesi ve gelişrilmesidir.",exp:"",exams:["2021-2022 Final"]},
+{id:59,q:"Aşağıdakilerden hangisi imha işlemlerinin her aşamasında kullanılan Evrak/Dosya İmha Listesi'nde yer alan bilgilerden biri değildir?",options:["A) İmha edilecek evrak/dosya türleri", "B) İmha yeri", "C) Evrak/dosya birimi", "D) İmha tarihi", "E) İmha sebebi"],ans:"E) İmha sebebi",exp:"",exams:["2023-2024 Final"]},
+{id:60,q:"Aşağıdakilerden hangisi insan, malzeme ve makine ekipmanları ile bilginin ürelip işlendiği büroların işlev ve fonksiyonlarından biri değildir?",options:["A) Yönemin ihyaç duyduğu bilgiye anlık erişebilmesi", "B) Bilgilerin belirli alanlarda depolanması", "C) Bilgilerin işlevsel hâle gerilmesi", "D) Bilgilerin imha edilmesi", "E) Bilginin toplanması aksine ürelir, kullanılır ve depolanır."],ans:"D) Bilgilerin imha edilmesi",exp:"",exams:["2021-2022 Final"]},
+{id:61,q:"Aşağıdakilerden hangisi iyi bir dosyalama sisteminde bulunması gereken özellikler arasında yer alır?",options:["A) İyi bir dosyalama sistemi kayıtların kontrol ve yönemini yönetmemelidir.", "B) İyi bir dosyalama sistemi kontrol, personel standartları, uygun sistem ve prosedürleri dikkate almamalıdır.", "C) İyi bir dosyalama sisteminde standartlaşmaya gidilmelidir.", "D) İyi bir dosyalama sisteminde tutarlılık önemli değildir.", "E) Dosyalama sisteminde belgeye uygun indeks olmamalıdır."],ans:"A) İyi bir dosyalama sistemi kayıtların kontrol ve yönemini yönetmemelidir.",exp:"",exams:["2024-2025 Final"]},
+{id:62,q:"Aşağıdakilerden hangisi iş görenin örgütsel değişimler (bazı birimlerin ortadan kalkması), iş görenin bulunduğu pozisyonda görevinin gereklerini yerine germemesi, iş ve örgüte ilişkin tutum ve davranışlarında olumsuzluklar saptanması gibi nedenlerle daha alt bir göreve kaydırılmasıdır?",options:["A) Nakil", "B) Rütbe indirimi", "C) Emeklilik", "D) Terfi", "E) Transfer"],ans:"B) Rütbe indirimi",exp:"",exams:["2024-2025 Final"]},
+{id:63,q:"Aşağıdakilerden hangisi iş görenleri yüksek gürültü ve ışık düzeyleri, çevresel kirlilikler, korumasız ve bakımsız makine, radyasyon vb. tehlikelerden koruyan bir çalışma çevresi yaratmayı amaçlar?",options:["A) Sosyal yardım ve hizmetler", "B) Personel ihyacının planlanması", "C) Personelin eğimi ve gelişrilmesi", "D) İşçi sağlığı ve iş güvenliği", "E) Ücret ve maaş yönemi"],ans:"D) İşçi sağlığı ve iş güvenliği",exp:"",exams:["2023-2024 Final"]},
+{id:64,q:"Aşağıdakilerden hangisi işletmenin amaç ve görevlerini gerçekleşrecek ve en fazla etkinliği sağlayacak özellikte insan gücü kaynağına sahip olma, gelişrme ve koruma sanadır?",options:["A) Sağlık yönemi", "B) Ürem yönemi", "C) Pazarlama yönemi", "D) Finansal yönem", "E) Personel yönemi"],ans:"E) Personel yönemi",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:65,q:"Aşağıdakilerden hangisi kuruluşlarda günlük olarak ortaya çıkan evrakların, ana arşivlere devrinden önce tutuldukları arşivlerdir?",options:["A) Özel arşivler", "B) Kartografik arşiv", "C) Devlet arşivi", "D) Günlük kullanılan arşiv", "E) Birim arşivi"],ans:"D) Günlük kullanılan arşiv",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:66,q:"Aşağıdakilerden hangisi kısa not, posta veya herhangi bir evrak ele geçği zaman yapılabileceklerden biri değildir?",options:["A) Dosyalayın", "B) Üzerinde çalışmaya başlayın", "C) Görmezden gelin", "D) An", "E) Başkasına gönderin"],ans:"C) Görmezden gelin",exp:"",exams:["2024-2025 Final"]},
+{id:67,q:"Aşağıdakilerden hangisi personel planlamasında dış çevresel unsurlardan biri değildir?",options:["A) Ekonomik koşullar", "B) Yasal düzenlemeler", "C) Rekabet", "D) İşgörenler", "E) Emek piyasası CEVAP AN"],ans:"D) İşgörenler",exp:"",exams:["2024-2025 Final"]},
+{id:68,q:"Aşağıdakilerden hangisi terfinin personele daha yüksek ücret ve unvan, daha fazla presj ve sorumluluk gerirken taşıdığı amaçlar arasında yer almaz?",options:["A) Personeli move etmesi ve verimliliklerini arrması", "B) Personelin takdir edilmesi ve ödüllendirilmesi", "C) Personel ile birlikte işletmenin de verimliliğini arrması", "D) İşletmedeki daha üst pozisyonlara çalışanların atanması", "E) Personelin monotonluğa sevk etmesi ücret ve unvan, daha fazla presj ve sorumluluk gerirken aşağıdaki amaçlara hizmet etmektedir:"],ans:"E) Personelin monotonluğa sevk etmesi ücret ve unvan, daha fazla presj ve sorumluluk gerirken aşağıdaki amaçlara hizmet etmektedir:",exp:"",exams:["2021-2022 Final"]},
+{id:69,q:"Aşağıdakilerden hangisi yöneltme fonksiyonunun en iyi şekilde yerine gerilmesi için verilen emirlerde olması gereken ilkelerden biri değildir?",options:["A) Emir yapılan hizmetle ilgili olmalıdır.", "B) Emir çok akıcı olmalıdır.", "C) Emir gerekğinde anlaşılması zor olabilecek şekilde şifrelenmelidir.", "D) Emir tam olmalıdır.", "E) Emir akılcı ve yerine gerilmesi mümkün olmalıdır."],ans:"C) Emir gerekğinde anlaşılması zor olabilecek şekilde şifrelenmelidir.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:70,q:"Belge ve dosyaların konulduğu, dayanıklı malzemeden yapılmış, arşiv dosyalarının da içine konulduğu ve bu dosyaları koruma, istenildiğinde erişimi kolaylaşrma amacıyla tasarlanmış ofis ve arşiv malzemesi aşağıdakilerden hangisidir?",options:["A) Dosya", "B) Bağcıklı klasör", "C) Mekanizmalı klasör", "D) Dosya dolabı", "E) Dosya gömleği konulduğu ve bu dosyaları koruma, istenildiğinde erişimi kolaylaşrma amacıyla tasarlanmış dolaplara dosya dolabı denilmektedir."],ans:"D) Dosya dolabı",exp:"",exams:["2021-2022 Final"]},
+{id:71,q:"Belgeler taşıdıkları değere göre sınıflandırılmaktadır. Buna göre aşağıdakilerden hangisi belgelerin taşıdıkları değerler arasında yer almaz?",options:["A) Arşivsel değer", "B) Yasal değer", "C) Araşrma değeri", "D) Sosyokültürel değer", "E) İdari değer"],ans:"D) Sosyokültürel değer",exp:"",exams:["2023-2024 Final"]},
+{id:72,q:"Belirlenen dosya sistemine göre evrakların doğru bir şekilde tasnifinin sağlanabilmesi, ihyaç duyulduğunda kolay bir şekilde bulunabilmesi veya kontrol edilebilmesi, evrakların hangi dosyalara konulması gerekğini gösteren temel araçr. Yukarıdaki dosyalama süreci hangisidir?",options:["A) Arşivleme", "B) Dosya eketleme", "C) Fihrist hazırlama", "D) Kodlama", "E) Dosya kontrolü"],ans:"C) Fihrist hazırlama",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:73,q:"Bilgisayarla oluşturulmuş bir elektronik belgenin aşağıdakilerden hangisinde elektronik olarak kaydedilip saklanması mümkün değildir?",options:["A) Flash bellek", "B) Hard disk", "C) DVD", "D) CD", "E) Kâğıt"],ans:"E) Kâğıt",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:74,q:"Bir pozisyon boşaldığı zaman yerine aynı düzeyde başka bir personelin iç transfer yolu ile atanmasına ne ad verilir?",options:["A) Emeklilik", "B) Terfi", "C) Nakil", "D) İsfa", "E) Rütbe indirimi CEVAP AN"],ans:"C) Nakil",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:75,q:"Büro kavramı ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) İşletmelerin bürokrak faaliyetlerinin yapıldığı en küçük birimlere büro denir.", "B) Bürolar, bilgi ve belge üreminin yapıldığı yerlerdir.", "C) Ürelen mamul ya da hizmetlerin verimlilik ve etkinliğini büyük oranda bürolarda yapılan faaliyetler etkilemektedir.", "D) Yöneme yardımcı olacak dokümanlar büroların dışında hazırlanmaktadır.", "E) Bürolar, özel sektör veya kamuda işlerin büyük bir kısmının yürütüldüğü yerlerdir."],ans:"D) Yöneme yardımcı olacak dokümanlar büroların dışında hazırlanmaktadır.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:76,q:"Devlet arşivlerinde bulunan, kullanılmasına ve muhafazasına lüzum görülmeyen her türlü malzemenin ayıklaması ve imhası işlemleri aşağıdakilerden hangisi tarandan yapılır?",options:["A) Belediye görevlileri", "B) İaiye görevlileri", "C) Zabıta komiserliği", "D) Kurum görevlileri", "E) Kolluk görevlileri kullanılmasına ve muhafazasına lüzum görülmeyen her türlü malzemenin ayıklama ve imhası, kurum arşivlerinde kendilerince yapılır"],ans:"D) Kurum görevlileri",exp:"",exams:["2021-2022 Final"]},
+{id:77,q:"Dijital arşivlemede kullanılan araçlardan hangisi elektriksel kayıt teknolojisi ile kayıt yapmaktadır?",options:["A) USB-Flash Bellek (EEPROM)", "B) Blu-Ray Disc ve Türevleri", "C) DVD-R ve Türevleri", "D) CD-R ve Türevleri", "E) Disket (Floppy Disc)"],ans:"A) USB-Flash Bellek (EEPROM)",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:78,q:"Dosyalama sistemi seçimi ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Belirlenecek sistemin mümkün olan en karmaşık sistem olması iyidir.", "B) Seçilecek sistem sadece bugünün değil, gelecekte oluşacak ihyaçları da karşılamalıdır.", "C) Seçim yaparken işletmenin ihyacına uygun olan sistemin seçilmesi çok önemlidir.", "D) Çoğu zaman işletmeler için tekbir dosyalama sistemi uygun olmayıp birden çok sistem bir arada kullanılır.", "E) Dosyalama sistemlerinin hiç bir türü her duruma uygun olmadığından hangisinin daha iyi olduğunu belirlemek zordur."],ans:"A) Belirlenecek sistemin mümkün olan en karmaşık sistem olması iyidir.",exp:"",exams:["2023-2024 Final"]},
+{id:79,q:"Dosyalama yöneminde insanların örgüt içindeki faaliyetlerini etkileyen, hareke olumlu veya olumsuz devam eren; insanlarda ekonomik, güvenlik, eğim ve yükselme gibi farklı araçlarla tatminin sağlandığı yöneltme (emir-komuta) unsuru aşağıdakilerden hangisidir?",options:["A) Planlama", "B) Emir verme", "C) Movasyon (güdüleme)", "D) Karar verme", "E) Harekete geçirme"],ans:"C) Movasyon (güdüleme)",exp:"",exams:["2023-2024 Final"]},
+{id:80,q:"Dosyalama yöneminde örgütün amaçlarını gerçekleşrebilmek için bütün birimlerin ve personellerin birbirleriyle uyum içinde çalışması sağlanır. Örgüe karışıklıkların ortaya çıkmasını önlemede en önemli unsurdur. Yukarıda bahsedilen dosyalama yönem süreci hangisidir?",options:["A) Koordinasyon (Eş güdüm)", "B) Planlama", "C) Yöneltme (Emir-komuta)", "D) Denem (Kontrol)", "E) Örgütleme örgütlerde dosyalama yöneminde karışıklıkların ortadan kaldırılması amaçlanmaktadır."],ans:"A) Koordinasyon (Eş güdüm)",exp:"",exams:["2021-2022 Final"]},
+{id:81,q:"Dosyalar üzerinde saklama süreleri gerekli mevzuat ve başvuru sıklığı doğrultusunda belirlendikten sonra aşağıdakilerden hangisi yapılmalıdır?",options:["A) Süre grupları oluşturulmalıdır.", "B) Ayıklanmalıdır.", "C) Muhafaza edilmelidir.", "D) Sıra grupları oluşturulmalıdır.", "E) İmha edilmelidir."],ans:"A) Süre grupları oluşturulmalıdır.",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:82,q:"Ekle ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) \"Töre bilimi\" olarak da bilinmektedir.", "B) Yunancada \"karakter, alışkanlık ve töre\" anlamına gelir.", "C) Ethos - ethikos kelimesinden türelmişr.", "D) Önemli ve uyulması gereken bir kavram değildir.", "E) Ba geleneğinde ahlak felsefesi olarak da anılmaktadır."],ans:"D) Önemli ve uyulması gereken bir kavram değildir.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:83,q:"Elektronik Belge Yönem Sistemi (EBYS)'nin Elektronik Dosya Yönem Sistemi (EDYS)’nden farklı özelliği aşağıdakilerden hangisidir?",options:["A) Belge saklama ölçütlerinin bulunabilmesi", "B) Belgelerin depolanmasını ürecilerin kontrol etmesi", "C) Belgelerin, belgeyi üreten tarandan imha edilmesine izin vermesi", "D) Gelişmiş fonksiyonları içeren sistem olması", "E) Örgütün günlük faaliyetlerinin etkin bir şekilde sürdürülmesini sağlaması ve daha detaylıdır. EBYS’ler, TSE TS 13298 ulusal standardına uygun şekilde hazırlanır. EBYS’ler gelişmiş fonksiyonlar içeren sistemlerdir"],ans:"D) Gelişmiş fonksiyonları içeren sistem olması",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:84,q:"Elektronik belgenin üreldiği ve kullanıldığı şekliyle belge grupları ile nasıl ilişkilendirildiğinin belirlendiği ortama ne ad verilir?",options:["A) Şekil", "B) Yapı", "C) İçerik", "D) Bağlam", "E) Konum"],ans:"D) Bağlam",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:85,q:"Evrak ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Evrak; kâğıt yapraklarından kitap sayfalarına, yazılmış mektuplardan senetlere kadar farklı şekillerde olabilmektedir.", "B) Kurumsal anlamda evrak; kurumların iç ve dış, gerçek ya da tüzel kişilerle ileşimlerini sağlayan yazılardır.", "C) Evrak kelimesi Arapça “varak” kelimesinin çoğulu olarak “yazılı kâğıt” anlamına gelir.", "D) Evrak kavramı yerine kayıt, doküman ve belge kavramları da kullanılmaktadır.", "E) Resmî kurumlarda işlem gören belgeler “evrak” olarak adlandırılamaz."],ans:"E) Resmî kurumlarda işlem gören belgeler “evrak” olarak adlandırılamaz.",exp:"",exams:["2023-2024 Final"]},
+{id:86,q:"Gizliliği gerekren ve önemli işlerin yürütüldüğü bir ya da birkaç kişi tarandan kullanılan bürolar aşağıdakilerden hangisi ile tanımlanmaktadır?",options:["A) Özel bürolar", "B) Kapalı bürolar", "C) Açık bürolar", "D) Güncel bürolar", "E) Genel bürolar"],ans:"B) Kapalı bürolar",exp:"",exams:["2024-2025 Final"]},
+{id:87,q:"Gövdeleri kimyevi dolgu maddeleri kullanılarak hazırlandığı için manyek bant, disk, disket, mikrofilm ve diğer önemli belgeleri olumsuz dış etkenlerden koruyan arşivleme aracı aşağıdakilerden hangisidir?",options:["A) Dosya", "B) Dosya dolabı", "C) Klasör", "D) Arşiv kutusu", "E) Kasa"],ans:"E) Kasa",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:88,q:"Göze, kulağa hitap eden film, manyek bant, plak ve kasetler üzerine işlenmiş arşiv belgesi olabilecek özellikteki resim, söz, müzik vb. malzemelerin muhafaza edildiği arşiv türü aşağıdakileden hangisidir?",options:["A) Özel Arşivle", "B) Folklor Arşivleri", "C) Kartografik Arşivler", "D) İkonografik Arşivler", "E) Odyo- Vizüel Arşivler"],ans:"E) Odyo- Vizüel Arşivler",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:89,q:"I. Bilginin analizi II. Bilginin toplanması III. Bilgilerin belirli yerlerde depolanması IV. Yönemin gereksinim duyduğu bilgiye anlık erişilebilmesi Yukarıdakilerden hangileri büroların işlev ve fonksiyonları arasında yer alır?",options:["A) I ve II", "B) III ve IV", "C) I, II, ve IV", "D) II, III ve IV", "E) I, II, III ve IV işlev ve fonksiyonları arasında yer almaktadır."],ans:"E) I, II, III ve IV işlev ve fonksiyonları arasında yer almaktadır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:90,q:"I. Erişilebilirlik II. Taşınabilirlik III. Doğruluk Elektronik belgeler yukarıdaki niteliklerden hangisi ya da hangilerine sahipr?",options:["A) I ve III", "B) Yalnız II", "C) I ve II", "D) Yalnız III", "E) Yalnız I"],ans:"A) I ve III",exp:"",exams:["2023-2024 Final"]},
+{id:91,q:"I. Kayıt II. Damgalama III. Kontrol IV. Birimlere dağıtma V. Zimmet kaydı VI. Numaralandırıma Yukarıda verilen \"Gelen Belge Yönem Süreci Adımları\"nın doğru sıralaması aşağıdakilerden hangisidir?",options:["A) IV-II-I-V-VI-III", "B) I-II-III-V-IV-VI", "C) VI-IV-III-I-II-V", "D) V-VI-II-I-III-IV", "E) I-II-V-VI-IV-III"],ans:"A) IV-II-I-V-VI-III",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:92,q:"I. Kurum arşivinden 2 memur, komisyonun tabii üyesidir. II. Belgelerin ait olduğu birimden, biriminde bilgi ve tecrübe sahibi 3 kişi, komisyonun tabii üyesidir. III. Kütüphane ve dokümantasyon birimi varsa sorumlu amir komisyonun tabii üyesidir. IV. Taşra birimlerinde o birimin amiri ve görevlendireceği tercihen 5 yoksa 4 veya 3 kişilik komisyonlar oluşturulur. Ayıklama ve imha komisyonu ile ilgili yukarıdakilerden hangileri doğrudur?",options:["A) III ve IV", "B) II ve IV", "C) I ve II", "D) I, II ve III", "E) I, III ve IV"],ans:"E) I, III ve IV",exp:"",exams:["2024-2025 Final"]},
+{id:93,q:"I. Kurum, standart dosya planında amaç ve dosyalama sistemlerine göre belirlenmiş olan ölçülerde ve büyüklükte dosya dolapları oluşturmalıdır. II. Elektronik belgelerin yer aldığı CD, DVD, Hard Disk gibi donanımlar için ayrı dolaplar bulundurulmalıdır. III. Dosya dolapları çekmeceli veya raflı olabilirler. IV. Dolapların hepsi sabit tek renk olmalıdır. Yukarıda dosya dolapları ile ilgili verilenlerden hangisi ya da hangileri yanlışr?",options:["A) Yalnız II", "B) Yalnız IV", "C) Yalnız I", "D) Yalnız III", "E) I ve II"],ans:"B) Yalnız IV",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:94,q:"I. Kurumun tüm birimlerinde birlikteliğin oluşturulması II. Benzer evraklar için standart bir kod belirlenmesinin sağlanması III. Düzenli bilgi ve belge akışının sağlanması IV. Kurum içinde bilgi ve belgelere hızlı ve kolay bir erişim sağlanması Yukarıdakilerden hangisi ya da hangileri standart dosya planının kuruma sağladığı faydalar arasındadır?",options:["A) Yalnız I", "B) II ve III", "C) III ve IV", "D) II, III ve IV", "E) I, II, III ve IV dosya planının kuruma sağladığı faydalardandır."],ans:"E) I, II, III ve IV dosya planının kuruma sağladığı faydalardandır.",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:95,q:"Kamu kurum ve kuruluşlarının alt birimlerinde oluşturulan arşiv türü aşağıdakilerden hangisidir?",options:["A) Devlet arşivi", "B) Birim arşivi", "C) Şehir arşivi", "D) Kurum arşivi", "E) Folklor arşivi"],ans:"B) Birim arşivi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:96,q:"Kişi veya kurumlar arşivlerden yararlanmak istediklerinde aşağıdakilerden hangisini doldurarak talepte bulunur?",options:["A) Arşiv malzemesi istek formu", "B) Emanet kasa formu", "C) Vip formu", "D) Sipariş formu", "E) Teiş formu"],ans:"A) Arşiv malzemesi istek formu",exp:"",exams:["2024-2025 Final"]},
+{id:97,q:"Kişinin normal imzasının küçültülmüş ve genellikle kişinin isim ve soy isminin ilk harflerinden oluşan hâli olarak tanımlanan kavram aşağıdakilerden hangisidir?",options:["A) Kayıt", "B) Kişilik", "C) İmza", "D) Tasnif", "E) Paraf"],ans:"E) Paraf",exp:"",exams:["2024-2025 Final"]},
+{id:98,q:"Komisyonlar kullanılmasına ve muhafazasına lüzum görülmeyen malzemelerle ayıklanması o yıla devredilmiş malzemeleri ……………………… tabi tutar. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) arşivlemeye", "B) ayıklamaya", "C) imhaya", "D) dosyalamaya", "E) muhafazaya"],ans:"B) ayıklamaya",exp:"",exams:["2023-2024 Final"]},
+{id:99,q:"Kronolojik sıralama işlemi ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) \"Arşiv yer damgası”, evrakın ön yüz alt bölümüne siyah ıstampa mürekkebi kullanılmak sureyle basılır.", "B) Tahmini tarihleme kaydı, köşeli parantez içerisinde gösterilir.", "C) Üzerinde gün ve ay olmayıp sadece yıl yazılı olanlar, ait oldukları yılın en sonuna konulur.", "D) Üzerinde yalnızca \"ay\"ı olup günü belli olmayan evraklar bulundukları ayın en başına konur.", "E) Eski harfli belgelerdeki Hicri ve Rumi tarihler, Miladi tarihe çevrilerek alınır."],ans:"D) Üzerinde yalnızca \"ay\"ı olup günü belli olmayan evraklar bulundukları ayın en başına konur.",exp:"",exams:["2024-2025 Final"]},
+{id:100,q:"Kurum içinde ödünç verilen dosyaların aşağıdaki formlardan hangisiyle takip edilmesi gerekmektedir?",options:["A) Dosya İmha Formu", "B) Dosya Muhafaza Formu", "C) Dosya Takip Çizelgesi Formu", "D) Dosya Kontrol Formu", "E) Dosya Fihrist Formu"],ans:"C) Dosya Takip Çizelgesi Formu",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:101,q:"Kurum ve kuruluşların, merkez teşkilâtları içinde var olan ve arşiv malzemesi, birim arşivlerine nazaran daha uzun süreli saklanan merkezî arşive ne ad verilir?",options:["A) Hazine arşivi", "B) Kurum arşivi", "C) Birim arşivi", "D) Özel arşiv", "E) Devlet arşivi"],ans:"B) Kurum arşivi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:102,q:"Kurumların elinde bulunan arşivlik malzeme, birim arşivlerinde ……………… süre ile arşiv malzemesi ise kurum arşivlerinde …………….. yıl saklanır. Cümlede boş bırakılan yerlere sırasıyla aşağıdakilerden hangileri gerilmelidir?",options:["A) 3-6 ay - 1-3 Yıl", "B) 6-12 ay - 3-5 yıl", "C) 1-5 yıl - 10-14 yıl", "D) 3-5 yıl - 15-20 yıl", "E) 5-10 yıl - 20-30 yıl malzeme, birim arşivlerinde 1-5 süre ile arşiv malzemesi ise kurum arşivlerinde10-14 yıl saklanır."],ans:"C) 1-5 yıl - 10-14 yıl",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:103,q:"Kâğıt türü arşiv malzemesinin korunması sırasında bulunduğu sıcaklık kaç derece olmalıdır?",options:["A) 12-15 derece", "B) 5-10 derece", "C) 15-18 derece", "D) 8-12 derece", "E) Oda sıcaklığı"],ans:"A) 12-15 derece",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:104,q:"Mükellefler arşiv hizmetleri faaliyet raporlarını ne zaman düzenleyerek genel müdürlüğe gönderir?",options:["A) Takip eden yılın ilk üç ayı içinde", "B) Takip eden yılın şubat ayı içinde", "C) Aynı yılın aralık ayının ilk haası içinde", "D) Aynı yılın aralık ayı sonuna kadar", "E) Takip eden yılın ocak ayı içinde"],ans:"E) Takip eden yılın ocak ayı içinde",exp:"",exams:["2023-2024 Final"]},
+{id:105,q:"Orijinal resim, gravür, resimli afişler, fotoğraf, şahıs, eşya veya anıt resimleri taşıyan her türlü dokümandan oluşan arşiv türü aşağıdakilerden hangisidir?",options:["A) İkonografik arşiv", "B) Folklor arşivi", "C) Devlet arşivi", "D) Kartografik arşiv", "E) Bucak arşivi"],ans:"A) İkonografik arşiv",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:106,q:"Personelin yapmış olduğu önemli bir hata, kural ihlali veya başarısızlık nedeniyle işletme yönemi tarandan işten çıkarılmasına ne ad verilir?",options:["A) Emeklilik", "B) Terfi", "C) İsfa", "D) Nakil", "E) İşten atma"],ans:"E) İşten atma",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:107,q:"Standart dosya planı ve fihristleme işlemlerine göre dosyalara verilecek isim ve numaraların belirlenmesi işlemine ne ad verilir?",options:["A) Dosyanın ödünç verilmesi", "B) Dosya kontrolü", "C) Dosyalama", "D) Kodlama", "E) Dosya açma"],ans:"D) Kodlama",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:108,q:"Tüm evrakların dosyaları ile birlikte kimde, nerede olduğu ve ne zaman döneceğinin kolaylıkla izlenebildiği araçlara ne ad verilir?",options:["A) Zimmet deeri", "B) Dosya isteme fişi", "C) Gelen evrak kayıt deeri", "D) Evrak kayıt deeri", "E) Giden evrak kayıt deeri"],ans:"B) Dosya isteme fişi",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:109,q:"Türk devlet ve millet hayanı ilgilendiren ve en son işlem tarihi üzerinden kaç yıl geçmiş olan belge arşiv materyali sayılır?",options:["A) 10", "B) 20", "C) 30", "D) 50", "E) 100"],ans:"C) 30",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:110,q:"Yer damgasındaki hangi bölüme bir kutuda yer alacak şekilde sıra numarası yazılır?",options:["A) İşlem yılı", "B) Kutu veya klasör numarası", "C) Alt birim kodu", "D) Dosya numarası", "E) Evrak sıra numarası"],ans:"D) Dosya numarası",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:111,q:"Çalışanın yapması gereken işlerin sayısını azaltarak iş etkinliğini arrmayı amaçlayan işleri; basit, tekrarlı, standart hâle gererek eğim ve beceri gelişrme ihyacını ortadan kaldıran sürece ne ad verilir?",options:["A) İş ölçümü", "B) Maliyet-fayda analizi", "C) İş basitleşrme", "D) İş etüdü", "E) Değer analizi"],ans:"C) İş basitleşrme",exp:"",exams:["2024-2025 Final"]},
+{id:112,q:"Çeşitli ürün ve hizmetlerin üremindeki faktörlerin (işgücü, sermaye, arazi, materyal, enerji, bilgi) etkin kullanımına ne ad verilir?",options:["A) Performans", "B) Maliyet", "C) Verimlilik", "D) Kalite", "E) Ürem"],ans:"C) Verimlilik",exp:"",exams:["2023-2024 Final"]},
+{id:113,q:"Çok sayıda birbirini takip eden küçük arşiv malzemesinin bir arada tutulmasını sağlayan arşivleme aracı aşağıdakilerden hangisidir?",options:["A) Klasör", "B) Kasa", "C) Dosya", "D) Arşiv kutusu", "E) Dosya dolabı"],ans:"D) Arşiv kutusu",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:114,q:"Üstlerin astlarına hitaben yazdıkları yazılardan ilan panolarına asılan duyurulara kadar resmî bir nitelik taşımayan yazılara ne ad verilir?",options:["A) Sirküler", "B) Şartname", "C) Özel yazışmalar", "D) İş mektupları", "E) Resmî yazışmalar"],ans:"C) Özel yazışmalar",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:115,q:"İmha Listeleri, Ankara'da ………………………………uzmanları tarandan incelenip onaylandıktan sonra en üst amirin onayına sunulur. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) kurum arşivleri", "B) devlet arşivleri", "C) daire", "D) taşra teşkila", "E) dosyalama ve arşivleme"],ans:"B) devlet arşivleri",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:116,q:"İmha listeleri aşağıdakilerden hangisi tarandan imzalanır?",options:["A) Devlet arşiv uzmanları", "B) Mükellefler", "C) İlgili birim amirleri", "D) Ayıklama ve imha komisyonlarının başkan ve üyeleri", "E) Kurum arşiv sorumluları"],ans:"D) Ayıklama ve imha komisyonlarının başkan ve üyeleri",exp:"",exams:["2024-2025 Final"]},
+{id:117,q:"İmhasına karar verilen arşiv malzemesi için hazırlanan imha tutanakları kaç yıl süreyle saklanır?",options:["A) 1 yıl", "B) 5 yıl", "C) 10 yıl", "D) 15 yıl", "E) 20 yıl"],ans:"C) 10 yıl",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:118,q:"İstenen belgelere süratli bir şekilde ulaşmayı sağlamak için belgelerin dosyalar içerisinde yerleşrileceği kutuların veya klasörlerin, sırtlarına yapışrılanlara ne ad verilir?",options:["A) Kod", "B) İsim", "C) Numara", "D) Barkod", "E) Eket"],ans:"E) Eket",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:119,q:"İstenilen şeylerin yazılması ve doldurulması için hazırlanmış basılı belgelere ne ad verilir?",options:["A) Form", "B) Küpür", "C) Küpürleme", "D) İç yazışma", "E) Soru kâğıdı"],ans:"A) Form",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:120,q:"İşgörene emeğini (iş gücünü) kiraya vermesi karşılığında ödenen bedele ne ad verilir?",options:["A) Kâr payı", "B) Royalty", "C) Ücret", "D) Rüçhan hakkı", "E) Temeü"],ans:"C) Ücret",exp:"",exams:["2021-2022 Final"]},
+{id:121,q:"İşin birim başına daha az masrafla daha kısa zamanda ve daha kolay bir şekilde yapılmasını sağlamak amacıyla tüm faaliyetlerin sistemak bir şekilde incelenmesi aşağıdaki tanımlardan hangisine uymaktadır?",options:["A) Zaman etüdü", "B) İş basitleşrme", "C) Hareket analizi", "D) İş etüdü", "E) Pareto analizi"],ans:"C) Hareket analizi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:122,q:"“Tablo şeklinde düzenlenmiş, içeriğinde sarlar, sütunlar ve kutucukların yer alabildiği formlardır.” şeklinde tanımlanan form şekli aşağıdakilerden hangisidir?",options:["A) Kartona basılı formlar", "B) Çizgi formlar", "C) Deer formlar", "D) Manyek mürekkep karakterleri tanımaya uygun hazırlanmış formlar", "E) Tek yaprak formlar"],ans:"B) Çizgi formlar",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:123,q:"“İleride kullanılmasına ve saklanmasına gerek görülmeyen, arşiv malzemesi ve arşivlik malzeme dışında kalan, hukuki kıymeni ve bir delil olma vasnı kaybetmiş belgelerin ayrılarak yönetmelikte belirlen usul ve esaslara göre imhası işlemini” ifade eden kavram aşağıdakilerden hangisidir?",options:["A) İmha", "B) Dosyalama", "C) Ayıklama", "D) Muhafaza etme", "E) Arşivleme"],ans:"A) İmha",exp:"",exams:["2024-2025 Bütünleme"]}
+];
+const pdfMap={"2021-2022 Bütünleme": "pdfs/Dosyalama_ve_Arsivleme/2021-2022_Butunleme.pdf", "2021-2022 Final": "pdfs/Dosyalama_ve_Arsivleme/2021-2022_Final.pdf", "2022-2023 Yaz Okulu": "pdfs/Dosyalama_ve_Arsivleme/2022-2023_Yaz_Okulu.pdf", "2023-2024 Bütünleme": "pdfs/Dosyalama_ve_Arsivleme/2023-2024_Butunleme.pdf", "2023-2024 Final": "pdfs/Dosyalama_ve_Arsivleme/2023-2024_Final.pdf", "2023-2024 Yaz Okulu": "pdfs/Dosyalama_ve_Arsivleme/2023-2024_Yaz_Okulu.pdf", "2024-2025 Bütünleme": "pdfs/Dosyalama_ve_Arsivleme/2024-2025_Butunleme.pdf", "2024-2025 Final": "pdfs/Dosyalama_ve_Arsivleme/2024-2025_Final.pdf"};
+const PROGRESS_KEY="auzef-progress-Dosyalama ve Ar\u015fivleme";
+
+let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
+function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
+function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+function shortenLabel(e){
+  return e
+    .replace(/(\d{4})-(\d{4})/g,(_,a,b)=>a.slice(2)+'-'+b.slice(2))
+    .replace(/^(\d{4}) /,(_,y)=>y.slice(2)+' ')
+    .replace('Bütünleme','Büt');
+}
+function tagCssClass(e){
+  if(e.includes('Kez Çıktı')) return 'freq-tag';
+  if(e.includes('Üç Ders'))   return 'uc-tag';
+  if(e.includes('Yaz Okulu')) return 'yaz-tag';
+  if(e.includes('Vize'))      return 'vize-tag';
+  if(e.includes('Final'))     return 'fin-tag';
+  if(e.includes('Bütünleme')) return 'but-tag';
+  return '';
+}
+function tagTfiClass(e){
+  if(e.includes('Üç Ders'))   return 'tfi-uc';
+  if(e.includes('Yaz Okulu')) return 'tfi-yaz';
+  if(e.includes('Vize'))      return 'tfi-vize';
+  if(e.includes('Final'))     return 'tfi-fin';
+  if(e.includes('Bütünleme')) return 'tfi-but';
+  return 'tfi-other';
+}
+function highlightNeg(text){
+  var L='[a-zA-ZçğışöüÇĞİIŞÖÜ]';
+  return text.replace(
+    new RegExp(
+      // Çok kelimeli kalıplar önce
+      'doğru\\s+değil'+L+'*'
+      +'|yanlış\\s+değil'+L+'*'
+      +'|uygun\\s+değil'+L+'*'
+      +'|gerekli\\s+değil'+L+'*'
+      +'|mümkün\\s+değil'+L+'*'
+      +'|'+L+'+mamas'+L+'\\s+gerek'+L+'*'
+      +'|'+L+'+memes'+L+'\\s+gerek'+L+'*'
+      +'|değil\\s+midir?'
+      +'|değil\\s+mi(?!'+L+')'
+      // Tek kelime negatifleri
+      +'|değildir'
+      +'|yanlıştır'
+      +'|yoktur(?!'+L+')'
+      +'|olamaz(?!'+L+')'
+      +'|olmaz(?!'+L+')'
+      // -mamaktadır/-memektedir (süregelen olumsuz)
+      +'|'+L+'+mamaktadır'+L+'*'
+      +'|'+L+'+memektedir'+L+'*'
+      // -mamalıdır/-memelidir (zorunluluk olumsuz)
+      +'|'+L+'+mamalıdır'
+      +'|'+L+'+memelidir'
+      +'|'+L+'+mamalı(?!'+L+')'
+      +'|'+L+'+memeli(?!'+L+')'
+      // -maz/-mez geniş (tüm Türkçe geniş zaman olumsuz)
+      +'|'+L+'+maz(?!'+L+')'
+      +'|'+L+'+mez(?!'+L+')',
+      'gi'
+    ),
+    function(m){return '<u class="neg-hl">'+m+'</u>';}
+  );
+}
+function getProgress(){try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'{}');}catch(e){return {};}}
+function saveProgress(qid,result){
+  var p=getProgress();p[String(qid)]=result;
+  localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
+  updateProgressBar();
+  var icon=document.getElementById('prev-'+qid);
+  if(icon){icon.className='q-prev '+(result==='correct'?'q-prev-correct':'q-prev-wrong');icon.textContent=result==='correct'?'✓ Doğru':'✗ Yanlış';}
+}
+function updateProgressBar(){
+  var p=getProgress();var total=sorular.length;
+  var done=Object.keys(p).filter(function(k){return parseInt(k)<total;}).length;
+  var el=document.getElementById('prog-done');if(el)el.textContent=done;
+  var et=document.getElementById('prog-total');if(et)et.textContent=total;
+  var fill=document.getElementById('prog-fill');if(fill)fill.style.width=(total?(done/total*100):0)+'%';
+}
+function resetProgress(){
+  if(!confirm('Bu ders için tüm ilerleme sıfırlansın mı?'))return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressBar();
+  var activeTab=document.querySelector('.tab-btn.active');
+  if(activeTab)activeTab.click();
+}
+function updateStatsBar(){
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function applyTagFilter(fullLabel,tfiClass){
+  document.querySelectorAll('.question-card').forEach(card=>{
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    card.classList.toggle('tag-hidden',!exams.includes(fullLabel));
+  });
+  updateStatsBar();
+  const ind=document.getElementById('tag-filter-indicator');
+  ind.className='visible '+tfiClass;
+  ind.querySelector('.tfi-label').textContent=shortenLabel(fullLabel)+' Görüntüleniyor';
+  document.querySelector('.sidebar').classList.add('tag-filter-active');
+  // PDF button
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const val=pdfMap[fullLabel];
+    if(val){
+      const ids=Array.isArray(val)?val:[val];
+      pdfBtn.dataset.pdfIds=JSON.stringify(ids);
+      pdfBtn.dataset.pdfLabels=JSON.stringify([fullLabel]);
+      pdfBtn.dataset.pdfLabel=shortenLabel(fullLabel);
+      pdfBtn.classList.add('visible');
+    } else pdfBtn.classList.remove('visible');
+  }
+}
+function clearTagFilter(){
+  document.querySelectorAll('.question-card').forEach(c=>c.classList.remove('tag-hidden'));
+  updateStatsBar();
+  document.getElementById('tag-filter-indicator').className='';
+  document.querySelector('.sidebar').classList.remove('tag-filter-active');
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn)pdfBtn.classList.remove('visible');
+}
+let _pdfIds=[],_pdfLabels=[],_pdfIdx=0;
+function _pdfLoad(idx){
+  const frames=document.getElementById('pdfModalFrames');
+  frames.innerHTML='';
+  const f=document.createElement('iframe');
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
+  f.allowFullscreen=true;
+  frames.appendChild(f);
+  const counter=document.getElementById('pdfCounter');
+  if(_pdfIds.length>1){counter.textContent=(_pdfIdx+1)+' / '+_pdfIds.length;}
+  else{counter.textContent='';}
+  // Modal başlığını her PDF'e göre güncelle
+  const lbl=_pdfLabels[idx]?shortenLabel(_pdfLabels[idx]):null;
+  document.getElementById('pdfModalTitle').textContent=(lbl||document.getElementById('pdfOpenBtn').dataset.pdfLabel||'Sınav')+' Sınav Kağıdı';
+  document.getElementById('pdfPrev').disabled=idx===0;
+  document.getElementById('pdfNext').disabled=idx===_pdfIds.length-1;
+}
+function pdfNav(dir){
+  const next=_pdfIdx+dir;
+  if(next<0||next>=_pdfIds.length)return;
+  _pdfIdx=next;_pdfLoad(_pdfIdx);
+}
+function openPdfModal(){
+  const btn=document.getElementById('pdfOpenBtn');
+  if(!btn)return;
+  _pdfIds=JSON.parse(btn.dataset.pdfIds||'[]');
+  _pdfLabels=JSON.parse(btn.dataset.pdfLabels||'[]');
+  if(!_pdfIds.length)return;
+  _pdfIdx=0;
+  document.getElementById('pdfPrev').style.display=_pdfIds.length>1?'':'none';
+  document.getElementById('pdfNext').style.display=_pdfIds.length>1?'':'none';
+  _pdfLoad(0);
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePdfModal(){
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfModalFrames').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function renderQuestions(filter){
+  const container=document.getElementById('quiz-container');
+  container.innerHTML='';resetScore();
+  const examCount=s=>s.exams.filter(e=>!e.includes('Kez')).length;
+  let filtered;
+  if(filter==='all') filtered=[...sorular];
+  else if(filter==='banko') filtered=sorular.filter(s=>examCount(s)>=2);
+  else if(filter==='review'){const p=getProgress();filtered=sorular.filter(s=>p[String(s.id)]!=='correct');}
+  else filtered=sorular.filter(s=>s.exams.some(e=>e.includes(filter)));
+  filtered.sort((a,b)=>examCount(b)-examCount(a));
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center;color:#888;padding:30px;">Bu kategoride soru bulunamadı.</p>';document.getElementById('stats-bar').innerHTML=`<span>0<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>`;return;}
+  filtered.forEach((soru,idx)=>{
+    const card=document.createElement('div');card.className='question-card';
+    card.dataset.exams=JSON.stringify(soru.exams);
+    const tagsHTML=soru.exams.map(e=>{
+      const css=tagCssClass(e);
+      const isFreq=e.includes('Kez Çıktı');
+      const clickable=isFreq?'':' tag-clickable';
+      const data=isFreq?'':` data-full="${e.replace(/"/g,'&quot;')}" data-tfi="${tagTfiClass(e)}"`;
+      return `<span class="exam-tag${css?' '+css:''}${clickable}"${data}>${shortenLabel(e)}</span>`;
+    }).join('');
+    const ansLetter=soru.ans?soru.ans.trim().charAt(0):'';
+    const optionsHTML=soru.options.map(o=>{
+      const isCorrect=ansLetter&&o.trim().startsWith(ansLetter+')');
+      return `<li${isCorrect?' data-correct="true"':''} onclick="selectOption(this)">${o}</li>`;
+    }).join('');
+    const answerId=`answer-${idx}-${filter}`;
+    card.dataset.qid=soru.id;
+    const prevResult=getProgress()[String(soru.id)];
+    const prevHTML=prevResult?`<span class="q-prev ${prevResult==='correct'?'q-prev-correct':'q-prev-wrong'}" id="prev-${soru.id}">${prevResult==='correct'?'✓ Doğru':'✗ Yanlış'}</span>`:`<span class="q-prev" id="prev-${soru.id}"></span>`;
+    card.innerHTML=`
+      <div class="q-header">
+        <div class="q-meta"><span class="q-num">Soru ${idx+1}</span>${prevHTML}</div>
+        <div class="exam-tags">${tagsHTML}</div>
+      </div>
+      <div class="question-text">${highlightNeg(soru.q)}</div>
+      <ul class="options">${optionsHTML}</ul>
+      <button class="btn-toggle" onclick="toggleAnswer('${answerId}',this)">Cevabı Göster</button>
+      <div class="answer-area" id="${answerId}" style="${allAnswersVisible?'display:block':''}">
+        <p class="correct-ans">✔ Doğru Cevap: ${soru.ans}</p>
+        <p class="exp-text">${soru.exp}</p>
+      </div>`;
+    if(allAnswersVisible){const cl=card.querySelector('.options li[data-correct="true"]');if(cl)cl.classList.add('correct-highlight');card.querySelector('.btn-toggle').textContent='Cevabı Gizle';}
+    card.querySelectorAll('.exam-tag.tag-clickable').forEach(tag=>{
+      tag.addEventListener('click',()=>applyTagFilter(tag.dataset.full,tag.dataset.tfi));
+    });
+    card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
+    container.appendChild(card);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function searchQuestions(q){
+  q=(q||'').trim().toLowerCase();
+  var cards=document.querySelectorAll('#quiz-container .question-card');
+  var visible=0;
+  cards.forEach(function(card){
+    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    var text=(card.querySelector('.question-text')||{}).textContent||'';
+    var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
+    var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
+    card.style.display=match?'':'none';
+    if(match)visible++;
+  });
+  document.getElementById('stats-bar').innerHTML='<span>'+visible+'<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>';
+}
+function setCorrectHighlight(card,visible){card.querySelectorAll('.options li[data-correct="true"]').forEach(li=>li.classList.toggle('correct-highlight',visible));}
+function selectOption(li){
+  const card=li.closest('.question-card');if(card.dataset.answered)return;
+  card.dataset.answered='true';const isCorrect=li.dataset.correct==='true';
+  if(isCorrect){li.classList.add('correct-highlight');card.dataset.answeredResult='correct';scoreCorrect++;}
+  else{li.classList.add('wrong-highlight');card.querySelectorAll('.options li[data-correct="true"]').forEach(l=>l.classList.add('correct-highlight'));card.dataset.answeredResult='wrong';scoreWrong++;}
+  saveProgress(card.dataset.qid,isCorrect?'correct':'wrong');
+  updateScore();
+  const area=card.querySelector('.answer-area');
+  if(area&&area.style.display!=='block'){area.style.display='block';const btn=card.querySelector('.btn-toggle');if(btn)btn.textContent='Cevabı Gizle';}
+}
+function toggleAnswer(id,btn){
+  const area=document.getElementById(id);const card=btn.closest('.question-card');
+  if(area.style.display==='none'||area.style.display===''){
+    area.style.display='block';btn.textContent='Cevabı Gizle';setCorrectHighlight(card,true);
+  }else{
+    area.style.display='none';btn.textContent='Cevabı Göster';setCorrectHighlight(card,false);
+    card.querySelectorAll('.options li.wrong-highlight').forEach(li=>li.classList.remove('wrong-highlight'));
+    if(card.dataset.answeredResult==='correct')scoreCorrect=Math.max(0,scoreCorrect-1);
+    else if(card.dataset.answeredResult==='wrong')scoreWrong=Math.max(0,scoreWrong-1);
+    delete card.dataset.answered;delete card.dataset.answeredResult;updateScore();
+  }
+}
+function toggleAllAnswers(){
+  allAnswersVisible=!allAnswersVisible;
+  document.getElementById('toggleAllBtn').textContent=allAnswersVisible?'Tüm Cevapları Gizle':'Tüm Cevapları Göster';
+  document.querySelectorAll('.answer-area').forEach(a=>a.style.display=allAnswersVisible?'block':'none');
+  document.querySelectorAll('.btn-toggle').forEach(b=>b.textContent=allAnswersVisible?'Cevabı Gizle':'Cevabı Göster');
+  document.querySelectorAll('.question-card').forEach(c=>setCorrectHighlight(c,allAnswersVisible));
+}
+function filterQuestions(filter,clickedBtn){
+  clearTagFilter();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  clickedBtn.classList.add('active');allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  renderQuestions(filter);
+  // Sekme filtresi için PDF butonunu güncelle
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const TAB_FILTERS=['Final','Bütünleme','Yaz Okulu','Vize','Üç Ders'];
+    const isTabFilter=TAB_FILTERS.some(k=>filter===k||filter.includes(k));
+    if(isTabFilter){
+      const tabIds=[],tabLabels=[];
+      // pdfMap anahtarlarını filtre anahtar kelimesine göre filtrele, kronolojik sırala
+      Object.keys(pdfMap).sort().forEach(label=>{
+        if(label.includes(filter)){
+          const val=pdfMap[label];
+          const ids=Array.isArray(val)?val:[val];
+          ids.forEach(id=>{tabIds.push(id);tabLabels.push(label);});
+        }
+      });
+      if(tabIds.length){
+        pdfBtn.dataset.pdfIds=JSON.stringify(tabIds);
+        pdfBtn.dataset.pdfLabels=JSON.stringify(tabLabels);
+        pdfBtn.dataset.pdfLabel=filter;
+        pdfBtn.classList.add('visible');
+      } else {
+        pdfBtn.classList.remove('visible');
+      }
+    } else {
+      pdfBtn.classList.remove('visible');
+    }
+  }
+}
+renderQuestions('all');
+updateProgressBar();
+(function(){
+  var _tb=document.querySelector('.site-topbar');
+  var _sb=document.querySelector('.sidebar');
+  var _qc=document.getElementById('quiz-container');
+  function syncPad(){
+    if(!_sb||!_qc)return;
+    if(window.innerWidth<=720){
+      var tbH=_tb?_tb.offsetHeight:48;
+      _sb.style.top=tbH+'px';
+      _qc.style.paddingTop=_sb.offsetHeight+'px';
+    } else {
+      _sb.style.top='';
+      _qc.style.paddingTop='';
+    }
+  }
+  syncPad();
+  window.addEventListener('resize',syncPad,{passive:true});
+  var mq=window.matchMedia('(max-width:720px)');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      if(_sb)_sb.classList.toggle('scroll-collapsed',window.scrollY>90);
+      ticking=false;
+    });
+  }
+  function setup(){
+    if(mq.matches){window.addEventListener('scroll',onScroll,{passive:true});}
+    else{window.removeEventListener('scroll',onScroll);if(_sb)_sb.classList.remove('scroll-collapsed');syncPad();}
+  }
+  if(mq.addEventListener)mq.addEventListener('change',setup);
+  else mq.addListener(setup);
+  setup();
+})();
+
+/* ── Dark Mode ── */
+(function(){
+  var toggle=document.getElementById('darkModeToggle');
+  if(!toggle)return;
+  var KEY='auzef-dark-mode';
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved=localStorage.getItem(KEY);
+  var isDark=saved!==null?saved==='true':prefersDark;
+  if(isDark)document.body.classList.add('dark-mode');
+  toggle.textContent=isDark?'☀️':'🌙';
+  toggle.addEventListener('click',function(){
+    document.body.classList.toggle('dark-mode');
+    var nowDark=document.body.classList.contains('dark-mode');
+    localStorage.setItem(KEY,String(nowDark));
+    toggle.textContent=nowDark?'☀️':'🌙';
+  });
+})();
+// Tekrar Et toggle
+function toggleReview(btn){
+  var isActive=btn.classList.contains('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  clearTagFilter();
+  if(isActive){
+    var allBtn=document.querySelector('.tab-btn:first-child');
+    if(allBtn)allBtn.classList.add('active');
+    renderQuestions('all');
+  } else {
+    btn.classList.add('active');
+    renderQuestions('review');
+  }
+}
+
+</script>
+</body>
+</html>

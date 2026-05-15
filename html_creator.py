@@ -60,6 +60,12 @@ DERS_CONFIG = {
         "emoji":   "📜",
         "pdf_dir": "1_sinif/bahar/pdfs/Afet_ve_Acil_Durum_Mevzuati",
     },
+    "Dosyalama ve Arşivleme": {
+        "excel":   "1_sinif/bahar/Dosyalama_ve_Arsivleme_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Dosyalama_ve_Arsivleme_Soru_Bankasi.html",
+        "emoji":   "🗂️",
+        "pdf_dir": "1_sinif/bahar/pdfs/Dosyalama_ve_Arsivleme",
+    },
     "Algoritmalar ve Programlamaya Giriş": {
         "excel":  "Data/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.xlsx",
         "output": "1_sinif/bahar/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.html",
