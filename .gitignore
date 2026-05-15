@@ -1,0 +1,13 @@
+# Claude session files
+.claude/
+
+# Raw extraction intermediates (not needed in repo)
+*_raw_questions.json
+*_celiskili_cevaplar.json
+extract_*.py
+
+# Example/template reference (not for deployment)
+example_index.html
+
+# macOS
+.DS_Store

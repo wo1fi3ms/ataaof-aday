@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATA-AÖF Soru Bankası – Acil Durum ve Afet Yönetimi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── Light Mode (varsayılan) — ATA-AÖF palette ── */
+:root{
+  /* ATA-AÖF ana lacivert */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* ATA-AÖF vurgu yeşili */
+  --accent:#00CB54;--accent-dk:#009e40;
+  /* Gold/tan */
+  --gold:#e1b77e;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --muted:#606065;
+}
+
+/* ── Dark Mode ── */
+body.dark-mode{
+  --green:#6b7fd4;--green-dk:#0d1460;--green-lt:#0d1a3a;
+  --accent:#00CB54;--accent-dk:#00a843;
+  --gold:#e1b77e;
+  --bg:#08091e;--card-bg:#0f1230;--text:#e0e0e0;--border:#1e2560;
+  --muted:#9192a3;
+}
+
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s;}
+
+/* ── Topbar ── */
+.topbar{background:var(--green-dk);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;flex-direction:column;gap:2px;}
+.topbar-uni{font-size:.72em;color:rgba(255,255,255,.5);letter-spacing:.02em;}
+.topbar-prog{font-size:.82em;font-weight:700;color:rgba(255,255,255,.85);}
+.topbar-right{font-size:.75em;color:rgba(255,255,255,.4);}
+
+/* ── Dark Mode Toggle ── */
+.dark-mode-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;
+  transition:all .2s;color:#fff;line-height:1;
+}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── Header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:40px 24px 36px;text-align:center;border-bottom:4px solid var(--gold);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:5px 18px;font-size:.75em;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.9);margin-bottom:16px;text-transform:uppercase;}
+.header h1{font-size:1.95em;font-weight:700;margin-bottom:8px;line-height:1.2;}
+.header p{font-size:.88em;color:rgba(255,255,255,.6);}
+
+/* ── Class Tabs ── */
+.class-nav{background:var(--card-bg);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.class-tabs{display:flex;max-width:900px;margin:0 auto;padding:0 16px;}
+.class-tab{flex:1;padding:16px 8px;text-align:center;font-size:.9em;font-weight:700;color:var(--text);opacity:.6;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;user-select:none;border-top:none;border-left:none;border-right:none;background:none;}
+.class-tab:hover{color:var(--accent);background:var(--green-lt);}
+.class-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--green-lt);}
+.class-tab .tab-label{display:block;font-size:.72em;font-weight:400;color:inherit;opacity:.7;margin-top:2px;}
+.class-tab.tab-ready{color:var(--accent);border-left:1px solid var(--border);}
+.class-tab.tab-ready.active{background:var(--green-lt);border-bottom-color:var(--accent);}
+#class-ready .course-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+
+/* ── Content ── */
+.content{max-width:900px;margin:0 auto;padding:32px 16px 60px;}
+.class-panel{display:none;}
+.class-panel.active{display:block;}
+
+/* ── Dark mode: topbar sağında toggle ── */
+@media(min-width:721px){
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+}
+
+/* ── Semester Section ── */
+.semester{margin-bottom:40px;}
+.semester-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.semester-title{font-size:1.05em;font-weight:700;color:var(--green);}
+.semester-badge{font-size:.72em;font-weight:700;background:var(--green-lt);color:var(--green);border:1px solid #c5caee;border-radius:12px;padding:3px 10px;}
+.semester-line{flex:1;height:1px;background:var(--border);}
+
+/* ── Course Grid ── */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+
+/* ── Course Card ── */
+.course-card{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:18px 16px;display:flex;flex-direction:column;gap:10px;transition:all .2s;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
+.course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border);transition:background .2s;}
+.course-card.ready{cursor:pointer;}
+.course-card.ready::before{background:var(--accent);}
+.course-card.ready:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(0,203,84,.15);transform:translateY(-2px);}
+.course-card.soon{cursor:default;}
+.course-card.soon::before{background:var(--gold);}
+
+.card-emoji{font-size:1.8em;line-height:1;}
+.card-code{font-size:.68em;font-weight:700;color:var(--text);opacity:.4;letter-spacing:.04em;font-family:monospace;}
+.card-name{font-size:.88em;font-weight:700;color:var(--text);line-height:1.35;}
+.card-badge{display:inline-flex;align-items:center;gap:5px;font-size:.7em;font-weight:700;border-radius:10px;padding:3px 9px;width:fit-content;}
+.badge-ready{background:#e6faf0;color:#009e40;border:1px solid #9de8bf;}
+body.dark-mode .badge-ready{background:#012a14;color:#00CB54;border-color:#015a2a;}
+.badge-soon{background:#fff8e6;color:#9a7012;border:1px solid #e8d48a;}
+body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10;}
+
+/* ── Stats bar ── */
+.stats{background:var(--card-bg);border-radius:12px;border:1px solid var(--border);padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;gap:2px;}
+.stat-val{font-size:1.3em;font-weight:700;color:var(--accent);}
+.stat-lbl{font-size:.72em;color:var(--text);opacity:.6;}
+.stat-divider{width:1px;height:32px;background:var(--border);}
+
+/* ── Empty ready state ── */
+.empty-ready{text-align:center;padding:60px 20px;color:var(--text);opacity:.5;}
+.empty-ready .empty-icon{font-size:3em;margin-bottom:12px;}
+.empty-ready p{font-size:.9em;}
+
+/* ── Responsive ── */
+@media(max-width:600px){
+  .header h1{font-size:1.4em;}
+  .class-tab{font-size:.78em;padding:12px 4px;}
+  .course-grid{grid-template-columns:1fr 1fr;}
+  .stats{gap:12px;}
+  .topbar-right{display:none;}
+}
+@media(max-width:400px){
+  .course-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-uni">Atatürk Üniversitesi · ATA-AÖF</span>
+    <span class="topbar-prog">Acil Durum ve Afet Yönetimi – Soru Bankası</span>
+  </div>
+  <span class="topbar-right"></span>
+  <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+</div>
+
+<div class="header">
+  <div class="header-badge">🚒 ATA-AÖF Soru Havuzu</div>
+  <h1>Acil Durum ve Afet Yönetimi</h1>
+  <p>Atatürk Üniversitesi Açık ve Uzaktan Öğretim Fakültesi · Önlisans · Sınav Hazırlık Platformu</p>
+</div>
+
+<nav class="class-nav">
+  <div class="class-tabs">
+    <button class="class-tab" onclick="showClass(1,this)">
+      1. Sınıf
+      <span class="tab-label">1–2. Yarıyıl</span>
+    </button>
+    <button class="class-tab" onclick="showClass(2,this)">
+      2. Sınıf
+      <span class="tab-label">3–4. Yarıyıl</span>
+    </button>
+    <button class="class-tab tab-ready active" onclick="showReady(this)">
+      ✓ Hazır
+      <span class="tab-label">Soru Bankası</span>
+    </button>
+  </div>
+</nav>
+
+<div class="content">
+
+  <div class="stats">
+    <div class="stat"><span class="stat-val">28</span><span class="stat-lbl">Toplam Ders</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-val" id="stat-ready">0</span><span class="stat-lbl">Hazır Soru Bankası</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-val" id="stat-soon">28</span><span class="stat-lbl">Yakında Eklenecek</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-val">2</span><span class="stat-lbl">Sınıf · 4 Yarıyıl</span></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ HAZIR PANEL -->
+  <div class="class-panel active" id="class-ready">
+    <div class="course-grid" id="ready-grid"></div>
+    <div class="empty-ready" id="empty-ready" style="display:none;">
+      <div class="empty-icon">📚</div>
+      <p>Henüz hazır soru bankası bulunmuyor.<br>Yakında ekleniyor!</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ 1. SINIF -->
+  <div class="class-panel" id="class-1">
+
+    <div class="semester">
+      <div class="semester-header">
+        <span class="semester-title">1. Yarıyıl</span>
+        <span class="semester-badge">7 Ders · Güz</span>
+        <div class="semester-line"></div>
+      </div>
+      <div class="course-grid">
+
+        <a href="1_sinif/guz/ADY1001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🚨</div>
+          <div class="card-code">ADY1001</div>
+          <div class="card-name">Acil Durum ve Afet Yönetimine Giriş</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/ADY1005_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🔍</div>
+          <div class="card-code">ADY1005</div>
+          <div class="card-name">Arama ve Kurtarma Bilgisi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/ADY1007_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🤝</div>
+          <div class="card-code">ADY1007</div>
+          <div class="card-name">Çalışma İlişkileri ve Etik</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/ADY1003_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🧠</div>
+          <div class="card-code">ADY1003</div>
+          <div class="card-name">Davranış Bilimleri</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/ADY1009_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🦺</div>
+          <div class="card-code">ADY1009</div>
+          <div class="card-name">İş Sağlığı ve Güvenliği</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/BIL1001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">💻</div>
+          <div class="card-code">BİL1001</div>
+          <div class="card-name">Temel Bilgi Teknolojileri I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/guz/ORT1001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🌍</div>
+          <div class="card-code">ORT1001</div>
+          <div class="card-name">Yabancı Dil I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+      </div>
+    </div><!-- /1. Yarıyıl -->
+
+    <div class="semester">
+      <div class="semester-header">
+        <span class="semester-title">2. Yarıyıl</span>
+        <span class="semester-badge">7 Ders · Bahar</span>
+        <div class="semester-line"></div>
+      </div>
+      <div class="course-grid">
+
+        <a href="1_sinif/bahar/ADY1010_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">📜</div>
+          <div class="card-code">ADY1010</div>
+          <div class="card-name">Afet ve Acil Durum Mevzuatı</div>
+          <span class="card-badge badge-ready">✓ 126 Soru</span>
+        </a>
+
+        <a href="1_sinif/bahar/ADY1008_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🗂️</div>
+          <div class="card-code">ADY1008</div>
+          <div class="card-name">Dosyalama ve Arşivleme</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/bahar/ADY1006_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏥</div>
+          <div class="card-code">ADY1006</div>
+          <div class="card-name">İlk Yardım ve Acil Sağlık Hizmetleri</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/bahar/ADY1004_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">⚗️</div>
+          <div class="card-code">ADY1004</div>
+          <div class="card-name">Kimyasal Maddeler ve Tehlikeleri</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/bahar/ADY1002_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">📦</div>
+          <div class="card-code">ADY1002</div>
+          <div class="card-name">Lojistik Yönetimi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/bahar/BIL1002_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🖥️</div>
+          <div class="card-code">BIL1002</div>
+          <div class="card-name">Temel Bilgi Teknolojileri II</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="1_sinif/bahar/ORT1002_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🌍</div>
+          <div class="card-code">ORT1002</div>
+          <div class="card-name">Yabancı Dil II</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+      </div>
+    </div><!-- /2. Yarıyıl -->
+
+  </div><!-- /class-1 -->
+
+  <!-- ═══════════════════════════════════════════════ 2. SINIF -->
+  <div class="class-panel" id="class-2">
+
+    <div class="semester">
+      <div class="semester-header">
+        <span class="semester-title">3. Yarıyıl</span>
+        <span class="semester-badge">7 Ders · Güz</span>
+        <div class="semester-line"></div>
+      </div>
+      <div class="course-grid">
+
+        <a href="2_sinif/guz/ADY2001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🧘</div>
+          <div class="card-code">ADY2001</div>
+          <div class="card-name">Acil Durum ve Afet Psikolojisi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ORT2001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏛️</div>
+          <div class="card-code">ORT2001</div>
+          <div class="card-name">Atatürk İlkeleri ve İnkılap Tarihi I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ADY2009_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏢</div>
+          <div class="card-code">ADY2009</div>
+          <div class="card-name">Bina Yönetim Sistemleri</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ADY2003_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🌲</div>
+          <div class="card-code">ADY2003</div>
+          <div class="card-name">Doğada Yaşam ve Hayatta Kalma</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ADY2007_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🗺️</div>
+          <div class="card-code">ADY2007</div>
+          <div class="card-name">Harita Bilgisi ve Coğrafi Bilgi Sistemleri</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ORT2003_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">📖</div>
+          <div class="card-code">ORT2003</div>
+          <div class="card-name">Türk Dili I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/ADY2005_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏗️</div>
+          <div class="card-code">ADY2005</div>
+          <div class="card-name">Yönetim ve Organizasyon</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+      </div>
+    </div><!-- /3. Yarıyıl -->
+
+    <div class="semester">
+      <div class="semester-header">
+        <span class="semester-title">4. Yarıyıl</span>
+        <span class="semester-badge">7 Ders · Bahar</span>
+        <div class="semester-line"></div>
+      </div>
+      <div class="course-grid">
+
+        <a href="2_sinif/bahar/ADY2002_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">⚠️</div>
+          <div class="card-code">ADY2002</div>
+          <div class="card-name">Afetlerde Risk ve Kriz Yönetimi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ORT2002_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏛️</div>
+          <div class="card-code">ORT2002</div>
+          <div class="card-name">Atatürk İlkeleri ve İnkılap Tarihi II</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ADY2010_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🌋</div>
+          <div class="card-code">ADY2010</div>
+          <div class="card-name">Doğal Afetler ve Afet Yönetimi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ADY2004_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">👥</div>
+          <div class="card-code">ADY2004</div>
+          <div class="card-name">Ekip Çalışması ve Liderlik</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ADY2006_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">📋</div>
+          <div class="card-code">ADY2006</div>
+          <div class="card-name">Olay Yönetim Sistemi</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ORT2004_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">📖</div>
+          <div class="card-code">ORT2004</div>
+          <div class="card-name">Türk Dili II</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/bahar/ADY2008_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🔥</div>
+          <div class="card-code">ADY2008</div>
+          <div class="card-name">Yanma ve Yangın</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+      </div>
+    </div><!-- /4. Yarıyıl -->
+
+  </div><!-- /class-2 -->
+
+</div><!-- /content -->
+
+<script>
+function showClass(n, btn) {
+  document.querySelectorAll('.class-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.class-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('class-' + n).classList.add('active');
+  btn.classList.add('active');
+  sessionStorage.setItem('activeClass', n);
+}
+
+function showReady(btn) {
+  document.querySelectorAll('.class-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.class-tab').forEach(t => t.classList.remove('active'));
+  const grid   = document.getElementById('ready-grid');
+  const empty  = document.getElementById('empty-ready');
+  grid.innerHTML = '';
+  document.querySelectorAll('.class-panel:not(#class-ready) .course-card.ready').forEach(card => {
+    grid.appendChild(card.cloneNode(true));
+  });
+  const hasReady = grid.children.length > 0;
+  grid.style.display  = hasReady ? '' : 'none';
+  empty.style.display = hasReady ? 'none' : '';
+  document.getElementById('class-ready').classList.add('active');
+  btn.classList.add('active');
+  sessionStorage.setItem('activeClass', 'ready');
+}
+
+/* ── Dark Mode Toggle ── */
+(function(){
+  const toggle = document.getElementById('darkModeToggle');
+  if (!toggle) return;
+  const STORAGE_KEY = 'ataaof-ady-dark-mode';
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const isDark = saved !== null ? saved === 'true' : prefersDark;
+  if (isDark) document.body.classList.add('dark-mode');
+  toggle.textContent = isDark ? '☀️' : '🌙';
+  toggle.addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    const nowDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem(STORAGE_KEY, String(nowDark));
+    toggle.textContent = nowDark ? '☀️' : '🌙';
+  });
+})();
+
+/* ── Sayfa geçişlerinde session yönetimi ── */
+(function(){
+  const saved = sessionStorage.getItem('activeClass');
+  if (saved && saved !== 'ready') {
+    const btn = document.querySelectorAll('.class-tab')[parseInt(saved) - 1];
+    if (btn) showClass(parseInt(saved), btn);
+  } else {
+    const btn = document.querySelector('.class-tab.tab-ready');
+    if (btn) showReady(btn);
+  }
+})();
+
+/* ── İstatistik sayacını DOM'dan otomatik hesapla ── */
+(function(){
+  const ready = document.querySelectorAll('.class-panel:not(#class-ready) .course-card.ready').length;
+  const soon  = document.querySelectorAll('.course-card.soon').length;
+  document.getElementById('stat-ready').textContent = ready;
+  document.getElementById('stat-soon').textContent  = soon;
+})();
+</script>
+</body>
+</html>

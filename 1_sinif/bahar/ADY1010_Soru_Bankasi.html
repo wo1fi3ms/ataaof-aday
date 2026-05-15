@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Afet ve Acil Durum Mevzuatı – Soru Havuzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ATA-AÖF ana lacivert — UI chrome */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* Vurgu yeşili — geri bildirim / başarı */
+  --accent:#00CB54;--accent-dk:#009e40;--accent-lt:#e6faf0;
+  --gold:#e1b77e;
+  --wine:#7b1d34;--wine-dk:#5c1526;
+  --banko:#c0392b;--banko-dk:#922b21;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --opt-bg:#fafafa;--opt-border:#e4e4e7;
+  --muted:#606065;
+}
+body.dark-mode{
+  /* UI chrome — okunabilir lacivert-lavanta */
+  --green:#8899ee;--green-dk:#c0caff;--green-lt:#131c42;
+  /* Geri bildirim yeşili */
+  --accent:#00CB54;--accent-dk:#4ade80;--accent-lt:#012a14;
+  --gold:#e1b77e;
+  /* Daha ölçülü wine ve banko */
+  --wine:#a05868;--wine-dk:#7d4052;
+  --banko:#c06060;--banko-dk:#9a4848;
+  --bg:#08091e;--card-bg:#0f1230;--text:#d8daec;--border:#252d60;
+  --opt-bg:#111830;--opt-border:#252d60;
+}
+*{box-sizing:border-box;}
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0 0 48px;line-height:1.65;transition:background .25s,color .25s;}
+
+/* ── topbar ── */
+.site-topbar{position:sticky;top:0;z-index:200;background:var(--green-dk);display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-home{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;transition:all .2s;white-space:nowrap;}
+.topbar-home:hover{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-uni{font-size:.75em;color:rgba(255,255,255,.45);letter-spacing:.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-course{font-size:.88em;font-weight:700;color:#fff;}
+.dark-mode-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;transition:all .2s;color:#fff;line-height:1;}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── hero header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:32px 24px 28px;text-align:center;border-bottom:4px solid var(--gold);box-shadow:0 3px 14px rgba(0,0,0,.2);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 16px;font-size:.77em;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.92);margin-bottom:14px;text-transform:uppercase;}
+.header h1{margin:0 0 8px;font-size:1.9em;font-weight:700;letter-spacing:-.01em;}
+.header-subtitle{margin:0;font-size:.93em;color:var(--gold);font-weight:600;letter-spacing:.03em;}
+
+/* ── layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.page-layout{display:flex;gap:22px;align-items:flex-start;margin-top:24px;}
+#quiz-container{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:18px;animation:fadeIn .3s ease-in-out;}
+#quiz-container>*{min-width:0;}
+@media(max-width:900px){#quiz-container{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── sidebar ── */
+.sidebar{width:192px;flex-shrink:0;position:sticky;top:48px;display:flex;flex-direction:column;gap:8px;background:var(--card-bg);padding:14px 12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sidebar-label{font-size:.68em;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.07em;margin-top:2px;}
+.sidebar-home{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 11px;background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);border-radius:7px;font-size:.82em;font-weight:700;text-decoration:none;transition:all .2s;}
+.sidebar-home:hover{background:var(--green-lt);}
+.tabs{display:flex;flex-direction:column;gap:5px;}
+.tab-btn{background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);padding:8px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:all .2s;text-align:left;width:100%;}
+.tab-btn:hover{background:var(--green-lt);}
+.tab-btn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 3px 8px rgba(13,20,96,.28);}
+.tab-btn.tab-banko{background:#fde8e8;color:var(--banko);border-color:var(--banko);}
+.tab-btn.tab-banko:hover,.tab-btn.tab-banko.active{background:var(--banko);color:#fff;}
+body.dark-mode .tab-btn.tab-banko{background:#1e0808;color:#e08080;border-color:#7a3030;}
+body.dark-mode .tab-btn.tab-banko:hover,body.dark-mode .tab-btn.tab-banko.active{background:#7a3030;color:#fff;}
+.toggle-all-btn{background:var(--wine);color:#fff;border:none;padding:10px 11px;font-size:.84em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;box-shadow:0 3px 8px rgba(123,29,52,.28);transition:all .2s;width:100%;text-align:center;}
+.toggle-all-btn:hover{background:var(--wine-dk);transform:translateY(-1px);}
+.stats-bar{text-align:center;font-size:.77em;color:#666;font-weight:600;}
+.stats-bar>span{display:inline-block;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2px 9px;}
+.stats-short{display:none;}
+.score-panel{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.score-item{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.91em;font-weight:700;border-radius:8px;padding:7px 10px;}
+.score-item span{font-size:1.3em;font-weight:800;min-width:24px;text-align:center;}
+.score-correct-item{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+.score-wrong-item{background:#fde8e8;color:#c0392b;border:1px solid #f87171;}
+body.dark-mode .score-correct-item{background:#012a14;color:#4ade80;border-color:#025a28;}
+body.dark-mode .score-wrong-item{background:#2a0808;color:#f08888;border-color:#5a1818;}
+.sidebar-meta{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:#aaa;}
+.tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
+.tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
+body.dark-mode .tab-btn.tab-review{color:#c8963a;border-color:#7a5010;background:#1a1000;}
+body.dark-mode .tab-btn.tab-review:hover{background:#2a1a00;color:#e0b050;}
+body.dark-mode .tab-btn.tab-review.active{background:#7a5010!important;color:#fff!important;border-color:#7a5010!important;box-shadow:0 3px 8px rgba(120,80,16,.4)!important;}
+.review-info-btn{position:absolute;top:4px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;background:none;font-size:.6em;font-weight:900;line-height:13px;text-align:center;cursor:pointer;padding:0;color:inherit;opacity:.65;font-family:inherit;display:none;}
+.review-tooltip{display:none;position:absolute;top:calc(100% + 6px);right:0;width:220px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.75em;font-weight:400;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:200;text-align:left;line-height:1.5;pointer-events:none;}
+@media(min-width:721px){
+  .review-info-btn{display:block;}
+  .review-info-btn:hover+.review-tooltip,.review-info-btn:focus+.review-tooltip{display:block;}
+}
+.progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.75em;font-weight:700;color:var(--text);}
+.progress-reset{background:none;border:none;font-size:.7em;color:#aaa;cursor:pointer;padding:0;font-family:inherit;transition:color .2s;}
+.progress-reset:hover{color:var(--banko);}
+.progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+.q-prev{font-size:.8em;font-weight:700;padding:2px 7px;border-radius:4px;line-height:1.4;}
+.q-prev-correct{background:#d1fae5;color:#065f46;}
+.q-prev-wrong{background:#fde8e8;color:#c0392b;}
+body.dark-mode .q-prev-correct{background:#012a14;color:#4ade80;border:1px solid #025a28;}
+body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #5a1818;}
+
+/* ── mobile sidebar ── */
+@media(max-width:720px){
+  .page-layout{flex-direction:column;margin-top:8px;}
+  .header{display:none;}
+  .sidebar{position:fixed;top:48px;left:0;right:0;z-index:100;flex-direction:column;gap:5px;padding:8px 12px;border-radius:0;border:none;border-bottom:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.13);width:100vw!important;max-width:100vw;overflow-x:hidden;box-sizing:border-box;}
+  .sidebar-home,.sidebar-label{display:none;}
+  .tabs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:5px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:7px 12px;font-size:.8em;}
+  .sidebar-meta{flex-direction:row;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .sidebar-meta::-webkit-scrollbar{display:none;}
+  .stats-bar{flex-shrink:0;font-size:.73em;white-space:nowrap;text-align:left;}
+  .stats-bar>span{padding:2px 7px;}
+  .score-panel{flex-direction:row;gap:4px;margin-top:0;flex-shrink:0;}
+  .score-item{padding:4px 6px;font-size:.74em;gap:3px;white-space:nowrap;}
+  .score-item span{font-size:1em;min-width:14px;}
+  .stats-full{display:none;}
+  .stats-short{display:inline;}
+  .toggle-all-btn{width:100%;padding:7px 10px;font-size:.8em;}
+  .sidebar.scroll-collapsed{flex-direction:row;align-items:center;gap:6px;padding:5px 12px;}
+  .sidebar.scroll-collapsed .tab-btn:not(.active){display:none;}
+  .sidebar.scroll-collapsed nav.tabs{flex-shrink:0;overflow:visible;}
+  .sidebar.scroll-collapsed .sidebar-meta{flex:1;min-width:0;gap:5px;overflow-x:auto;}
+  .sidebar.scroll-collapsed .score-item{padding:3px 5px;}
+  .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
+  .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
+  .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
+  .sidebar.scroll-collapsed .prog-label{display:none;}
+  .sidebar.scroll-collapsed .score-label{display:none;}
+  .sidebar.scroll-collapsed .stats-full{display:none;}
+  .sidebar.scroll-collapsed .stats-short{display:inline;}
+  #quiz-container{grid-template-columns:1fr;}
+}
+
+/* ── question cards ── */
+.question-card{background:var(--card-bg);border-radius:9px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:22px 24px;border-left:5px solid var(--green);transition:box-shadow .2s;display:flex;flex-direction:column;}
+.question-card:hover{box-shadow:0 5px 18px rgba(13,20,96,.12);}
+.question-card .btn-toggle{margin-top:auto;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;border-bottom:1px solid var(--border);padding-bottom:10px;gap:10px;}
+.q-meta{display:flex;flex-direction:column;gap:3px;}
+.q-num{color:var(--green-dk);font-size:.86em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.exam-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.exam-tag{padding:2px 8px;border-radius:4px;font-size:.73em;font-weight:700;letter-spacing:.02em;}
+.uc-tag{background:#ede9fe;color:#4c1d95;}
+.vize-tag{background:#dbeafe;color:#1e3a8a;}
+.fin-tag{background:#d1fae5;color:#065f46;}
+.but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+.yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+.freq-tag{background:var(--banko);color:#fff;}
+.exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
+.exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
+.question-card.tag-hidden{display:none;}
+.sidebar.tag-filter-active .tabs,.sidebar.tag-filter-active .sidebar-home,.sidebar.tag-filter-active .sidebar-label,.sidebar.tag-filter-active .toggle-all-btn{opacity:.28;pointer-events:none;user-select:none;}
+.sidebar.tag-filter-active #tag-filter-indicator{opacity:1!important;pointer-events:auto!important;}
+#tag-filter-indicator{display:none;border-radius:7px;padding:8px 10px;font-size:.82em;font-weight:700;align-items:center;gap:6px;}
+#tag-filter-indicator.visible{display:flex;}
+#tag-filter-indicator .tfi-label{flex:1;line-height:1.3;}
+#tag-filter-indicator .tfi-close{background:none;border:none;cursor:pointer;font-size:1.1em;padding:0 2px;font-weight:900;opacity:.65;line-height:1;font-family:inherit;}
+#tag-filter-indicator .tfi-close:hover{opacity:1;}
+#tag-filter-indicator.tfi-fin{background:#d1fae5;color:#065f46;}
+#tag-filter-indicator.tfi-vize{background:#dbeafe;color:#1e3a8a;}
+#tag-filter-indicator.tfi-but{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+#tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
+#tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+#tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
+.question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
+.neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
+.q-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 12px;}
+.q-table{border-collapse:collapse!important;width:100%!important;margin:0!important;font-size:.88em;font-weight:400;white-space:normal!important;table-layout:auto;word-break:break-word;}
+.q-table th,.q-table td{border:1px solid var(--border)!important;padding:5px 9px!important;vertical-align:middle!important;}
+.q-table th{background:var(--green-lt)!important;color:var(--green-dk)!important;font-weight:700!important;text-align:center!important;}
+.q-table td{text-align:left;}
+.q-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;font-size:.95em;}
+.q-table tr:nth-child(even) td{background:var(--opt-bg);}
+.q-table tfoot td,.q-table tr:last-child td[style*="font-weight"]{font-weight:700;background:var(--green-lt);}
+body.dark-mode .q-table th{background:#1a2060!important;color:#c0caff!important;}
+body.dark-mode .options li.wrong-highlight{background:#2a0808;border-color:#7a3030;color:#f08888;}
+body.dark-mode .options li.correct-highlight{background:#012a14;border-color:#025a28;color:#4ade80;}
+@media(max-width:600px){.q-table{font-size:.78em!important;}.q-table th,.q-table td{padding:4px 6px!important;}}
+.options{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;}
+.options li{background:var(--opt-bg);padding:9px 14px;border-radius:7px;border:1px solid var(--opt-border);font-size:.96em;transition:background .22s,border-color .22s;cursor:pointer;user-select:none;color:var(--text);}
+.options li.correct-highlight{background:var(--accent-lt);border-color:var(--accent);font-weight:700;color:var(--accent-dk);}
+.options li.wrong-highlight{background:#fde8e8;border-color:#e74c3c;font-weight:700;color:#c0392b;}
+.btn-toggle{background:var(--green);color:#fff;border:none;padding:10px 0;width:100%;font-size:.96em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:background .2s;}
+.btn-toggle:hover{background:var(--green-dk);}
+.answer-area{display:none;margin-top:13px;padding:14px 16px;background:var(--accent-lt);border-left:4px solid var(--accent);border-radius:0 7px 7px 0;}
+.correct-ans{font-size:1.04em;color:var(--accent-dk);margin:0 0 7px;font-weight:700;}
+.exp-text{margin:0;color:var(--text);line-height:1.55;font-size:.92em;}
+
+/* ── PDF button & modal ── */
+.pdf-open-btn{display:none;background:var(--green);color:#fff;border:none;padding:9px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;width:100%;text-align:center;transition:background .2s;}
+.pdf-open-btn:hover{background:var(--green-dk);}
+.pdf-open-btn.visible{display:block;}
+.pdf-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);padding:16px;align-items:stretch;}
+.pdf-modal.open{display:flex;flex-direction:column;}
+.pdf-modal-inner{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.pdf-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-dk);color:#fff;font-weight:700;font-size:.9em;gap:8px;}
+.pdf-modal-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-modal-close{background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;line-height:1;padding:0 4px;opacity:.8;}
+.pdf-modal-close:hover{opacity:1;}
+.pdf-nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.1em;cursor:pointer;border-radius:5px;padding:2px 10px;line-height:1.6;transition:background .15s;}
+.pdf-nav-btn:hover{background:rgba(255,255,255,.35);}
+.pdf-nav-btn:disabled{opacity:.3;cursor:default;}
+.pdf-nav-counter{font-size:.8em;opacity:.85;white-space:nowrap;}
+#pdfModalFrames{display:flex;flex-direction:column;flex:1;min-height:0;}
+#pdfModalFrames iframe{flex:1;width:100%;border:none;min-height:0;}
+
+/* ── footer ── */
+.page-footer{text-align:center;margin-top:44px;padding:16px;font-size:.77em;color:#888;border-top:2px solid var(--border);}
+.page-footer strong{color:var(--green-dk);}
+</style>
+</head>
+<body>
+
+<div class="site-topbar">
+  <div class="topbar-left">
+    <a href="../../index.html" class="topbar-home">← Ana Sayfa</a>
+    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-course">📜 Afet ve Acil Durum Mevzuatı</span>
+    <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-badge">📜 AUZEF Soru Havuzu</div>
+  <h1>Afet ve Acil Durum Mevzuatı</h1>
+  <p class="header-subtitle">Eksiksiz Çıkmış Sorular · 📙 Final · 📗 Bütünleme · ☀️ Yaz Okulu</p>
+</div>
+
+<div class="container">
+  <div class="page-layout">
+    <div id="quiz-container"></div>
+
+    <aside class="sidebar">
+      <a href="../../index.html" class="sidebar-home">⌂ Ana Sayfa</a>
+
+      <span class="sidebar-label">Filtrele</span>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="filterQuestions('all',this)">Tüm Sorular</button>
+        <button class="tab-btn" onclick="filterQuestions('Final',this)">📙 Final</button>
+        <button class="tab-btn" onclick="filterQuestions('Bütünleme',this)">📗 Bütünleme</button>
+        <button class="tab-btn" onclick="filterQuestions('Yaz Okulu',this)">☀️ Yaz Okulu</button>
+        <button class="tab-btn tab-banko" onclick="filterQuestions('banko',this)">🔥 Çok Çıkanlar</button>
+        <button class="tab-btn tab-review" onclick="toggleReview(this)">🔄 Devam Et
+          <span class="review-info-btn" onclick="event.stopPropagation()" tabindex="0">ℹ</span>
+          <div class="review-tooltip">Daha önce doğru cevapladığın sorular çıkarılarak teste devam eder.</div>
+        </button>
+      </nav>
+
+      <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div id="tag-filter-indicator">
+        <span class="tfi-label"></span>
+        <button class="tfi-close" onclick="clearTagFilter()">✕</button>
+      </div>
+      <button id="pdfOpenBtn" class="pdf-open-btn" onclick="openPdfModal()">📄 Sınav PDF Göster</button>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span><span id="prog-done">0</span> / <span id="prog-total">0</span><span class="prog-label"> tamamlandı</span></span>
+          <button class="progress-reset" onclick="resetProgress()" title="İlerlemeyi sıfırla">sıfırla</button>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="score-panel">
+          <div class="score-item score-correct-item">✓ <span id="score-correct">0</span><span class="score-label"> Doğru</span></div>
+          <div class="score-item score-wrong-item">✗ <span id="score-wrong">0</span><span class="score-label"> Yanlış</span></div>
+        </div>
+      </div>
+      <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+    </aside>
+  </div>
+
+  <div class="page-footer">
+    <strong>Afet ve Acil Durum Mevzuatı</strong> · Çıkmış Sorular Soru Havuzu · 126 Soru
+  </div>
+</div>
+
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <div class="pdf-modal-header">
+      <span class="pdf-modal-title" id="pdfModalTitle">Sınav Kağıdı</span>
+      <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfNav(-1)">&#8249;</button>
+      <span class="pdf-nav-counter" id="pdfCounter"></span>
+      <button class="pdf-nav-btn" id="pdfNext" onclick="pdfNav(1)">&#8250;</button>
+      <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    </div>
+    <div id="pdfModalFrames"></div>
+  </div>
+</div>
+
+<script>
+const sorular=[
+{id:0,q:"Aşağıdakilerden hangisinin yaprımı (müeyyidesi) manevi değildir?",options:["A) Din", "B) Hukuk", "C) Görgü", "D) Ahlak", "E) İksat"],ans:"B) Hukuk",exp:"",exams:["2021-2022 Final"]},
+{id:1,q:"7269 sayılı Kanun'a göre aşağıdaki durumların hangisinde hak sahipliği talep edilmez?",options:["A) Afet nedeniyle kiracı ve misafir durumda evleri yıkılan bireyler", "B) Afet sebebiyle işrak veya müşterek mülk hâlindeki konutları muhtemel bir afete maruz bulunanlar", "C) Afet sebebiyle dükkân, rın gibi iş yerleri yıkılan bireyler", "D) Kendilerine ait konutları muhtemel bir afete maruz bölgede bulunan aileler", "E) Afet gören yerlerin bişiğinde veya yakınında, üzerinde bina yaprılmak üzere Çevre ve Şehircilik Bakanlığınca tespit edilip imar planına dâhil edilen veya bu konutları için kıymet belgesi verilen aileler"],ans:"A) Afet nedeniyle kiracı ve misafir durumda evleri yıkılan bireyler",exp:"",exams:["2021-2022 Final"]},
+{id:2,q:"Aday memurların temel eğim süresi aşağıdakilerden hangisinde doğru verilmişr?",options:["A) 1 haa", "B) 10 günden az", "C) 10 gün ile 2 ay arası", "D) 2 aydan fazla", "E) 3 aydan fazla"],ans:"C) 10 gün ile 2 ay arası",exp:"",exams:["2021-2022 Final"]},
+{id:3,q:"Sigorta hukuku ile ilgili olarak aşağıdaki ifadelerden hangisi yanlışr?",options:["A) Zorunlu sorumluluk sigortaları; iki taran da bu sözleşmeyi yapmak yükümlülüğünün bulunması hâlidir.", "B) Sorumluluk sigortalarında takas yasağı vardır.", "C) Hayat sigortalarında sigorta eren 15 gün içerisinde sözleşmeden cayabilir, bu hakkın var olduğuna ilişkin bilgilendirme yapılmalıdır.", "D) Meblağ sigortalarında zararın gerçekleşmesi aranmaz. Bu sigorta türünde sigorta değerinden bahsedilmez.", "E) Hayat sigortası hükümleri hastalık ve sağlık sigortaları için geçerli değildir."],ans:"E) Hayat sigortası hükümleri hastalık ve sağlık sigortaları için geçerli değildir.",exp:"",exams:["2021-2022 Final"]},
+{id:4,q:"Geçici koruma alndaki yabancılarla ilgili olarak AFAD Başkanlığı tarandan yayımlanan 2014/4 sayılı Genelge'de aşağıdaki konulardan hangisi ile ilgili bir hüküm yer almaz?",options:["A) Geçici Koruma Yönetmeliği kapsamındaki yabancıların sağlık ve eğim hizmetlerinden yararlanabilmesi", "B) Sınırlarımızdan giriş yapmış olan yabancıların kayıt işlemleri", "C) Refakatsiz çocuklar, engelliler gibi özel ihyaç sahiplerinin barındırılması", "D) Geçici koruma alndaki yabancılara verilecek sosyal yardımların tespi", "E) Geçici koruma kapsamındaki yabancılara konut tahsisi"],ans:"E) Geçici koruma kapsamındaki yabancılara konut tahsisi",exp:"",exams:["2021-2022 Final"]},
+{id:5,q:"Türk Anayasası'nda kişi haklarını düzenleyen maddeler hangi aralığa tekabül etmektedir?",options:["A) Madde 5- Madde 10", "B) Madde 11- Madde 16", "C) Madde 17- Madde 40", "D) Madde 41- Madde 56", "E) Madde 57- Madde 68"],ans:"C) Madde 17- Madde 40",exp:"",exams:["2021-2022 Final"]},
+{id:6,q:"Kimyasal, Biyolojik, Radyolojik ve Nükleer (KBRN) ile ilgili Afet ve Acil Durum Yönemi Başkanlığının görev ve sorumlulukları arasında aşağıdakilerden hangisi yer almaz?",options:["A) KBRN ekipman ve diğer malzemelerinin teknik özelliklerini, ilgili kuruluşlarının görüşleri doğrultusunda belirler, teknolojik gelişmeleri takip eder ve talepte bulunan kurumlara bilgi desteği sağlar.", "B) KBRN konuları ile ilgili genel ve özel kurslar düzenler, serfikalı eğici eğimleri verilmesini sağlar.", "C) Rüzgâr alnda tehlike sınırları içinde kalabilecek bölgelerin gerekğinde boşallması veya tahliye edilmesi iş ve işlemlerini koordine eder.", "D) KBRN risk analizlerinin çıkarılması hususunda askerî makamlardan talep edilen bilgilerin verilmesini sağlar.", "E) Tehlike haberlerinin ilgili valiliklere ve halka duyurulması için gerekli olan haber alma ve yayma, ikaz ve alarm sistemi ile KBRN ikaz ve rapor verme sistemlerini kurar ve faal hâlde bulundurur."],ans:"D) KBRN risk analizlerinin çıkarılması hususunda askerî makamlardan talep edilen bilgilerin verilmesini sağlar.",exp:"",exams:["2021-2022 Final"]},
+{id:7,q:"Aşağıdakilerden hangisi iyileşrmenin amaçları arasında yer almaz?",options:["A) Afetzedelerin temel ihyaçlarının karşılanması", "B) Hayan normale döndürülmesi", "C) Afetlere hazırlık yapılması", "D) Afetzedelere konut, iş yeri vb. yardım yapılması", "E) Altyapı hasarlarının giderilmesi"],ans:"C) Afetlere hazırlık yapılması",exp:"",exams:["2021-2022 Final"]},
+{id:8,q:"Türkiye Afet Müdahale Planı’nda tanımlanan afete müdahale seviyelerinde uluslararası destek ihyacının olması anlamına gelen seviye aşağıdakilerden hangisidir?",options:["A) S1", "B) S2", "C) S3", "D) S4", "E) S5"],ans:"D) S4",exp:"",exams:["2021-2022 Final"]},
+{id:9,q:"Afet planlamasında en önemli kavram aşağıdakilerden hangisidir?",options:["A) Afet envanteri", "B) Afet senaryosu", "C) Afet seviye etki derecesi", "D) Afete hazırlık", "E) Afet tehlike haritası Doğru"],ans:"B) Afet senaryosu",exp:"",exams:["2023-2024 Final"]},
+{id:10,q:"Avrupa Birliği'ne üye ülkelerde ......................, Amerika'da 911 numarası acil yardım ha olarak kullanılmaktadır. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) 177", "B) 155", "C) 156", "D) 112", "E) 110 Doğru"],ans:"D) 112",exp:"",exams:["2023-2024 Final"]},
+{id:11,q:"Aşağıdakilerden hangisi “tahliyeye tabi hassas bölgelerin bir kısım nüfusunun zayia azaltmak için köy ve kasabalara dağılması” açıklamasını tanımlar?",options:["A) Tahliye", "B) Seyrekleşrme", "C) Planlama", "D) Geri gönderme", "E) Tecrit Doğru"],ans:"B) Seyrekleşrme",exp:"",exams:["2023-2024 Final"]},
+{id:12,q:"Aşağıdakilerden hangisi AFAD'ın benimsediği risk yönemi esaslarından olan bütünleşik afet yönem sisteminin evrelerinden biri değildir?",options:["A) Hazırlık", "B) Müdahale", "C) Planlama", "D) Zarar Azaltma", "E) İyileşrme Doğru"],ans:"C) Planlama",exp:"",exams:["2023-2024 Final"]},
+{id:13,q:"Aşağıdakilerden hangisi insanların toplumda uyması gereken ve sosyal düzeni sağlayan davranış kuralları arasında yer almaz?",options:["A) Hukuk kuralları", "B) Örf ve âdet kuralları", "C) Moda kuralları", "D) Görgü kuralları", "E) Çevre kuralları Doğru"],ans:"E) Çevre kuralları Doğru",exp:"",exams:["2023-2024 Final"]},
+{id:14,q:"Doğumla kazanılan uyrukluk aşağıdakilerden hangisidir?",options:["A) Müktesep uyrukluk", "B) Kişisel hak", "C) Kazanılmış uyrukluk", "D) Asli uyrukluk", "E) T.C. vatandaşlığı Doğru"],ans:"D) Asli uyrukluk",exp:"",exams:["2023-2024 Final"]},
+{id:15,q:"Türkiye Cumhuriye Anayasası'nda benimsenen yasama, yürütme ve yargı organlarının birbirinden ayrılması olarak bilinen ilke aşağıdakilerden hangisidir?",options:["A) Siyasal Haklar ve Ödevler İlkesi", "B) Kuvvetler Ayrılığı İlkesi", "C) Sosyal Devlet İlkesi", "D) Temel Haklar İlkesi", "E) Eşitlerin Eşitliği İlkesi Doğru"],ans:"B) Kuvvetler Ayrılığı İlkesi",exp:"",exams:["2023-2024 Final"]},
+{id:16,q:"Tüzük ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Kanunlara aykırı olamaz.", "B) Sayıştay denemine tabidir.", "C) Cumhurbaşkanı'nca imzalanır.", "D) Resmî Gazete'de yayımlanır.", "E) Kanunların uygulanmasını gösterir. Doğru"],ans:"B) Sayıştay denemine tabidir.",exp:"",exams:["2023-2024 Final"]},
+{id:17,q:"Aşağıdakilerden hangisi Türkiye Afet Müdahale Planı'nın temel prensiplerinden biri değildir?",options:["A) Koordinasyon, iş birliği ve dayanışma", "B) Her tür ve ölçekteki tehlikeleri kapsaması", "C) Kapsamlı olması", "D) Ulusal, bölgesel ve yerel afet müdahale kapasitesini anında harekete geçirmeyi esas alması", "E) Tüm ana ve destek çözüm ortaklarının rol ve sorumluluklarını içermesi Doğru"],ans:"A) Koordinasyon, iş birliği ve dayanışma",exp:"",exams:["2023-2024 Final"]},
+{id:18,q:"Aşağıdaki kurumlardan hangisi Türk Arama ve Kurtarma Yönetmeliği'ne göre kıyılardan ibaren deniz sahalarındaki AK faaliyetlerinin koordinatörüdür?",options:["A) Sağlık Bakanlığı", "B) Denizcilik Müsteşarlığı", "C) Millî İshbarat Teşkila", "D) Deniz Kuvvetleri Komutanlığı", "E) Sahil Güvenlik komutanlığı Doğru"],ans:"E) Sahil Güvenlik komutanlığı Doğru",exp:"",exams:["2023-2024 Final"]},
+{id:19,q:"Aşağıdakilerden hangisi borçlandırma bedelinin en az 5 ve en çok 15 yılda ve eşit taksitler hâlinde tahsil edilerek fon hesabına yarıldığı yardımlardan biridir?",options:["A) Fırın yardımı", "B) Konut inşası yardımı", "C) Arsa yardımı", "D) Sair yardım", "E) Konut yardımı Doğru"],ans:"A) Fırın yardımı",exp:"",exams:["2023-2024 Final"]},
+{id:20,q:"Afet ve Acil Durum Müdahale Hizmetleri Yönetmeliği'nin kapsamında kurumlara verilmiş olan görevlerle ilgili olarak gerekğinde diğer kurum ve kuruluşları görevlendirme yetkisi aşağıdakilerden hangisine air?",options:["A) Kurum amiri", "B) Başkanlık", "C) Cumhurbaşkanlığı", "D) Belediye başkanı", "E) Vali-Kaymakam Doğru"],ans:"E) Vali-Kaymakam Doğru",exp:"",exams:["2023-2024 Final"]},
+{id:21,q:"Kamu Hukuku ve Özel Hukuk ayrımında “Uygulama talebe bağlı olarak gerçekleşiyorsa özel hukukun, eğer uygulama resen yapılıyorsa kamu hukukunun konusudur.” şeklinde ifade edilen teori aşağıdakilerden hangisidir?",options:["A) Menfaat Teorisi", "B) İlişkilerin Tarafları Teorisi", "C) Kuralların Mahiye Teorisi", "D) Çıkar Teorisi", "E) Egemenlik veya Süjeler Teorisi Doğru"],ans:"C) Kuralların Mahiye Teorisi",exp:"",exams:["2023-2024 Final"]},
+{id:22,q:"Aşağıdakilerden hangisi Türk Hukuku'ndaki yazılı kaynaklardan biri değildir?",options:["A) Örf ve âdetler", "B) Milletlerarası antlaşmalar", "C) Anayasa", "D) Genelge", "E) Tüzük Doğru"],ans:"A) Örf ve âdetler",exp:"",exams:["2023-2024 Final"]},
+{id:23,q:"Aşağıdakilerden hangisi İl Millî Müdafaa Mükellefiye Komisyonu üyeleri arasında yer almaz?",options:["A) Garnizon komutanı", "B) Deerdar", "C) Ticaret ve sanayi odası başkanı veya temsilcisi", "D) Belediye başkanı veya temsilcisi", "E) İl afet ve acil durum müdürü Doğru"],ans:"A) Garnizon komutanı",exp:"",exams:["2023-2024 Final"]},
+{id:24,q:"\"Kanunla yasaklanmamış her şey meşrudur.\" ifadesi aşağıdaki hukuk alanlarından hangisinde geçerlidir?",options:["A) İdare hukuku", "B) Vergi hukuku", "C) Usul hukuku", "D) Ceza hukuku", "E) Özel hukuk Doğru"],ans:"E) Özel hukuk Doğru",exp:"",exams:["2024-2025 Final"]},
+{id:25,q:"Aşağıdakilerden hangisi idari yönetmelikler kapsamında değerlendirilir?",options:["A) Afet ve Acil Durum Müdahale Hizmetleri Yönetmeliği", "B) Afet ve Acil Durum Yönem Merkezleri Yönetmeliği", "C) Afet ve Acil Durum Harcamaları Yönetmeliği", "D) Afetlerin Genel Haya Etkinliğine İlişkin Temel Kurallar Hakkında Yönetmelik", "E) Afet Sebebiyle Hak Sahibi Olanların Tespi Hakkındaki Yönetmelik Doğru"],ans:"B) Afet ve Acil Durum Yönem Merkezleri Yönetmeliği",exp:"",exams:["2024-2025 Final"]},
+{id:26,q:"Aşağıdakilerden hangisi 2014/1 sayılı Genelge'ye göre bütüncül olarak işlenen konulardan biri değildir?",options:["A) Kurumsallaşmadaki mevcut bölümlerinin görev alanları ve bu kapsamdaki değişikliklerin açık bir şekilde belirlmesi", "B) Kurumsal işleyiş noktasında genel hususların açık bir şekilde ortaya koyulması", "C) Uygulamada yapılması gereken işlemlerin genelge ile zaman sınırlaması gerilerek aksaklığa meydan verilmeden necelendirilmesi", "D) Harcama ve mali işlemler ile ilgili görüşlerin bildirilmesi", "E) Geçici koruma alndaki yabancıların mali işlemlerinin ivedilikle sonuçlandırılması Doğru"],ans:"E) Geçici koruma alndaki yabancıların mali işlemlerinin ivedilikle sonuçlandırılması Doğru",exp:"",exams:["2024-2025 Final"]},
+{id:27,q:"Aşağıdakilerden hangisi kimyasal tehlikelerde doğru davranış biçimlerinden biri değildir?",options:["A) Acilen kapalı alana sığınmak", "B) Kapı ve pencereleri açmak", "C) Radyo ve televizyonu açmak", "D) Üst katları tercih etmek", "E) Havalandırmaları kapatmak Doğru"],ans:"B) Kapı ve pencereleri açmak",exp:"",exams:["2024-2025 Final"]},
+{id:28,q:"Afet ve Acil Durum Yönemi Başkanlığı'nın, kurumsal kimliği kazanma ve bu kimliğin daha sağlıklı yürütülmesi noktasında çalışan personelin meslek kazası ve risklerini en aza indirme gayesiyle yayımlanan genelgesi aşağıdakilerden hangisidir?",options:["A) 2015/1 Sayılı İş Sağlığı ve Güvenliği Genelgesi", "B) 2014/2 Sayılı Uygulama Genelgesi", "C) 2015/5 Sayılı Afet Tehlike Haritaları Hakkında Genelge", "D) 2014/4 Sayılı Uygulama Genelgesi", "E) 2014/1 Sayılı Uygulama Genelgesi Doğru"],ans:"A) 2015/1 Sayılı İş Sağlığı ve Güvenliği Genelgesi",exp:"",exams:["2024-2025 Final"]},
+{id:29,q:"I. Kanunlara aykırı olamaz. II. Resmî Gazete'de yayımlanır. III. Cumhurbaşkanınca imzalanır. IV. Dayıştay denemine tabidir. V. Kanunların uygulanmasını gösterir. Verilen özellikler aşağıdakilerden hangisine air?",options:["A) İçhat", "B) Kanun", "C) Tüzük", "D) Tamim", "E) Yönetmelik Doğru"],ans:"C) Tüzük",exp:"",exams:["2024-2025 Final"]},
+{id:30,q:"İşare dalgalı siren sesi (3 dk.) olan ikaz haberi aşağıdakilerden hangisidir?",options:["A) Siyah ikaz", "B) Beyaz ikaz", "C) Yeşil ikaz", "D) Sarı ikaz", "E) Kırmızı ikaz Doğru"],ans:"E) Kırmızı ikaz Doğru",exp:"",exams:["2024-2025 Final"]},
+{id:31,q:"Aşağıdakilerden hangisi zorunlu deprem sigortası kapsamında değildir?",options:["A) Kat Mülkiye Kanunu kapsamındaki bağımsız bölümler", "B) Kamu kuruluşlarına ait binalar ile köy yerleşik alanlarında yapılan binalar", "C) Doğal afetler nedeniyle devlet tarandan verilen kredi ile yapılan meskenler", "D) Özel mülkiyete tabi taşınmazlar üzerinde mesken olarak inşa edilmiş binalar", "E) Doğal afetler nedeniyle devlet tarandan yaprılan binalar Doğru"],ans:"B) Kamu kuruluşlarına ait binalar ile köy yerleşik alanlarında yapılan binalar",exp:"",exams:["2024-2025 Final"]},
+{id:32,q:"Türkiye'nin hava sahasını ihlâl eden uçağın angajman kuralları gereği düşürmesi iki ülke arasında bir ……........ hâli yaşanmasına sebep olmuştur. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) TAMP", "B) Afet ve Acil Durum", "C) Afet", "D) Deprem", "E) Kriz Doğru"],ans:"E) Kriz Doğru",exp:"",exams:["2024-2025 Final"]},
+{id:33,q:"Aşağıdakilerden hangisi afet yönem merkezlerinde çalışan enformasyon memurlarının görevlerinden biri değildir?",options:["A) Olayın saani öğrenmek", "B) AADYM'ye gelen çağrıları karşılamak", "C) Olay normale dönünceye kadarki müdahale aşamalarını ve sonucu raporlamak", "D) Olaya müdahale etmek", "E) Olayın yerini öğrenmek Doğru"],ans:"D) Olaya müdahale etmek",exp:"",exams:["2024-2025 Final"]},
+{id:34,q:"“Tehlike x hasar görebilirlik” formülü ile ifade edilen afet ve acil durum terimi aşağıdakilerden hangisidir?",options:["A) Kriz", "B) Risk", "C) Planlama", "D) Doğal afet", "E) Acil durum Doğru"],ans:"B) Risk",exp:"",exams:["2024-2025 Final"]},
+{id:35,q:"Aşağıdaki bilgilerin hangisinin Afet Yönemi ve Karar Destek Sistemi (AYDES)'ne girilmesi gerekmez?",options:["A) İl müdürlüğü personel bilgisi", "B) Yerel düzey hizmet grubu operasyon planları", "C) Ekip ve alt ekip bilgileri", "D) Toplanma alanları", "E) Geçici iskân alanı Doğru"],ans:"A) İl müdürlüğü personel bilgisi",exp:"",exams:["2024-2025 Final"]},
+{id:36,q:"Aşağıdakilerden hangisi, hangi yönetmeliklerin Resmî Gazete'de yayımlanacağını belirr?",options:["A) İlan", "B) Gazete ilanı", "C) Kanunla", "D) Valilik", "E) İleşim araçları Doğru"],ans:"C) Kanunla",exp:"",exams:["2024-2025 Final"]},
+{id:37,q:"I. Din, toplumun iskrarı ve devam edebilmesi için yardım eder. II. Din, sosyal bütünleşmenin korunmasında önemli rol oynar. III. Dinler toplum üyelerine, güç çevre şartları içinde varlığı sürdürme mücadelesi için cesaret verir. Yukarıdakilerin hangisi ya da hangileri dinin fonksiyonları arasında yer alır?",options:["A) I, II ve III", "B) Yalnız I", "C) Yalnız II", "D) I ve III", "E) II ve III Doğru"],ans:"A) I, II ve III",exp:"",exams:["2024-2025 Final"]},
+{id:38,q:"Genel hayata etkili olmayan afetler, münferit olaylar olup .................. sayılı Kanun kapsamında yapılacak yardımlarla ilgili hükümler kapsamı dışında değerlendirilir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) 4123", "B) 1051", "C) 7269", "D) 3194", "E) 3177 Doğru"],ans:"C) 7269",exp:"",exams:["2024-2025 Final"]},
+{id:39,q:"Afet bölgesinde görev yapabilecek yeterli bbi donanıma ve müdahale becerisine sahip ekipler aşağıdakilerden hangisidir?",options:["A) UMKE", "B) ÇAKUT", "C) JARK", "D) AKUT", "E) KBRN Doğru"],ans:"A) UMKE",exp:"",exams:["2024-2025 Final"]},
+{id:40,q:"I. Tespit et II. Belirle III. Sabitle Yukarıdakilerden hangisi ya da hangileri tehlike avı kavramının içinde yer alır?",options:["A) II ve III", "B) Yalnız II", "C) I, II ve III", "D) Yalnız I", "E) I ve II Doğru"],ans:"C) I, II ve III",exp:"",exams:["2024-2025 Final"]},
+{id:41,q:"Aşağıdakilerden hangisi Türkiye Cumhuriye Anayasası’nın kabul eği temel ilkelerden biri değildir?",options:["A) Laik devlet", "B) Atatürk milliyetçiliğine bağlı devlet", "C) Sosyal devlet", "D) Hukuk devle", "E) Refah devle"],ans:"E) Refah devle",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:42,q:"Aşağıdakilerden hangisi ceza hukukunun amaçları arasında yer almaz?",options:["A) Islah edici olmak", "B) Toplumsal düzeni sağlamak", "C) Öç almak", "D) Suç işleyen kimseleri yeniden topluma kazandırabilmek", "E) Kısası yasaklamak"],ans:"C) Öç almak",exp:"",exams:["2021-2022 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:43,q:"2015/7 sayılı Genelge’ye göre aşağıdakilerden hangisi il afet ve acil durum müdürlüklerinin risk azaltma, iyileşrme çalışmaları çerçevesinde yürüükleri işlemlerde izlenmesi gereken temel adımlar ile uyulması gereken hususlar arasında yer almaz?",options:["A) AYDES kullanıcı görevlendirmesi ve eğimi", "B) Yerel düzey operasyon hizmet grubu planları", "C) OHAL planları", "D) Ulusal ve yerel düzey hizmet gruplarının afee kullanacağı envanterler", "E) İl afet müdahale planları"],ans:"C) OHAL planları",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:44,q:"Deprem Danışma Kurulu yılda en az kaç defa toplanır?",options:["A) 1", "B) 2", "C) 3", "D) 4", "E) 6"],ans:"D) 4",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:45,q:"Bir acil durum veya afet hâlinde yapılması planlanmış olan müdahale sürecinde yer alacak eylemlerin uygunluğunu, yeterliliğini ve güncelliğini, mümkün olduğunca gerçeğe yakın koşullar alnda ve bir senaryoya bağlı kalarak denemek amacıyla yapılan uygulama aşağıdakilerden hangisidir?",options:["A) Eğim", "B) Tatbikat", "C) Öğrem", "D) Amaç", "E) Seferberlik"],ans:"B) Tatbikat",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:46,q:"Etüt Proje Çalışmalarıyla ilgili aşağıdakilerden hangisi yanlışr?",options:["A) Hazırlanan imar planları, büyükşehir belediyesi olan illerde belediyece, olmayan illerde ise il özel idaresi tarandan onaylanır.", "B) Yer seçimi protokolü 7269 sayılı Kanun’un 16. maddesine göre başkanlıkça onaylanır.", "C) Hâlihazır harita, büyükşehir belediyesi olan illerde belediyece, olmayan illerde Çevre ve Şehircilik İl Müdürlüğünce onaylanır.", "D) Mera tahsisi, 4342 sayılı Mera Kanununa göre Tarım İl Müdürlüğü, Mera Komisyonunca incelenerek yapılır.", "E) Seçilen toplu alanlarda jeolojik – jeoteknik etüt raporu hazırlanır ve rapor İl Çevre ve Şehircilik Müdürlüğünce onaylanır."],ans:"C) Hâlihazır harita, büyükşehir belediyesi olan illerde belediyece, olmayan illerde Çevre ve Şehircilik İl Müdürlüğünce onaylanır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:47,q:"Aşağıdakilerden hangisi Bakanlık ve kurum/kuruluşların seferberlik ve savaş hâli hazırlıklarına ilişkin görevleri arasında yer almaz?",options:["A) Millî Alarm Sistemi'ne ait iş ve işlemleri yapmak", "B) Seferberlik ve savaş hâli özel planlarının gereklerini yerine germek", "C) Savaş hasar onarım planlarının hazırlanmasında koordineyi sağlamak", "D) Araç, mal ve hizmet seferberliğine ait iş ve işlemleri yapmak", "E) Millî Güvenlik Kurulu Genel Sekreterliği koordinatörlüğünde yapılan denetlemelerde gerekğinde gözlemci bulundurmak"],ans:"E) Millî Güvenlik Kurulu Genel Sekreterliği koordinatörlüğünde yapılan denetlemelerde gerekğinde gözlemci bulundurmak",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:48,q:"Aşağıdakilerden hangisi Yerel Düzey Hizmet Grubu ana çözüm ortağı kurum ya da kuruluşlarından biri değildir?",options:["A) Aile ve Sosyal Polikalar İl Müdürlüğü", "B) Orman Bölge Müdürlüğü", "C) Karayolları Bölge Müdürlüğü", "D) Kızılay", "E) İl Emniyet Müdürlüğü"],ans:"B) Orman Bölge Müdürlüğü",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:49,q:"Aşağıdakilerden hangisi Türkiye'de müdahale ile ilgili mevzuatlardan biri değildir?",options:["A) 7126 sayılı Sivil Savunma Kanunu", "B) 7269 Sayılı Umumi Hayata Müessir Afetler Dolayısıyla Alınacak Tedbirlerle Yapılacak Yardımlara Dair Kanun", "C) 5902 sayılı AFAD Kanunu", "D) Türk Arama ve Kurtarma Yönetmeliği", "E) 7179 sayılı Asker alma Kanunu"],ans:"E) 7179 sayılı Asker alma Kanunu",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:50,q:"Birleşmiş Milletler İklim Değişikliği Çerçeve Sözleşmesi hangi protokol ile imzalanmışr?",options:["A) Kyoto Protokolü", "B) Cenevre Protokolü", "C) İstanbul Protokolü", "D) Paris Protokolü", "E) Londra Protokolü"],ans:"A) Kyoto Protokolü",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:51,q:"Benzer hususlarda verilen farklı kararları ve uyuşmazlıkları önlemek adına Yargıtay Genel Kurulunun aldığı kararlara ne ad verilir?",options:["A) İçhat Hukuku", "B) İçhatları Birleşrme Kararları", "C) Bağlayıcı Kararlar", "D) Olay Kararları", "E) Genelge"],ans:"B) İçhatları Birleşrme Kararları",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:52,q:"Yıkılan veya ağır hasar gören ya da muhtemel afetlerden etkilenebilecek binalarla olan mülkiyet ilişkilerini belgeleyebilen ve yeniden yapılacak binalardan veya verilecek inşaat kredisinden yararlanabilen afetzedeler aşağıdakilerden hangisidir?",options:["A) Toprak sahibi", "B) Bilirkişi", "C) Arama kurtarma teknisyeni", "D) Hak sahibi", "E) Afet gönüllüsü"],ans:"D) Hak sahibi",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:53,q:"Kişi, araç, malzeme ve binalar ile alanlar üzerinde etki gösteren KBRN (Kimyasal-Biyolojik- Radyasyon- Nükleer) maddelerinin etki seviyesinin en aza indirilmesi için yapılan temizleme işlemlerine ne ad verilir?",options:["A) Kontaminasyon", "B) KBRN", "C) Triaj", "D) Tehdit", "E) Dekontaminasyon"],ans:"E) Dekontaminasyon",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:54,q:"Hasar tespitleri ile ilgili aşağıdakilerden hangisi doğrudur?",options:["A) Hasar tespitlerine öncelikli olarak resmî binalardan başlanılır.", "B) Ön hasar tespit raporu ile yapılan irazlar incelenir.", "C) Kesin hasar tespit raporları, ön hasar tespit raporlarından önce yapılır.", "D) Ön hasar tespit raporuna 2 ay içerisinde iraz edilebilir.", "E) Muhakkik hasar tespit raporunda tespit edilen ağır ve orta hasarlar kesin hasar tespit raporuna eklenemez."],ans:"A) Hasar tespitlerine öncelikli olarak resmî binalardan başlanılır.",exp:"",exams:["2021-2022 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:55,q:"Kanunların nasıl anlaşılması, ne şekilde uygulanması gerekği konusunda ilgili üst makamlarca yapılan genel nitelikli açıklamalar ne olarak ifade edilir?",options:["A) Doktrin", "B) Kanun Hükmünde Kararname", "C) Tebliğ", "D) Tüzük", "E) Yönetmelik Doğru"],ans:"C) Tebliğ",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:56,q:"Kişinin başkasına zarar vermeden istediği gibi davranması anlamına gelen ve insani ilişkilerde çok önemli olan kavram aşağıdakilerden hangisidir?",options:["A) Ahlak", "B) Töre", "C) Saygı", "D) Hürriyet", "E) Yardım Doğru"],ans:"D) Hürriyet",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:57,q:"INSARAG'ın açılımı aşağıdakilerden hangisidir?",options:["A) Birleşmiş Milletler İnsani Yardım Vak", "B) Ayrılış Varış Merkezi", "C) Japonya Arama ve Kurtarma Ekibi", "D) Uluslararası Kurtarma Ekipleri", "E) Uluslararası Arama Kurtarma Dayanışma Örgütü Doğru"],ans:"E) Uluslararası Arama Kurtarma Dayanışma Örgütü Doğru",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:58,q:".................., insan haklarını evrensel düzeyde koruyan uluslararası antlaşmaların ilkidir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Birleşmiş Milletler Antlaşması", "B) Amerika İnsan Hakları Sözleşmesi", "C) İnsan Hakları Evrensel Bildirisi", "D) Avrupa Birliği Temel Haklar Şar", "E) Avrupa İnsan Hakları Sözleşmesi Doğru"],ans:"A) Birleşmiş Milletler Antlaşması",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:59,q:"Türkiye Afet Müdahale Planı'nda belirlenen seviye etki derecelerine göre aşağıdakilerden hangisi destek illerin takviyesine ihyaç duyulan etki derece seviyesini göstermektedir?",options:["A) S1", "B) S4", "C) S5", "D) S2", "E) S3 Doğru"],ans:"D) S2",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:60,q:"Türkiye'de 11 bölgede kurulmuş ve bölgesel nitelikte arama kurtarma hizme veren oluşum aşağıdakilerden hangisidir?",options:["A) Doğal Afet Arama Kurtarma Taburu", "B) Arama ve Kurtarma Dernekleri Federasyonu", "C) Jandarma Arama Kurtarma Ekipleri", "D) Afet Acil Durum Arama ve Kurtarma Birlik Müdürlükleri", "E) Müdahale Şube Müdürlüğü Doğru"],ans:"D) Afet Acil Durum Arama ve Kurtarma Birlik Müdürlükleri",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:61,q:"Aşağıdakilerden hangisi AFAD Deprem Dairesi Başkanlığı tarandan yapılan çalışmalardan biridir?",options:["A) Heyelan haritalarının hazırlanması", "B) Afet haritalarının hazırlanması", "C) Deprem haritalarının hazırlanması", "D) Çığ haritalarının hazırlanması", "E) Kaya düşmesi haritalarının hazırlanması Doğru"],ans:"C) Deprem haritalarının hazırlanması",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:62,q:"Devletler arası ilişkileri düzenleyen kamu hukuku dalı aşağıdakilerden hangisidir?",options:["A) Anayasa Hukuku", "B) İnsan Hakları Hukuku", "C) Devletler Özel Hukuku", "D) Devletler Genel Hukuku", "E) Medeni Hukuk Doğru"],ans:"D) Devletler Genel Hukuku",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:63,q:"Ülkenin maddi ve manevi güç unsurları ile savunulmasına ne ad verilir?",options:["A) Sivil savunma", "B) Topyekûn savunma", "C) Millî savunma", "D) Büyük savunma", "E) Askerî savunma Doğru"],ans:"B) Topyekûn savunma",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:64,q:"Bilimsel görüşlerde konunun çeşitli özelliklerini belirtmek ve eleşrmek üzere kaleme alınan yazılara ne ad verilir?",options:["A) Karar derlemeleri", "B) Monografiler", "C) Bibliyografyalar", "D) Makaleler", "E) Eser ve karar tahlilleri Doğru"],ans:"E) Eser ve karar tahlilleri Doğru",exp:"",exams:["2023-2024 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:65,q:"İlin risk analizlerinin çıkarılmasını sağlamak için il afet ve acil durum müdürlüklerinde toplanacak olan bilgi ve veriler hangi kurumdan alınacakr?",options:["A) Afet ve Acil Durum Yönemi Başkanlığından", "B) Genelkurmay Başkanlığından", "C) Türk Atom ve Enerjisi Kurumu Başkanlığından", "D) Bilim Sanayi ve Teknoloji Bakanlığından", "E) İçişleri Bakanlığından Doğru"],ans:"C) Türk Atom ve Enerjisi Kurumu Başkanlığından",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:66,q:"Ülkemizde Sivil Savunma Hizmetleri aşağıdaki kurumların hangisinin koordinasyonunda yürütülmektedir?",options:["A) Türk Silahlı Kuvvetleri", "B) AFAD Başkanlığı", "C) Millî Savunma Bakanlığı", "D) Sanayi ve Teknoloji Bakanlığı", "E) Sağlık Bakanlığı Doğru"],ans:"B) AFAD Başkanlığı",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:67,q:"Düşman taarruzlarına, tabii afetlere ve büyük yangınlara karşı halkın can ve mal kaybının asgari hadde indirilmesi, haya ehemmiye haiz her türlü resmî ve hususi tesis ve teşekküllerin korunması ve faaliyetlerinin idamesi için acil tamir ve ıslahı, savunma gayretlerinin sivil halk tarandan azami suree desteklenmesi ve cephe gerisi maneviyanın muhafazası maksadıyla alınacak her türlü silahsız koruyucu ve kurtarıcı tedbir ve faaliyetleri ihva eden oluşum aşağıdakilerden hangisidir?",options:["A) AKUT", "B) Askeriye", "C) AFAD", "D) Köy Koruyucuları", "E) Sivil Savunma Doğru"],ans:"E) Sivil Savunma Doğru",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:68,q:"Aşağıdakilerden hangisi hizmet içi eğim türlerinden olan aday memurların yeşrilmesi eğimleri kapsamındadır?",options:["A) Yabancı dil eğimi", "B) Halkla ilişkiler eğimi", "C) Medya eğimi", "D) İleşim eğimi", "E) Hazırlayıcı eğim Doğru"],ans:"E) Hazırlayıcı eğim Doğru",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:69,q:"Olay seviyesi Seviye 3 ve Seviye 4 olması durumunda müdahale çalışmaları kim tarandan yürütülür?",options:["A) İl Afet ve Acil Durum Müdürü", "B) Vali", "C) İl Emniyet Müdürü", "D) Vali Yardımcısı", "E) Kaymakam Doğru"],ans:"B) Vali",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:70,q:"Ülkemizdeki çoklu acil çağrı numaralarının toplanarak tek bir merkezde toplanması amacıyla hangi yönetmelik çıkarılmışr?",options:["A) Afet Yönem Merkezleri Yönetmeliği", "B) Türk Arama ve Kurtarma Yönetmeliği", "C) 112 Acil Çağrı Merkezleri Yönetmeliği", "D) GAMER Yönetmeliği", "E) Acil Durum Müdahale Yönetmeliği Doğru"],ans:"C) 112 Acil Çağrı Merkezleri Yönetmeliği",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:71,q:"Aşağıdakilerden hangisi Afete Hazır Türkiye Projesi içinde yer alan terimlerden biridir?",options:["A) Afete hazır çocuk", "B) Afete hazır kadın", "C) Afete hazır kişi", "D) Afete hazır aile", "E) Afete hazır erkek Doğru"],ans:"D) Afete hazır aile",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:72,q:"İl Afet Müdahale Planı kapsamında düzenlenen eğim ve tatbikatlar hangi kanuni düzenlemeye göre yapılır?",options:["A) Afet ve Acil Durum Yönemi Başkanlığı 2015/07 Genelgesi", "B) Afet ve Acil Durum Müdahale Hizmetleri Yönetmeliği", "C) 2941 sayılı Seferberlik ve Savaş Hâli Kanunu", "D) 7126 sayılı Sivil Savunma Kanunu", "E) Binaların Yangından Korunması Hakkında Yönetmelik Doğru"],ans:"B) Afet ve Acil Durum Müdahale Hizmetleri Yönetmeliği",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:73,q:"Afet ve acil durumlarda müdahale edebilmek için arama ve kurtarmada gerekli eğimler ile birlikte, ihyaç hâlinde arama ve kurtarmaya yönelik diğer branşlarda gerekli eğimleri almış personelin genel ismi nedir?",options:["A) Enformasyon personeli", "B) Akut personeli", "C) UMKE personeli", "D) Gea personeli", "E) Arama kurtarma personeli Doğru"],ans:"E) Arama kurtarma personeli Doğru",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:74,q:"Aşağıdakilerden hangisi Türkiye Cumhuriye Anayasası'na göre oy kullanamayacak kişilerden biri değildir?",options:["A) Silah alnda bulunan erbaşlar", "B) Ceza infaz kurumlarında bulunan hükümlüler", "C) Silah alnda bulunan erler", "D) Akli dengesi yerinde olmayan kişiler", "E) Askerî öğrenciler Doğru"],ans:"D) Akli dengesi yerinde olmayan kişiler",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:75,q:"Aşağıdakilerden hangisi afete hazırlık çalışmaları stratejisi başlıklarından biri değildir?",options:["A) Koordinasyon", "B) Yönem", "C) Eğim", "D) Tespit", "E) Müdahale Doğru"],ans:"E) Müdahale Doğru",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:76,q:"Afet lojisk depolarında aşağıdaki malzemelerden hangisi bulunmaz?",options:["A) Muak ekipmanları", "B) Yatak", "C) Barınma çadırları", "D) Giyim eşyası", "E) Baaniye Doğru"],ans:"D) Giyim eşyası",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:77,q:"İl sınırları içerisinde KBRN (Kimyasal, Biyolojik, Radyoakf, Nükleer) tehlikesinin halka duyurulmasını ve gerekli önlemlerin alınmasını aşağıdakilerden hangisi sağlar?",options:["A) Emniyet Müdürlüğü", "B) Valilikler", "C) Belediyeler", "D) Özel İdareler", "E) Sağlık Müdürlüğü Doğru"],ans:"B) Valilikler",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:78,q:"Aşağıdakilerden hangisi Personel ve Destek Hizmetleri Daire Başkanlığının görevlerinden biri değildir?",options:["A) Başkanlığın performans ölçütlerini belirlemek", "B) Başkanlık personelinin özlük işlemlerini yürütmek", "C) Uluslararası acil yardımları yapmak ve kabul etmek", "D) Başkanlığın idari ve mali hizmetlerini yürütmek", "E) Başkanlığın insan kaynakları polikasını belirlemek Doğru"],ans:"C) Uluslararası acil yardımları yapmak ve kabul etmek",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:79,q:"Aşağıdakilerden hangisi hukuk kurallarında bulunması gereken bir özellik değildir?",options:["A) Dinî özellikleri olması", "B) Uyuşmazlıkları çözmeyi amaçlaması", "C) Devletçe belirlenmesi", "D) Hakları ve hukuki ödevleri göstermesi", "E) Bireyler arasındaki ilişkileri düzenlemesi Doğru"],ans:"A) Dinî özellikleri olması",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:80,q:"Aşağıdakilerden hangisi Türkiye Afet Müdahale Planı'nın (TAMP) tamamlayıcı prensiplerinden biri değildir?",options:["A) Bilgi yönemi ve ileşim", "B) İyileşrme ve gelişrme", "C) İlgili mevzuata uygunluk", "D) Kapsamlı olma", "E) Etkili planlama Doğru"],ans:"D) Kapsamlı olma",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:81,q:"Ali Özmen adlı kişiye ait konua kiracı olarak oturan Hasan Ballıtaş'ın evi su baskını afenden dolayı hasar görmüş ve eşyaları zarar görmüştür. Afet olayı ile ilgili iyileşrme çalışmaları kapsamında nasıl bir yardım alınabilir?",options:["A) 7269 sayılı Kanun'a göre hak sahibi kabul edilmez ancak belediye kendisine konut yapar.", "B) 7269 sayılı Kanun'a göre hak sahibi kabul edilmez ancak 4123 sayılı Kanun'la kendisine maddi yardım yapılır.", "C) 7269 sayılı Kanun'a göre hak sahibi kabul edilir, kendisine konut yapılır.", "D) 7269 sayılı Kanun'a göre hak sahibi kabul edilmez ancak valilik kendisine konut yapar.", "E) 7269 sayılı Kanun'a göre hak sahibi kabul edilmez ancak sivil toplum kuruluşları kendisine konut yapar. Doğru"],ans:"B) 7269 sayılı Kanun'a göre hak sahibi kabul edilmez ancak 4123 sayılı Kanun'la kendisine maddi yardım yapılır.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:82,q:"………. bir olaydan ziyade bir olayın doğurduğu sonuçtur. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Afet", "B) TAMP", "C) Kriz Masası", "D) Afet ve Acil Durum", "E) Deprem Doğru"],ans:"A) Afet",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:83,q:"I. En yakın kapalı alana girmek II. Çıkarılan giysileri yaşam alanı içerisinde tutmak III. Su ve sabun kullanarak öncelikle burun ve ağzı yıkamak Yukarıdakilerden hangisi ya da hangileri açık alanda radyoakf serpin veya kimyasal saldırı ve maruziyet söz konusu iken yapılması gerekenlerden biri değildir?",options:["A) I ve III", "B) Yalnız III", "C) I ve II", "D) Yalnız II", "E) II ve III Doğru"],ans:"E) II ve III Doğru",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:84,q:"Aşağıdakilerden hangisi 2014/2 sayılı genelgeye göre açıklayıcı ifadelere yer verilen konulardan biri değildir?",options:["A) Sivil savunma", "B) Deprem", "C) Müdahale", "D) İyileşrme", "E) Risk yönemi Doğru"],ans:"A) Sivil savunma",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:85,q:"Personel seferberliği tatbikat ve eğimleri en çok kaç gün olmaktadır?",options:["A) 35 gün", "B) 55 gün", "C) 45 gün", "D) 80 gün", "E) 90 gün"],ans:"C) 45 gün",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:86,q:"Aşağıdakilerden hangisi küresel ısınma ve iklim değişikliği konusunda mücadeleyi sağlamaya yönelik uluslararası tek çerçeve olan protokoldür?",options:["A) İstanbul Protokolü", "B) Kyoto Protokolü", "C) Cenevre Protokolü", "D) Ankara Protokolü", "E) Ana Protokolü"],ans:"B) Kyoto Protokolü",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:87,q:"Aşağıdakilerden hangisi hukuk düzeninin temel fonksiyonları arasında yer almaz?",options:["A) Barışı sağlamalı", "B) Özgürlüğü sağlamalı", "C) Eşitliği sağlamalı", "D) Güveni sağlamalı", "E) Asayişi sağlamalı"],ans:"E) Asayişi sağlamalı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:88,q:"Afet bölgesinde yağmalama girişiminde bulunanlara uygulanacak müeeyideler hangi hukuk dalının konusudur?",options:["A) Yargı Hukuku", "B) Ceza Hukuku", "C) Eşya Hukuku", "D) Borçlar Hukuku", "E) Kişiler Hukuku"],ans:"B) Ceza Hukuku",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:89,q:"“İnsanlar için fiziksel, ekonomik ve sosyal kayıplar doğuran, insanın normal yaşansını ve eylemlerini durduracak veya kesinye uğratacak, imkânların yetersiz kaldığı, doğal veya insan kökenli olaylara verilen genel ifade” aşağıdakilerden hangisidir?",options:["A) Afet", "B) Deprem", "C) Acil durum", "D) Kriz", "E) Savaş"],ans:"A) Afet",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:90,q:"“Devletler tarandan şiddet veya çaşma nedeniyle kitleler hâlinde kaçıp gelen, durumları geçici olan kişilere bireysel statü belirlemesi olmadan koruma sağlamak için gelişrilen düzenleme veya araç” ifadesi aşağıdakilerden hangisinin tanımıdır?",options:["A) Geçici koruma", "B) Geçici savunma", "C) Mülteci koruma", "D) Acil durum koruması", "E) Güvenli koruma"],ans:"A) Geçici koruma",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:91,q:"Aşağıdakilerden hangisi Yönem Hizmetleri Daire Başkanlığının görevlerinden biri değildir?",options:["A) Başkanlık personelinin özlük işlemlerini yürütmek", "B) Başkanlığın idari ve mali hizmetlerini yürütmek", "C) Afet ve acil duruma ilişkin kaynakları yönetmek", "D) Başkanlık personelinin eğim çalışmalarını yürütmek", "E) Uluslararası acil yardımları yapmak ve kabul etmek"],ans:"E) Uluslararası acil yardımları yapmak ve kabul etmek",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:92,q:"KBRN (Kimyasal, Biyolojik, Radyoloik ve Nükleer) maddelerin meydana gereceği tehlikelere karşı önlem almak aşağıdakilerden hangisinin sorumluluğundadır?",options:["A) Deprem Dairesi Başkanlığı", "B) Sivil Savunma Daire Başkanlığı", "C) İyileşrme Dairesi Başkanlığı", "D) Müdahale Dairesi Başkanlığı", "E) Planlama ve Zarar Azaltma Dairesi Başkanlığı"],ans:"B) Sivil Savunma Daire Başkanlığı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:93,q:"I. Kanunlara aykırı olamazlar. II. Resmî Gazete'de yayımlanırlar. III. Cumhurbaşkanı'nca imzalanırlar. IV. Dayıştay denemine tabidirler. V. Kanunların uygulanmasını gösterirler. Bu ifadeler aşağıdakilerden hangisini belirr?",options:["A) Tamim", "B) İçhat", "C) Tüzük", "D) Yönetmelik", "E) Kanun"],ans:"C) Tüzük",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:94,q:"Hukuk devle olunabilmesi için sağlanması gereken ilk şart aşağıdakilerden hangisidir?",options:["A) Yürütmenin yargısal denemi", "B) Laik devlet ilkesi", "C) İnanç hürriye", "D) Yargısal eşitlik", "E) Yasama bağımsızlığı"],ans:"A) Yürütmenin yargısal denemi",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:95,q:"Aşağıdakilerden hangisi Türk Hukuku'nda başlıca yazısız kaynaklardan biridir?",options:["A) Yönetmelik", "B) Anayasa", "C) Örf", "D) Tüzük", "E) Genelge Doğru"],ans:"C) Örf",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:96,q:"Aşağıdakilerden hangisi Arama ve Kurtarma Birlik Müdürlükleri arasında yer almaz?",options:["A) Kimyasal biyolojik radyo akf ve nükleer ekip", "B) Su üstü ve su al arama ve kurtarma ekibi", "C) Dağcılık ekibi", "D) Kapalı maden kazaları kurtarma ekibi", "E) Köpekli arama ekibi Doğru"],ans:"D) Kapalı maden kazaları kurtarma ekibi",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:97,q:"Medeni Usul Hukuku'na göre ilk derecede görev yapan mahkemelere ne ad verilir?",options:["A) Ceza mahkemeleri", "B) Aile mahkemeleri", "C) İdari mahkemeler", "D) Ağır ceza mahkemeleri", "E) Hukuk mahkemeleri Doğru"],ans:"E) Hukuk mahkemeleri Doğru",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:98,q:"Aşağıdakilerden hangisi 2014/1 sayılı genelgeye göre bütüncül olarak işlenen konulardan biri değildir?",options:["A) Kurumsal işleyiş noktasında genel hususların açık bir şekilde ortaya koyulması", "B) Harcama ve mali işlemler ile ilgili görüşlerin bildirilmesi", "C) Geçici koruma alndaki yabancıların mali işlemlerinin ivedilikle sonuçlandırılması", "D) Kurumsallaşmadaki mevcut bölümlerinin görev alanları ve bu kapsamdaki değişikliklerin açık bir şekilde belirlmesi", "E) Uygulamada yapılması gereken işlemlerin genelge ile zaman sınırlaması gerilerek aksaklığa meydan verilmeden necelendirilmesi Doğru"],ans:"C) Geçici koruma alndaki yabancıların mali işlemlerinin ivedilikle sonuçlandırılması",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:99,q:"Hasar tespi, bütünleşik afet yönemi döngüsünde hangi aşamada yer almaktadır?",options:["A) Müdahale", "B) İyileşrme", "C) Kurtarma", "D) Hazırlık", "E) Zarar Azaltma Doğru"],ans:"A) Müdahale",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:100,q:"Aşağıdakilerden hangisi vatandaşların devlete karşı yapması gereken ödevlerden biridir?",options:["A) Kültürel etkinlik yapma", "B) Düşkünlere yardım etme", "C) Üniversite eğimi alma", "D) Askerlik yapma", "E) Devlet memuru olma Doğru"],ans:"D) Askerlik yapma",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:101,q:"Aşağıdakilerden hangisi Normlar hiyerarşisinde yer almaz?",options:["A) Genelge", "B) Cumhurbaşkanlığı Kararnamesi", "C) Yönetmelik", "D) Tüzük", "E) Tebliğ Doğru"],ans:"E) Tebliğ Doğru",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:102,q:"I Din, toplumun iskrarı ve devam edebilmesi için yardım eder. II. Din, sosyal bütünleşmenin korunmasında önemli rol oynar. III.Dinler toplum üyelerine, güç çevre şartları içinde varlığı sürdürme mücadelesi için cesaret verirler. Yukarıdakilerin hangisi ya da hangileri dinin fonksiyonları arasında yer alır?",options:["A) Yalnız II", "B) I, II ve III", "C) Yalnız I", "D) I ve III", "E) II ve III Doğru"],ans:"B) I, II ve III",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:103,q:"Aşağıdaki bilgilerin hangisi Afet Yönemi ve Karar Destek Sistemi (AYDES)'ne girilmesi gerekmez?",options:["A) İl müdürlüğü personel bilgisi", "B) Toplanma alanları", "C) Geçici iskân alanı", "D) Yerel düzey hizmet grubu operasyon planları", "E) Ekip ve alt ekip bilgileri Doğru"],ans:"A) İl müdürlüğü personel bilgisi",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:104,q:"Aşağıdakilerden hangisi afet yöneminde, afete müdahaleden sonra gelen dönemi ifade eder?",options:["A) Müdahale", "B) Kurtarma", "C) Planlama", "D) İyileşrme", "E) Zarar azaltma Doğru"],ans:"D) İyileşrme",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:105,q:"Aşağıdakilerden hangisi sivil savunma mahalli kuvvetleri kapsamındaki sivil savunma servislerinden biri değildir?",options:["A) Planlama servisi", "B) Karargâh servisi", "C) Kurtarma servisi", "D) İlk yardım ve ambulans servisi", "E) Sosyal yardım servisi"],ans:"A) Planlama servisi",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:106,q:"Türkiye topraklarında karşılaşılan afetler arasında en fazla etkiye sahip olan afet türü aşağıdakilerden hangisidir?",options:["A) Sel", "B) Deprem", "C) Heyelan", "D) Yangın", "E) Çığ düşmesi"],ans:"B) Deprem",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2 Kez Çıktı!"]},
+{id:107,q:"Afet sebebiyle hak sahibi olanların mahallin en büyük mülkiye amirine ne kadar süre içerisinde yazılı olarak talep ve taahhütname vermeleri şarr?",options:["A) 3 gün", "B) 1 haa", "C) 2 ay", "D) 6 ay", "E) 1 yıl"],ans:"C) 2 ay",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:108,q:"Aşağıdakilerden hangisi bütünleşik afet yönemi döngüsünde bulunan iyileşrme çerçevesinde alınacak tedbirlerden değildir?",options:["A) Afet ve acil durum sonrası hayan normale dönmesini sağlayıcı tedbirler", "B) Güvenli yer seçimi", "C) Evini yapana yardım", "D) Afete maruz yerlerin imar, plan, proje düzenlemeleri", "E) Lojisk ve bakım"],ans:"E) Lojisk ve bakım",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:109,q:"Kanun ve yönetmeliklerin uygulanmasında yol göstermek, ülke çapında bir sorunu gidermek, herhangi bir konuyu aydınlatmak, uygulama birliğini sağlamak, o konudaki usulsüz uygulamaları kaldırmak amacıyla ilgililere gönderilen yazı, tamim, sirküler şeklinde bir sıraya göre yayımlanmaktadır. Yukarıda özellikleri verilen genel emir hangisidir?",options:["A) Kanun", "B) Tüzük", "C) Genelge", "D) Tebliğ", "E) Yönetmelik"],ans:"C) Genelge",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Final", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:110,q:"Aşağıdakilerden hangisi sivil savunma mükellefleri yaş aralığıdır?",options:["A) 13-50", "B) 14-55", "C) 15-65", "D) 17-70", "E) 18-75"],ans:"C) 15-65",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2023-2024 Final", "3 Kez Çıktı!"]},
+{id:111,q:"Afet bölgesinde görev yapabilecek özellikte, yeterli bbi donanıma ve müdahale becerisine sahip sağlık personelinden oluşan ekip aşağıdakilerden hangisidir?",options:["A) Kara Kuvvetleri Komutanlığı Arama Kurtarma Timleri", "B) İaiye Teşkila Ekipleri", "C) Ulusal Medikal Kurtarma Ekipleri (UMKE)", "D) Gönüllü Arama ve Kurtarma Ekipleri", "E) AFAD Ekipleri"],ans:"C) Ulusal Medikal Kurtarma Ekipleri (UMKE)",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:112,q:"\"Hava saldırısı ihmali var.\" diye belirten \"sarı ikaz\"ın işare aşağıdakilerden hangisidir?",options:["A) Düz ve Devamlı Siren Sesi", "B) Dalgalı Siren Sesi", "C) Kesik Kesik Siren Sesi", "D) Sesli Yayınlar", "E) Kesik Dalgalı Siren sesi"],ans:"A) Düz ve Devamlı Siren Sesi",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:113,q:"Aşağıdakilerden hangisi bütünleşik afet yönem sisteminin afet öncesi ve sonrasında uygulanan evresidir?",options:["A) Hazırlıklı olma", "B) Müdahale", "C) İyileşrme", "D) Hasar tespit", "E) Zarar azaltma"],ans:"E) Zarar azaltma",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:114,q:"İlgililere duyurulması gereken yönetmelikler hangi tarihte yürürlüğe girer?",options:["A) İlgililere duyurulduğu tarihte", "B) İlgililere duyurulduğu tarihten bir gün sonra", "C) İlgililere duyurulmadan kısa bir zaman önce", "D) İlgililere duyurulduğu tarihten 24 saat sonra", "E) İlgililere duyurulduğu tarihi takip eden günde"],ans:"A) İlgililere duyurulduğu tarihte",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:115,q:"Toplum yaşayışında yer edinmek için edinilen bilgi, beceri ve anlayışlara ne ad verilir?",options:["A) Öğrem", "B) Tatbikat", "C) Eğim", "D) Uygulama", "E) Amaç"],ans:"C) Eğim",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "4 Kez Çıktı!"]},
+{id:116,q:"Geçici koruma alndaki yabancılara verilecek sosyal yardımların tespi, bu yardımların verilmesine ilişkin usul ve esasların belirlenmesi ile sosyal yardımların tekerrüre yer vermeyecek şekilde eşit ve adil dağılımın sağlanması hangi bakanlığın sorumluluğundadır?",options:["A) İçişleri Bakanlığı", "B) Sağlık Bakanlığı", "C) Dışişleri Bakanlığı", "D) Maliye Bakanlığı", "E) Aile, Çalışma ve Sosyal Hizmetler Bakanlığı"],ans:"E) Aile, Çalışma ve Sosyal Hizmetler Bakanlığı",exp:"",exams:["2021-2022 Final", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:117,q:"Herhangi bir ilde meydana gelen afen olay seviyesinin belirlenmesi ve ilan edilmesinden hangi kurum/kuruluş sorumludur?",options:["A) Ulaşrma ve Altyapı Bakanlığı", "B) Üniversiteler", "C) AFAD", "D) İstanbul Üniversitesi Kandilli Rasathanesi", "E) AKUT"],ans:"C) AFAD",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2024-2025 Final", "3 Kez Çıktı!"]},
+{id:118,q:"Aşağıdakilerden hangisi hukuk düzeninin temel fonksiyonlarından biri değildir?",options:["A) Eşitlik sağlamak", "B) Özgürlük sağlamak", "C) Barışı sağlamak", "D) Güveni sağlamak", "E) Teknolojik gelişmeyi sağlamak"],ans:"E) Teknolojik gelişmeyi sağlamak",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:119,q:"Aşağıdakilerden hangisi Türkiye Cumhuriye Anayasası'nın kabul eği temel ilkelerden biri değildir?",options:["A) Laik devlet", "B) Atatürk milliyetçiliğine bağlı devlet", "C) Sosyal devlet", "D) Hukuk devle", "E) Refah devle"],ans:"E) Refah devle",exp:"",exams:["2022-2023 Yaz Okulu", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:120,q:"Hasar tespitleri ile ilgili olarak aşağıdaki tanımlardan hangisi yanlışr?",options:["A) İlk yapılan hasar tespitleri ön hasar tespit raporudur.", "B) Ön hasar tespit raporundan sonra iraz hasar tespi yapılır.", "C) Kesin hasar tespit raporu, ön hasar ve iraz raporlarının birleşimidir.", "D) Muhakkik hasar tespit raporu mahkeme tarandan hazırlalır.", "E) İraz hasar tespit raporu ile kesin hasar tespitleri değişrilebilir."],ans:"E) İraz hasar tespit raporu ile kesin hasar tespitleri değişrilebilir.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2024-2025 Final", "4 Kez Çıktı!"]},
+{id:121,q:"2015/7 sayılı Genelge'ye göre aşağıdakilerden hangisi il afet ve acil durum müdürlüklerinin risk azaltma, iyileşrme çalışmaları çerçevesinde yürüükleri işlemlerde izlenmesi gereken temel adımlar ile uyulması gereken hususlar arasında yer almaz?",options:["A) AYDES kullanıcı görevlendirmesi ve eğimi", "B) Yerel düzey operasyon hizmet grubu planları", "C) OHAL planları", "D) Ulusal ve yerel düzey hizmet gruplarının afee kullanacağı envanterler", "E) İl afet müdahale planları"],ans:"C) OHAL planları",exp:"",exams:["2022-2023 Yaz Okulu", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:122,q:"Afetzedenin ölmesi durumunda hak sahipliğine ilişkin hakların mirasçılara geçmesi durumunda borçlandırma nasıl yapılır?",options:["A) Mirasçılar için borçlandırma yapılmaz.", "B) En büyük mirasçı için borçlandırma yapılır.", "C) Mirasçıların borçlandırması ertelenir.", "D) Mirasçılar birlikte borçlandırılır.", "E) Mirascıların borçlarının bir kısmı ertelenir."],ans:"D) Mirasçılar birlikte borçlandırılır.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:123,q:"Afet ve Acil Durum Yönem Merkezleri ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Afet yönem merkezleri haada 5 gün mesai usulü esasına göre çalışır.", "B) İl afet ve acil durum yönem merkezi, vali veya vali adına vali yardımcısı başkanlığında yönelir.", "C) Olay normale dönünceye kadar yapılan çalışmalar Afet Yönem Merkezi tarandan takip edilir.", "D) Afet ve acil durum yönem merkezi kadrosunda başında bir şube müdürü, bir endüstri mühendisi ve/veya meteoroloji mühendisi, yeterli sayıda enformasyon memuru bulunur.", "E) Afet ve acil durum yönem merkezinde görevli enformasyon memurları, olayın bütün aşamalarını Afet Yönemi Karar Destek Sistemi'ne (AYDES) veri girişi yapar. Doğru"],ans:"A) Afet yönem merkezleri haada 5 gün mesai usulü esasına göre çalışır.",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:124,q:"''Aln Saatler'' olarak adlandırılan zaman aşağıdakilerden hangisidir?",options:["A) İlk 60 saat", "B) İlk 120 saat", "C) İlk 12 saat", "D) İlk 48 saat", "E) İlk 72 saat Doğru"],ans:"E) İlk 72 saat Doğru",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:125,q:"Afet ve acil durumlar sonrasında geçici veya kalıcı tedbirler alarak hayan normale dönmesini sağlamak hangi daire başkanlığının görevidir?",options:["A) Müdahale Dairesi Başkanlığı", "B) Planlama ve Zarar Azaltma Dairesi Başkanlığı", "C) Deprem Dairesi Başkanlığı", "D) İyileşrme Dairesi Başkanlığı", "E) Sivil Savunma Dairesi Başkanlığı Doğru"],ans:"D) İyileşrme Dairesi Başkanlığı",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]}
+];
+const pdfMap={};
+const PROGRESS_KEY="auzef-progress-Afet ve Acil Durum Mevzuat\u0131";
+
+let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
+function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
+function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+function shortenLabel(e){
+  return e
+    .replace(/(\d{4})-(\d{4})/g,(_,a,b)=>a.slice(2)+'-'+b.slice(2))
+    .replace(/^(\d{4}) /,(_,y)=>y.slice(2)+' ')
+    .replace('Bütünleme','Büt');
+}
+function tagCssClass(e){
+  if(e.includes('Kez Çıktı')) return 'freq-tag';
+  if(e.includes('Üç Ders'))   return 'uc-tag';
+  if(e.includes('Yaz Okulu')) return 'yaz-tag';
+  if(e.includes('Vize'))      return 'vize-tag';
+  if(e.includes('Final'))     return 'fin-tag';
+  if(e.includes('Bütünleme')) return 'but-tag';
+  return '';
+}
+function tagTfiClass(e){
+  if(e.includes('Üç Ders'))   return 'tfi-uc';
+  if(e.includes('Yaz Okulu')) return 'tfi-yaz';
+  if(e.includes('Vize'))      return 'tfi-vize';
+  if(e.includes('Final'))     return 'tfi-fin';
+  if(e.includes('Bütünleme')) return 'tfi-but';
+  return 'tfi-other';
+}
+function highlightNeg(text){
+  var L='[a-zA-ZçğışöüÇĞİIŞÖÜ]';
+  return text.replace(
+    new RegExp(
+      // Çok kelimeli kalıplar önce
+      'doğru\\s+değil'+L+'*'
+      +'|yanlış\\s+değil'+L+'*'
+      +'|uygun\\s+değil'+L+'*'
+      +'|gerekli\\s+değil'+L+'*'
+      +'|mümkün\\s+değil'+L+'*'
+      +'|'+L+'+mamas'+L+'\\s+gerek'+L+'*'
+      +'|'+L+'+memes'+L+'\\s+gerek'+L+'*'
+      +'|değil\\s+midir?'
+      +'|değil\\s+mi(?!'+L+')'
+      // Tek kelime negatifleri
+      +'|değildir'
+      +'|yanlıştır'
+      +'|yoktur(?!'+L+')'
+      +'|olamaz(?!'+L+')'
+      +'|olmaz(?!'+L+')'
+      // -mamaktadır/-memektedir (süregelen olumsuz)
+      +'|'+L+'+mamaktadır'+L+'*'
+      +'|'+L+'+memektedir'+L+'*'
+      // -mamalıdır/-memelidir (zorunluluk olumsuz)
+      +'|'+L+'+mamalıdır'
+      +'|'+L+'+memelidir'
+      +'|'+L+'+mamalı(?!'+L+')'
+      +'|'+L+'+memeli(?!'+L+')'
+      // -maz/-mez geniş (tüm Türkçe geniş zaman olumsuz)
+      +'|'+L+'+maz(?!'+L+')'
+      +'|'+L+'+mez(?!'+L+')',
+      'gi'
+    ),
+    function(m){return '<u class="neg-hl">'+m+'</u>';}
+  );
+}
+function getProgress(){try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'{}');}catch(e){return {};}}
+function saveProgress(qid,result){
+  var p=getProgress();p[String(qid)]=result;
+  localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
+  updateProgressBar();
+  var icon=document.getElementById('prev-'+qid);
+  if(icon){icon.className='q-prev '+(result==='correct'?'q-prev-correct':'q-prev-wrong');icon.textContent=result==='correct'?'✓ Doğru':'✗ Yanlış';}
+}
+function updateProgressBar(){
+  var p=getProgress();var total=sorular.length;
+  var done=Object.keys(p).filter(function(k){return parseInt(k)<total;}).length;
+  var el=document.getElementById('prog-done');if(el)el.textContent=done;
+  var et=document.getElementById('prog-total');if(et)et.textContent=total;
+  var fill=document.getElementById('prog-fill');if(fill)fill.style.width=(total?(done/total*100):0)+'%';
+}
+function resetProgress(){
+  if(!confirm('Bu ders için tüm ilerleme sıfırlansın mı?'))return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressBar();
+  var activeTab=document.querySelector('.tab-btn.active');
+  if(activeTab)activeTab.click();
+}
+function updateStatsBar(){
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function applyTagFilter(fullLabel,tfiClass){
+  document.querySelectorAll('.question-card').forEach(card=>{
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    card.classList.toggle('tag-hidden',!exams.includes(fullLabel));
+  });
+  updateStatsBar();
+  const ind=document.getElementById('tag-filter-indicator');
+  ind.className='visible '+tfiClass;
+  ind.querySelector('.tfi-label').textContent=shortenLabel(fullLabel)+' Görüntüleniyor';
+  document.querySelector('.sidebar').classList.add('tag-filter-active');
+  // PDF button
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const val=pdfMap[fullLabel];
+    if(val){
+      const ids=Array.isArray(val)?val:[val];
+      pdfBtn.dataset.pdfIds=JSON.stringify(ids);
+      pdfBtn.dataset.pdfLabels=JSON.stringify([fullLabel]);
+      pdfBtn.dataset.pdfLabel=shortenLabel(fullLabel);
+      pdfBtn.classList.add('visible');
+    } else pdfBtn.classList.remove('visible');
+  }
+}
+function clearTagFilter(){
+  document.querySelectorAll('.question-card').forEach(c=>c.classList.remove('tag-hidden'));
+  updateStatsBar();
+  document.getElementById('tag-filter-indicator').className='';
+  document.querySelector('.sidebar').classList.remove('tag-filter-active');
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn)pdfBtn.classList.remove('visible');
+}
+let _pdfIds=[],_pdfLabels=[],_pdfIdx=0;
+function _pdfLoad(idx){
+  const frames=document.getElementById('pdfModalFrames');
+  frames.innerHTML='';
+  const f=document.createElement('iframe');
+  f.src='https://drive.google.com/file/d/'+_pdfIds[idx]+'/preview';
+  f.allowFullscreen=true;
+  frames.appendChild(f);
+  const counter=document.getElementById('pdfCounter');
+  if(_pdfIds.length>1){counter.textContent=(_pdfIdx+1)+' / '+_pdfIds.length;}
+  else{counter.textContent='';}
+  // Modal başlığını her PDF'e göre güncelle
+  const lbl=_pdfLabels[idx]?shortenLabel(_pdfLabels[idx]):null;
+  document.getElementById('pdfModalTitle').textContent=(lbl||document.getElementById('pdfOpenBtn').dataset.pdfLabel||'Sınav')+' Sınav Kağıdı';
+  document.getElementById('pdfPrev').disabled=idx===0;
+  document.getElementById('pdfNext').disabled=idx===_pdfIds.length-1;
+}
+function pdfNav(dir){
+  const next=_pdfIdx+dir;
+  if(next<0||next>=_pdfIds.length)return;
+  _pdfIdx=next;_pdfLoad(_pdfIdx);
+}
+function openPdfModal(){
+  const btn=document.getElementById('pdfOpenBtn');
+  if(!btn)return;
+  _pdfIds=JSON.parse(btn.dataset.pdfIds||'[]');
+  _pdfLabels=JSON.parse(btn.dataset.pdfLabels||'[]');
+  if(!_pdfIds.length)return;
+  _pdfIdx=0;
+  document.getElementById('pdfPrev').style.display=_pdfIds.length>1?'':'none';
+  document.getElementById('pdfNext').style.display=_pdfIds.length>1?'':'none';
+  _pdfLoad(0);
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePdfModal(){
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfModalFrames').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function renderQuestions(filter){
+  const container=document.getElementById('quiz-container');
+  container.innerHTML='';resetScore();
+  const examCount=s=>s.exams.filter(e=>!e.includes('Kez')).length;
+  let filtered;
+  if(filter==='all') filtered=[...sorular];
+  else if(filter==='banko') filtered=sorular.filter(s=>examCount(s)>=2);
+  else if(filter==='review'){const p=getProgress();filtered=sorular.filter(s=>p[String(s.id)]!=='correct');}
+  else filtered=sorular.filter(s=>s.exams.some(e=>e.includes(filter)));
+  filtered.sort((a,b)=>examCount(b)-examCount(a));
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center;color:#888;padding:30px;">Bu kategoride soru bulunamadı.</p>';document.getElementById('stats-bar').innerHTML=`<span>0<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>`;return;}
+  filtered.forEach((soru,idx)=>{
+    const card=document.createElement('div');card.className='question-card';
+    card.dataset.exams=JSON.stringify(soru.exams);
+    const tagsHTML=soru.exams.map(e=>{
+      const css=tagCssClass(e);
+      const isFreq=e.includes('Kez Çıktı');
+      const clickable=isFreq?'':' tag-clickable';
+      const data=isFreq?'':` data-full="${e.replace(/"/g,'&quot;')}" data-tfi="${tagTfiClass(e)}"`;
+      return `<span class="exam-tag${css?' '+css:''}${clickable}"${data}>${shortenLabel(e)}</span>`;
+    }).join('');
+    const ansLetter=soru.ans?soru.ans.trim().charAt(0):'';
+    const optionsHTML=soru.options.map(o=>{
+      const isCorrect=ansLetter&&o.trim().startsWith(ansLetter+')');
+      return `<li${isCorrect?' data-correct="true"':''} onclick="selectOption(this)">${o}</li>`;
+    }).join('');
+    const answerId=`answer-${idx}-${filter}`;
+    card.dataset.qid=soru.id;
+    const prevResult=getProgress()[String(soru.id)];
+    const prevHTML=prevResult?`<span class="q-prev ${prevResult==='correct'?'q-prev-correct':'q-prev-wrong'}" id="prev-${soru.id}">${prevResult==='correct'?'✓ Doğru':'✗ Yanlış'}</span>`:`<span class="q-prev" id="prev-${soru.id}"></span>`;
+    card.innerHTML=`
+      <div class="q-header">
+        <div class="q-meta"><span class="q-num">Soru ${idx+1}</span>${prevHTML}</div>
+        <div class="exam-tags">${tagsHTML}</div>
+      </div>
+      <div class="question-text">${highlightNeg(soru.q)}</div>
+      <ul class="options">${optionsHTML}</ul>
+      <button class="btn-toggle" onclick="toggleAnswer('${answerId}',this)">Cevabı Göster</button>
+      <div class="answer-area" id="${answerId}" style="${allAnswersVisible?'display:block':''}">
+        <p class="correct-ans">✔ Doğru Cevap: ${soru.ans}</p>
+        <p class="exp-text">${soru.exp}</p>
+      </div>`;
+    if(allAnswersVisible){const cl=card.querySelector('.options li[data-correct="true"]');if(cl)cl.classList.add('correct-highlight');card.querySelector('.btn-toggle').textContent='Cevabı Gizle';}
+    card.querySelectorAll('.exam-tag.tag-clickable').forEach(tag=>{
+      tag.addEventListener('click',()=>applyTagFilter(tag.dataset.full,tag.dataset.tfi));
+    });
+    card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
+    container.appendChild(card);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function searchQuestions(q){
+  q=(q||'').trim().toLowerCase();
+  var cards=document.querySelectorAll('#quiz-container .question-card');
+  var visible=0;
+  cards.forEach(function(card){
+    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    var text=(card.querySelector('.question-text')||{}).textContent||'';
+    var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
+    var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
+    card.style.display=match?'':'none';
+    if(match)visible++;
+  });
+  document.getElementById('stats-bar').innerHTML='<span>'+visible+'<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>';
+}
+function setCorrectHighlight(card,visible){card.querySelectorAll('.options li[data-correct="true"]').forEach(li=>li.classList.toggle('correct-highlight',visible));}
+function selectOption(li){
+  const card=li.closest('.question-card');if(card.dataset.answered)return;
+  card.dataset.answered='true';const isCorrect=li.dataset.correct==='true';
+  if(isCorrect){li.classList.add('correct-highlight');card.dataset.answeredResult='correct';scoreCorrect++;}
+  else{li.classList.add('wrong-highlight');card.querySelectorAll('.options li[data-correct="true"]').forEach(l=>l.classList.add('correct-highlight'));card.dataset.answeredResult='wrong';scoreWrong++;}
+  saveProgress(card.dataset.qid,isCorrect?'correct':'wrong');
+  updateScore();
+  const area=card.querySelector('.answer-area');
+  if(area&&area.style.display!=='block'){area.style.display='block';const btn=card.querySelector('.btn-toggle');if(btn)btn.textContent='Cevabı Gizle';}
+}
+function toggleAnswer(id,btn){
+  const area=document.getElementById(id);const card=btn.closest('.question-card');
+  if(area.style.display==='none'||area.style.display===''){
+    area.style.display='block';btn.textContent='Cevabı Gizle';setCorrectHighlight(card,true);
+  }else{
+    area.style.display='none';btn.textContent='Cevabı Göster';setCorrectHighlight(card,false);
+    card.querySelectorAll('.options li.wrong-highlight').forEach(li=>li.classList.remove('wrong-highlight'));
+    if(card.dataset.answeredResult==='correct')scoreCorrect=Math.max(0,scoreCorrect-1);
+    else if(card.dataset.answeredResult==='wrong')scoreWrong=Math.max(0,scoreWrong-1);
+    delete card.dataset.answered;delete card.dataset.answeredResult;updateScore();
+  }
+}
+function toggleAllAnswers(){
+  allAnswersVisible=!allAnswersVisible;
+  document.getElementById('toggleAllBtn').textContent=allAnswersVisible?'Tüm Cevapları Gizle':'Tüm Cevapları Göster';
+  document.querySelectorAll('.answer-area').forEach(a=>a.style.display=allAnswersVisible?'block':'none');
+  document.querySelectorAll('.btn-toggle').forEach(b=>b.textContent=allAnswersVisible?'Cevabı Gizle':'Cevabı Göster');
+  document.querySelectorAll('.question-card').forEach(c=>setCorrectHighlight(c,allAnswersVisible));
+}
+function filterQuestions(filter,clickedBtn){
+  clearTagFilter();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  clickedBtn.classList.add('active');allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  renderQuestions(filter);
+  // Sekme filtresi için PDF butonunu güncelle
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const TAB_FILTERS=['Final','Bütünleme','Yaz Okulu','Vize','Üç Ders'];
+    const isTabFilter=TAB_FILTERS.some(k=>filter===k||filter.includes(k));
+    if(isTabFilter){
+      const tabIds=[],tabLabels=[];
+      // pdfMap anahtarlarını filtre anahtar kelimesine göre filtrele, kronolojik sırala
+      Object.keys(pdfMap).sort().forEach(label=>{
+        if(label.includes(filter)){
+          const val=pdfMap[label];
+          const ids=Array.isArray(val)?val:[val];
+          ids.forEach(id=>{tabIds.push(id);tabLabels.push(label);});
+        }
+      });
+      if(tabIds.length){
+        pdfBtn.dataset.pdfIds=JSON.stringify(tabIds);
+        pdfBtn.dataset.pdfLabels=JSON.stringify(tabLabels);
+        pdfBtn.dataset.pdfLabel=filter;
+        pdfBtn.classList.add('visible');
+      } else {
+        pdfBtn.classList.remove('visible');
+      }
+    } else {
+      pdfBtn.classList.remove('visible');
+    }
+  }
+}
+renderQuestions('all');
+updateProgressBar();
+(function(){
+  var _tb=document.querySelector('.site-topbar');
+  var _sb=document.querySelector('.sidebar');
+  var _qc=document.getElementById('quiz-container');
+  function syncPad(){
+    if(!_sb||!_qc)return;
+    if(window.innerWidth<=720){
+      var tbH=_tb?_tb.offsetHeight:48;
+      _sb.style.top=tbH+'px';
+      _qc.style.paddingTop=_sb.offsetHeight+'px';
+    } else {
+      _sb.style.top='';
+      _qc.style.paddingTop='';
+    }
+  }
+  syncPad();
+  window.addEventListener('resize',syncPad,{passive:true});
+  var mq=window.matchMedia('(max-width:720px)');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      if(_sb)_sb.classList.toggle('scroll-collapsed',window.scrollY>90);
+      ticking=false;
+    });
+  }
+  function setup(){
+    if(mq.matches){window.addEventListener('scroll',onScroll,{passive:true});}
+    else{window.removeEventListener('scroll',onScroll);if(_sb)_sb.classList.remove('scroll-collapsed');syncPad();}
+  }
+  if(mq.addEventListener)mq.addEventListener('change',setup);
+  else mq.addListener(setup);
+  setup();
+})();
+
+/* ── Dark Mode ── */
+(function(){
+  var toggle=document.getElementById('darkModeToggle');
+  if(!toggle)return;
+  var KEY='auzef-dark-mode';
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved=localStorage.getItem(KEY);
+  var isDark=saved!==null?saved==='true':prefersDark;
+  if(isDark)document.body.classList.add('dark-mode');
+  toggle.textContent=isDark?'☀️':'🌙';
+  toggle.addEventListener('click',function(){
+    document.body.classList.toggle('dark-mode');
+    var nowDark=document.body.classList.contains('dark-mode');
+    localStorage.setItem(KEY,String(nowDark));
+    toggle.textContent=nowDark?'☀️':'🌙';
+  });
+})();
+// Tekrar Et toggle
+function toggleReview(btn){
+  var isActive=btn.classList.contains('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  clearTagFilter();
+  if(isActive){
+    var allBtn=document.querySelector('.tab-btn:first-child');
+    if(allBtn)allBtn.classList.add('active');
+    renderQuestions('all');
+  } else {
+    btn.classList.add('active');
+    renderQuestions('review');
+  }
+}
+
+</script>
+</body>
+</html>
