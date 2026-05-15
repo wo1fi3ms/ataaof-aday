@@ -55,8 +55,8 @@ DERS_CONFIG = {
     },
     # ── 1. Sınıf Bahar ────────────────────────────────────────────────────────
     "Afet ve Acil Durum Mevzuatı": {
-        "excel":  "1_sinif/bahar/ADY1010_Soru_Bankasi.xlsx",
-        "output": "1_sinif/bahar/ADY1010_Soru_Bankasi.html",
+        "excel":  "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.xlsx",
+        "output": "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.html",
         "emoji":  "📜",
     },
     "Algoritmalar ve Programlamaya Giriş": {
