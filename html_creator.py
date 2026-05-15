@@ -10,7 +10,7 @@ Kullanım:
 Excel dosyaları ve HTML çıktıları ilgili sınıf/dönem klasöründe toplanır. Data/ ham kaynak klasörüdür.
 """
 
-import sys, re, json, argparse
+import sys, re, json, argparse, os, unicodedata
 from pathlib import Path
 import pandas as pd
 from html import escape
@@ -55,9 +55,10 @@ DERS_CONFIG = {
     },
     # ── 1. Sınıf Bahar ────────────────────────────────────────────────────────
     "Afet ve Acil Durum Mevzuatı": {
-        "excel":  "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.xlsx",
-        "output": "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.html",
-        "emoji":  "📜",
+        "excel":   "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Afet_ve_Acil_Durum_Mevzuati_Soru_Bankasi.html",
+        "emoji":   "📜",
+        "pdf_dir": "1_sinif/bahar/pdfs/Afet_ve_Acil_Durum_Mevzuati",
     },
     "Algoritmalar ve Programlamaya Giriş": {
         "excel":  "Data/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.xlsx",
@@ -495,6 +496,37 @@ STANDARD_TABS = [
 ]
 
 
+# ─── PDF auto-discovery ───────────────────────────────────────────────────────
+
+# ASCII filename part → Turkish label suffix
+_PDF_SINAV_MAP = {
+    "Butunleme": "Bütünleme",
+    "Final":     "Final",
+    "Yaz_Okulu": "Yaz Okulu",
+}
+
+def discover_pdfs(pdf_dir, output_path):
+    """Scan pdf_dir for YYYY-YYYY_Sinav.pdf files, return {label: rel_path} dict.
+    Paths are relative to the output HTML file's directory."""
+    if not pdf_dir or not os.path.isdir(pdf_dir):
+        return {}
+    out_dir = str(Path(output_path).parent)
+    result = {}
+    for fname in sorted(os.listdir(pdf_dir)):
+        if not fname.lower().endswith(".pdf"):
+            continue
+        m = re.match(r'^(\d{4}-\d{4})_(.+)\.pdf$', fname)
+        if not m:
+            continue
+        year = m.group(1)
+        sinav_key = m.group(2)
+        sinav_tr = _PDF_SINAV_MAP.get(sinav_key, sinav_key.replace("_", " "))
+        label = f"{year} {sinav_tr}"
+        rel = os.path.relpath(os.path.join(pdf_dir, fname), out_dir)
+        result[label] = rel
+    return result
+
+
 # ─── normalisation helpers ────────────────────────────────────────────────────
 
 def _str(v):
@@ -915,7 +947,9 @@ function _pdfLoad(idx){
   const frames=document.getElementById('pdfModalFrames');
   frames.innerHTML='';
   const f=document.createElement('iframe');
-  f.src='https://drive.google.com/file/d/'+_pdfIds[idx]+'/preview';
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
   f.allowFullscreen=true;
   frames.appendChild(f);
   const counter=document.getElementById('pdfCounter');
@@ -1376,6 +1410,9 @@ def main():
     output_path = args.output or config.get("output")
     emoji       = config.get("emoji", "📚")
     pdfs        = config.get("pdfs", {})
+    pdf_dir     = config.get("pdf_dir")
+    if pdf_dir and not pdfs:
+        pdfs = discover_pdfs(pdf_dir, output_path)
 
     if not excel_path:
         print(f"HATA: '{course}' için Excel bulunamadı. --excel ile belirtin.")

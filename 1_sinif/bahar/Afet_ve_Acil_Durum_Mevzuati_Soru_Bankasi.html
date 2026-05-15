@@ -438,7 +438,7 @@ const sorular=[
 {id:124,q:"''Aln Saatler'' olarak adlandırılan zaman aşağıdakilerden hangisidir?",options:["A) İlk 60 saat", "B) İlk 120 saat", "C) İlk 12 saat", "D) İlk 48 saat", "E) İlk 72 saat Doğru"],ans:"E) İlk 72 saat Doğru",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
 {id:125,q:"Afet ve acil durumlar sonrasında geçici veya kalıcı tedbirler alarak hayan normale dönmesini sağlamak hangi daire başkanlığının görevidir?",options:["A) Müdahale Dairesi Başkanlığı", "B) Planlama ve Zarar Azaltma Dairesi Başkanlığı", "C) Deprem Dairesi Başkanlığı", "D) İyileşrme Dairesi Başkanlığı", "E) Sivil Savunma Dairesi Başkanlığı Doğru"],ans:"D) İyileşrme Dairesi Başkanlığı",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]}
 ];
-const pdfMap={};
+const pdfMap={"2021-2022 Bütünleme": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2021-2022_Butunleme.pdf", "2021-2022 Final": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2021-2022_Final.pdf", "2022-2023 Yaz Okulu": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2022-2023_Yaz_Okulu.pdf", "2023-2024 Bütünleme": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2023-2024_Butunleme.pdf", "2023-2024 Final": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2023-2024_Final.pdf", "2023-2024 Yaz Okulu": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2023-2024_Yaz_Okulu.pdf", "2024-2025 Bütünleme": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2024-2025_Butunleme.pdf", "2024-2025 Final": "pdfs/Afet_ve_Acil_Durum_Mevzuati/2024-2025_Final.pdf"};
 const PROGRESS_KEY="auzef-progress-Afet ve Acil Durum Mevzuat\u0131";
 
 let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
@@ -565,7 +565,9 @@ function _pdfLoad(idx){
   const frames=document.getElementById('pdfModalFrames');
   frames.innerHTML='';
   const f=document.createElement('iframe');
-  f.src='https://drive.google.com/file/d/'+_pdfIds[idx]+'/preview';
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
   f.allowFullscreen=true;
   frames.appendChild(f);
   const counter=document.getElementById('pdfCounter');
