@@ -13,8 +13,8 @@
 :root{
   /* ATA-AÖF ana lacivert */
   --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
-  /* ATA-AÖF vurgu yeşili */
-  --accent:#00CB54;--accent-dk:#009e40;
+  /* Vurgu mavisi */
+  --accent:#4a9eff;--accent-dk:#2d7dd4;
   /* Gold/tan */
   --gold:#e1b77e;
   --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
@@ -24,7 +24,7 @@
 /* ── Dark Mode ── */
 body.dark-mode{
   --green:#6b7fd4;--green-dk:#0d1460;--green-lt:#0d1a3a;
-  --accent:#00CB54;--accent-dk:#00a843;
+  --accent:#4a9eff;--accent-dk:#6ab4ff;
   --gold:#e1b77e;
   --bg:#08091e;--card-bg:#0f1230;--text:#e0e0e0;--border:#1e2560;
   --muted:#9192a3;
@@ -89,7 +89,7 @@ body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);c
 .course-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border);transition:background .2s;}
 .course-card.ready{cursor:pointer;}
 .course-card.ready::before{background:var(--accent);}
-.course-card.ready:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(0,203,84,.15);transform:translateY(-2px);}
+.course-card.ready:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(74,158,255,.18);transform:translateY(-2px);}
 .course-card.soon{cursor:default;}
 .course-card.soon::before{background:var(--gold);}
 
@@ -97,8 +97,8 @@ body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);c
 .card-code{font-size:.68em;font-weight:700;color:var(--text);opacity:.4;letter-spacing:.04em;font-family:monospace;}
 .card-name{font-size:.88em;font-weight:700;color:var(--text);line-height:1.35;}
 .card-badge{display:inline-flex;align-items:center;gap:5px;font-size:.7em;font-weight:700;border-radius:10px;padding:3px 9px;width:fit-content;}
-.badge-ready{background:#e6faf0;color:#009e40;border:1px solid #9de8bf;}
-body.dark-mode .badge-ready{background:#012a14;color:#00CB54;border-color:#015a2a;}
+.badge-ready{background:#e8f3ff;color:#1a6abf;border:1px solid #9dceff;}
+body.dark-mode .badge-ready{background:#0a1a35;color:#4a9eff;border-color:#1a4a8a;}
 .badge-soon{background:#fff8e6;color:#9a7012;border:1px solid #e8d48a;}
 body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10;}
 
