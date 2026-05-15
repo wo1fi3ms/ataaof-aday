@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Temel Bilgi Teknolojileri II – Soru Havuzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ATA-AÖF ana lacivert — UI chrome */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* Vurgu yeşili — geri bildirim / başarı */
+  --accent:#00CB54;--accent-dk:#009e40;--accent-lt:#e6faf0;
+  --gold:#e1b77e;
+  --wine:#7b1d34;--wine-dk:#5c1526;
+  --banko:#c0392b;--banko-dk:#922b21;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --opt-bg:#fafafa;--opt-border:#e4e4e7;
+  --muted:#606065;
+}
+body.dark-mode{
+  /* UI chrome — okunabilir lacivert-lavanta */
+  --green:#8899ee;--green-dk:#c0caff;--green-lt:#131c42;
+  /* Geri bildirim yeşili */
+  --accent:#00CB54;--accent-dk:#4ade80;--accent-lt:#012a14;
+  --gold:#e1b77e;
+  /* Daha ölçülü wine ve banko */
+  --wine:#a05868;--wine-dk:#7d4052;
+  --banko:#c06060;--banko-dk:#9a4848;
+  --bg:#08091e;--card-bg:#0f1230;--text:#d8daec;--border:#252d60;
+  --opt-bg:#111830;--opt-border:#252d60;
+}
+*{box-sizing:border-box;}
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0 0 48px;line-height:1.65;transition:background .25s,color .25s;}
+
+/* ── topbar ── */
+.site-topbar{position:sticky;top:0;z-index:200;background:var(--green-dk);display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-home{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;transition:all .2s;white-space:nowrap;}
+.topbar-home:hover{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-uni{font-size:.75em;color:rgba(255,255,255,.45);letter-spacing:.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-course{font-size:.88em;font-weight:700;color:#fff;}
+.dark-mode-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;transition:all .2s;color:#fff;line-height:1;}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── hero header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:32px 24px 28px;text-align:center;border-bottom:4px solid var(--gold);box-shadow:0 3px 14px rgba(0,0,0,.2);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 16px;font-size:.77em;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.92);margin-bottom:14px;text-transform:uppercase;}
+.header h1{margin:0 0 8px;font-size:1.9em;font-weight:700;letter-spacing:-.01em;}
+.header-subtitle{margin:0;font-size:.93em;color:var(--gold);font-weight:600;letter-spacing:.03em;}
+
+/* ── layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.page-layout{display:flex;gap:22px;align-items:flex-start;margin-top:24px;}
+#quiz-container{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:18px;animation:fadeIn .3s ease-in-out;}
+#quiz-container>*{min-width:0;}
+@media(max-width:900px){#quiz-container{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── sidebar ── */
+.sidebar{width:192px;flex-shrink:0;position:sticky;top:48px;display:flex;flex-direction:column;gap:8px;background:var(--card-bg);padding:14px 12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sidebar-label{font-size:.68em;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.07em;margin-top:2px;}
+.sidebar-home{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 11px;background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);border-radius:7px;font-size:.82em;font-weight:700;text-decoration:none;transition:all .2s;}
+.sidebar-home:hover{background:var(--green-lt);}
+.tabs{display:flex;flex-direction:column;gap:5px;}
+.tab-btn{background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);padding:8px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:all .2s;text-align:left;width:100%;}
+.tab-btn:hover{background:var(--green-lt);}
+.tab-btn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 3px 8px rgba(13,20,96,.28);}
+.tab-btn.tab-banko{background:#fde8e8;color:var(--banko);border-color:var(--banko);}
+.tab-btn.tab-banko:hover,.tab-btn.tab-banko.active{background:var(--banko);color:#fff;}
+body.dark-mode .tab-btn.tab-banko{background:#1e0808;color:#e08080;border-color:#7a3030;}
+body.dark-mode .tab-btn.tab-banko:hover,body.dark-mode .tab-btn.tab-banko.active{background:#7a3030;color:#fff;}
+.toggle-all-btn{background:var(--wine);color:#fff;border:none;padding:10px 11px;font-size:.84em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;box-shadow:0 3px 8px rgba(123,29,52,.28);transition:all .2s;width:100%;text-align:center;}
+.toggle-all-btn:hover{background:var(--wine-dk);transform:translateY(-1px);}
+.stats-bar{text-align:center;font-size:.77em;color:#666;font-weight:600;}
+.stats-bar>span{display:inline-block;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2px 9px;}
+.stats-short{display:none;}
+.score-panel{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.score-item{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.91em;font-weight:700;border-radius:8px;padding:7px 10px;}
+.score-item span{font-size:1.3em;font-weight:800;min-width:24px;text-align:center;}
+.score-correct-item{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+.score-wrong-item{background:#fde8e8;color:#c0392b;border:1px solid #f87171;}
+body.dark-mode .score-correct-item{background:#012a14;color:#4ade80;border-color:#025a28;}
+body.dark-mode .score-wrong-item{background:#2a0808;color:#f08888;border-color:#5a1818;}
+.sidebar-meta{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:#aaa;}
+.tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
+.tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
+body.dark-mode .tab-btn.tab-review{color:#c8963a;border-color:#7a5010;background:#1a1000;}
+body.dark-mode .tab-btn.tab-review:hover{background:#2a1a00;color:#e0b050;}
+body.dark-mode .tab-btn.tab-review.active{background:#7a5010!important;color:#fff!important;border-color:#7a5010!important;box-shadow:0 3px 8px rgba(120,80,16,.4)!important;}
+.review-info-btn{position:absolute;top:4px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;background:none;font-size:.6em;font-weight:900;line-height:13px;text-align:center;cursor:pointer;padding:0;color:inherit;opacity:.65;font-family:inherit;display:none;}
+.review-tooltip{display:none;position:absolute;top:calc(100% + 6px);right:0;width:220px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.75em;font-weight:400;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:200;text-align:left;line-height:1.5;pointer-events:none;}
+@media(min-width:721px){
+  .review-info-btn{display:block;}
+  .review-info-btn:hover+.review-tooltip,.review-info-btn:focus+.review-tooltip{display:block;}
+}
+.progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.75em;font-weight:700;color:var(--text);}
+.progress-reset{background:none;border:none;font-size:.7em;color:#aaa;cursor:pointer;padding:0;font-family:inherit;transition:color .2s;}
+.progress-reset:hover{color:var(--banko);}
+.progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+.q-prev{font-size:.8em;font-weight:700;padding:2px 7px;border-radius:4px;line-height:1.4;}
+.q-prev-correct{background:#d1fae5;color:#065f46;}
+.q-prev-wrong{background:#fde8e8;color:#c0392b;}
+body.dark-mode .q-prev-correct{background:#012a14;color:#4ade80;border:1px solid #025a28;}
+body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #5a1818;}
+
+/* ── mobile sidebar ── */
+@media(max-width:720px){
+  .page-layout{flex-direction:column;margin-top:8px;}
+  .header{display:none;}
+  .sidebar{position:fixed;top:48px;left:0;right:0;z-index:100;flex-direction:column;gap:5px;padding:8px 12px;border-radius:0;border:none;border-bottom:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.13);width:100vw!important;max-width:100vw;overflow-x:hidden;box-sizing:border-box;}
+  .sidebar-home,.sidebar-label{display:none;}
+  .tabs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:5px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:7px 12px;font-size:.8em;}
+  .sidebar-meta{flex-direction:row;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .sidebar-meta::-webkit-scrollbar{display:none;}
+  .stats-bar{flex-shrink:0;font-size:.73em;white-space:nowrap;text-align:left;}
+  .stats-bar>span{padding:2px 7px;}
+  .score-panel{flex-direction:row;gap:4px;margin-top:0;flex-shrink:0;}
+  .score-item{padding:4px 6px;font-size:.74em;gap:3px;white-space:nowrap;}
+  .score-item span{font-size:1em;min-width:14px;}
+  .stats-full{display:none;}
+  .stats-short{display:inline;}
+  .toggle-all-btn{width:100%;padding:7px 10px;font-size:.8em;}
+  .sidebar.scroll-collapsed{flex-direction:row;align-items:center;gap:6px;padding:5px 12px;}
+  .sidebar.scroll-collapsed .tab-btn:not(.active){display:none;}
+  .sidebar.scroll-collapsed nav.tabs{flex-shrink:0;overflow:visible;}
+  .sidebar.scroll-collapsed .sidebar-meta{flex:1;min-width:0;gap:5px;overflow-x:auto;}
+  .sidebar.scroll-collapsed .score-item{padding:3px 5px;}
+  .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
+  .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
+  .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
+  .sidebar.scroll-collapsed .prog-label{display:none;}
+  .sidebar.scroll-collapsed .score-label{display:none;}
+  .sidebar.scroll-collapsed .stats-full{display:none;}
+  .sidebar.scroll-collapsed .stats-short{display:inline;}
+  #quiz-container{grid-template-columns:1fr;}
+}
+
+/* ── question cards ── */
+.question-card{background:var(--card-bg);border-radius:9px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:22px 24px;border-left:5px solid var(--green);transition:box-shadow .2s;display:flex;flex-direction:column;}
+.question-card:hover{box-shadow:0 5px 18px rgba(13,20,96,.12);}
+.question-card .btn-toggle{margin-top:auto;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;border-bottom:1px solid var(--border);padding-bottom:10px;gap:10px;}
+.q-meta{display:flex;flex-direction:column;gap:3px;}
+.q-num{color:var(--green-dk);font-size:.86em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.exam-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.exam-tag{padding:2px 8px;border-radius:4px;font-size:.73em;font-weight:700;letter-spacing:.02em;}
+.uc-tag{background:#ede9fe;color:#4c1d95;}
+.vize-tag{background:#dbeafe;color:#1e3a8a;}
+.fin-tag{background:#d1fae5;color:#065f46;}
+.but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+.yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+.freq-tag{background:var(--banko);color:#fff;}
+.exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
+.exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
+.question-card.tag-hidden{display:none;}
+.sidebar.tag-filter-active .tabs,.sidebar.tag-filter-active .sidebar-home,.sidebar.tag-filter-active .sidebar-label,.sidebar.tag-filter-active .toggle-all-btn{opacity:.28;pointer-events:none;user-select:none;}
+.sidebar.tag-filter-active #tag-filter-indicator{opacity:1!important;pointer-events:auto!important;}
+#tag-filter-indicator{display:none;border-radius:7px;padding:8px 10px;font-size:.82em;font-weight:700;align-items:center;gap:6px;}
+#tag-filter-indicator.visible{display:flex;}
+#tag-filter-indicator .tfi-label{flex:1;line-height:1.3;}
+#tag-filter-indicator .tfi-close{background:none;border:none;cursor:pointer;font-size:1.1em;padding:0 2px;font-weight:900;opacity:.65;line-height:1;font-family:inherit;}
+#tag-filter-indicator .tfi-close:hover{opacity:1;}
+#tag-filter-indicator.tfi-fin{background:#d1fae5;color:#065f46;}
+#tag-filter-indicator.tfi-vize{background:#dbeafe;color:#1e3a8a;}
+#tag-filter-indicator.tfi-but{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+#tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
+#tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+#tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
+.question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
+.neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
+.q-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 12px;}
+.q-table{border-collapse:collapse!important;width:100%!important;margin:0!important;font-size:.88em;font-weight:400;white-space:normal!important;table-layout:auto;word-break:break-word;}
+.q-table th,.q-table td{border:1px solid var(--border)!important;padding:5px 9px!important;vertical-align:middle!important;}
+.q-table th{background:var(--green-lt)!important;color:var(--green-dk)!important;font-weight:700!important;text-align:center!important;}
+.q-table td{text-align:left;}
+.q-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;font-size:.95em;}
+.q-table tr:nth-child(even) td{background:var(--opt-bg);}
+.q-table tfoot td,.q-table tr:last-child td[style*="font-weight"]{font-weight:700;background:var(--green-lt);}
+body.dark-mode .q-table th{background:#1a2060!important;color:#c0caff!important;}
+body.dark-mode .options li.wrong-highlight{background:#2a0808;border-color:#7a3030;color:#f08888;}
+body.dark-mode .options li.correct-highlight{background:#012a14;border-color:#025a28;color:#4ade80;}
+@media(max-width:600px){.q-table{font-size:.78em!important;}.q-table th,.q-table td{padding:4px 6px!important;}}
+.options{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;}
+.options li{background:var(--opt-bg);padding:9px 14px;border-radius:7px;border:1px solid var(--opt-border);font-size:.96em;transition:background .22s,border-color .22s;cursor:pointer;user-select:none;color:var(--text);}
+.options li.correct-highlight{background:var(--accent-lt);border-color:var(--accent);font-weight:700;color:var(--accent-dk);}
+.options li.wrong-highlight{background:#fde8e8;border-color:#e74c3c;font-weight:700;color:#c0392b;}
+.btn-toggle{background:var(--green);color:#fff;border:none;padding:10px 0;width:100%;font-size:.96em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:background .2s;}
+.btn-toggle:hover{background:var(--green-dk);}
+.answer-area{display:none;margin-top:13px;padding:14px 16px;background:var(--accent-lt);border-left:4px solid var(--accent);border-radius:0 7px 7px 0;}
+.correct-ans{font-size:1.04em;color:var(--accent-dk);margin:0 0 7px;font-weight:700;}
+.exp-text{margin:0;color:var(--text);line-height:1.55;font-size:.92em;}
+
+/* ── PDF button & modal ── */
+.pdf-open-btn{display:none;background:var(--green);color:#fff;border:none;padding:9px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;width:100%;text-align:center;transition:background .2s;}
+.pdf-open-btn:hover{background:var(--green-dk);}
+.pdf-open-btn.visible{display:block;}
+.pdf-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);padding:16px;align-items:stretch;}
+.pdf-modal.open{display:flex;flex-direction:column;}
+.pdf-modal-inner{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.pdf-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-dk);color:#fff;font-weight:700;font-size:.9em;gap:8px;}
+.pdf-modal-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-modal-close{background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;line-height:1;padding:0 4px;opacity:.8;}
+.pdf-modal-close:hover{opacity:1;}
+.pdf-nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.1em;cursor:pointer;border-radius:5px;padding:2px 10px;line-height:1.6;transition:background .15s;}
+.pdf-nav-btn:hover{background:rgba(255,255,255,.35);}
+.pdf-nav-btn:disabled{opacity:.3;cursor:default;}
+.pdf-nav-counter{font-size:.8em;opacity:.85;white-space:nowrap;}
+#pdfModalFrames{display:flex;flex-direction:column;flex:1;min-height:0;}
+#pdfModalFrames iframe{flex:1;width:100%;border:none;min-height:0;}
+
+/* ── footer ── */
+.page-footer{text-align:center;margin-top:44px;padding:16px;font-size:.77em;color:#888;border-top:2px solid var(--border);}
+.page-footer strong{color:var(--green-dk);}
+</style>
+</head>
+<body>
+
+<div class="site-topbar">
+  <div class="topbar-left">
+    <a href="../../index.html" class="topbar-home">← Ana Sayfa</a>
+    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-course">💻 Temel Bilgi Teknolojileri II</span>
+    <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-badge">💻 AUZEF Soru Havuzu</div>
+  <h1>Temel Bilgi Teknolojileri II</h1>
+  <p class="header-subtitle">Eksiksiz Çıkmış Sorular · 📙 Final · 📗 Bütünleme · ☀️ Yaz Okulu</p>
+</div>
+
+<div class="container">
+  <div class="page-layout">
+    <div id="quiz-container"></div>
+
+    <aside class="sidebar">
+      <a href="../../index.html" class="sidebar-home">⌂ Ana Sayfa</a>
+
+      <span class="sidebar-label">Filtrele</span>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="filterQuestions('all',this)">Tüm Sorular</button>
+        <button class="tab-btn" onclick="filterQuestions('Final',this)">📙 Final</button>
+        <button class="tab-btn" onclick="filterQuestions('Bütünleme',this)">📗 Bütünleme</button>
+        <button class="tab-btn" onclick="filterQuestions('Yaz Okulu',this)">☀️ Yaz Okulu</button>
+        <button class="tab-btn tab-banko" onclick="filterQuestions('banko',this)">🔥 Çok Çıkanlar</button>
+        <button class="tab-btn tab-review" onclick="toggleReview(this)">🔄 Devam Et
+          <span class="review-info-btn" onclick="event.stopPropagation()" tabindex="0">ℹ</span>
+          <div class="review-tooltip">Daha önce doğru cevapladığın sorular çıkarılarak teste devam eder.</div>
+        </button>
+      </nav>
+
+      <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div id="tag-filter-indicator">
+        <span class="tfi-label"></span>
+        <button class="tfi-close" onclick="clearTagFilter()">✕</button>
+      </div>
+      <button id="pdfOpenBtn" class="pdf-open-btn" onclick="openPdfModal()">📄 Sınav PDF Göster</button>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span><span id="prog-done">0</span> / <span id="prog-total">0</span><span class="prog-label"> tamamlandı</span></span>
+          <button class="progress-reset" onclick="resetProgress()" title="İlerlemeyi sıfırla">sıfırla</button>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="score-panel">
+          <div class="score-item score-correct-item">✓ <span id="score-correct">0</span><span class="score-label"> Doğru</span></div>
+          <div class="score-item score-wrong-item">✗ <span id="score-wrong">0</span><span class="score-label"> Yanlış</span></div>
+        </div>
+      </div>
+      <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+    </aside>
+  </div>
+
+  <div class="page-footer">
+    <strong>Temel Bilgi Teknolojileri II</strong> · Çıkmış Sorular Soru Havuzu · 129 Soru
+  </div>
+</div>
+
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <div class="pdf-modal-header">
+      <span class="pdf-modal-title" id="pdfModalTitle">Sınav Kağıdı</span>
+      <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfNav(-1)">&#8249;</button>
+      <span class="pdf-nav-counter" id="pdfCounter"></span>
+      <button class="pdf-nav-btn" id="pdfNext" onclick="pdfNav(1)">&#8250;</button>
+      <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    </div>
+    <div id="pdfModalFrames"></div>
+  </div>
+</div>
+
+<script>
+const sorular=[
+{id:0,q:"PowerPoint programında şerit üzerinde sekmelere erişim tuşlarını görüntüleyen kısayol tuşu aşağıdakilerden hangisidir?",options:["A) CTRL", "B) SHIFT", "C) ALT GR", "D) ALT", "E) BACKSPACE"],ans:"C) ALT GR",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2023-2024 Yaz Okulu", "2024-2025 Final", "4 Kez Çıktı!"]},
+{id:1,q:"Akıllı saat ile aşağıdakilerden hangisi yapılamaz?",options:["A) Mesaj yazmak", "B) Telefonla konuşmak", "C) Kan tahlili yapmak", "D) Uyku analizi yapmak", "E) Bildirimleri görüntülemek"],ans:"C) Kan tahlili yapmak",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:2,q:"Aşağıdakilerden hangisi sanal dünyaların uzaktan eğimde kullanımına yönelik dezavantajlarından olan teknolojik aksaklıkların açıklamasıdır?",options:["A) Sanal dünyalardaki eğim, öğrencilerin sanal dünyalardaki akviteleri veya oyunları dışında bir şey yapmak istememelerine neden olabilir.", "B) Sanal dünyalardaki eğim, gerçek hayaaki deneyimlerin ve etkileşimlerin yerini tutmayabilir.", "C) Sanal dünyalardaki eğim, internet bağlansının yavaş veya kesinli olması durumunda etkilenebilir.", "D) Sanal dünyalardaki uzaktan eğim, fiziksel sınıflarla kıyaslandığında daha maliyetli olabilir.", "E) Sanal dünyalarda öğrencilerin kişisel bilgileri ve öğrenme verileri, güvenliği garan edilmemiş veri depolama veya ağlar aracılığıyla tehlikeye alabilir. NAHTARI"],ans:"A) Sanal dünyalardaki eğim, öğrencilerin sanal dünyalardaki akviteleri veya oyunları dışında bir şey yapmak istememelerine neden olabilir.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:3,q:"Aşağıdakilerden hangisi telif haklarının özelliklerinden biri değildir?",options:["A) Eser sahibini bilişim sistemlerine girmeye zorlar.", "B) Belli bir süre boyunca korunur.", "C) Özel kanunlar, tüzükler ve yönetmelikler çerçevesinde düzenlenir.", "D) Soyut nitelikte bir hakr.", "E) Eser sahibinin haklarını koruma alna alır."],ans:"A) Eser sahibini bilişim sistemlerine girmeye zorlar.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:4,q:"Arama motorları ile ilgili verilen bilgilerden hangisi yanlışr?",options:["A) Arama motoru ile tarayıcı aynı iki kavramdır.", "B) Arama motoru World Wide Web üzerindeki içerikleri toplayıp düzenledikten sonra kullanıcılara sunan bir programdır.", "C) Arama motorları Botlar yardımı ile web sayfaları gezer.", "D) Etkin arama yapmayı sağlayan parametreleri vardır.", "E) Arama işlemi sırasında çeşitli algoritmalar kullanırlar."],ans:"A) Arama motoru ile tarayıcı aynı iki kavramdır.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:5,q:"Aşağıdaki Yaracı Birliktelik lisanslama türlerinden hangisinde ilk lisans modelinin korunması şar yer almaktadır?",options:["A) BY", "B) BY-NC", "C) BY-NC-ND", "D) BY-ND", "E) BY-SA"],ans:"E) BY-SA",exp:"",exams:["2023-2024 Bütünleme", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:6,q:"Aşağıdakilerden hangisi bilgisayar sistemlerini zararlı olarak etkileyen kötü niyetli yazılımlardan biri değildir?",options:["A) Solucan", "B) Casus Yazılım", "C) Virüs", "D) Anvirüs", "E) Truva A NAHTARI"],ans:"D) Anvirüs",exp:"",exams:["2023-2024 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:7,q:"Aşağıdakilerden hangisi bir anvirüs yazılımıdır?",options:["A) Firewall", "B) Trojan", "C) Panda", "D) Worm", "E) Spam"],ans:"C) Panda",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:8,q:"Aşağıdakilerden hangisi bulut bilişimin sınırlılıklarından biri değildir?",options:["A) Bağımlılık", "B) Güncelleme ve bakım", "C) Bağlan sorunları", "D) Veri sınırlamaları", "E) Maliyet"],ans:"B) Güncelleme ve bakım",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:9,q:"Aşağıdakilerden hangisi e-devlet hizmetlerinin faydalarından biri değildir?",options:["A) Şeffaflık", "B) Erişilebilirlik", "C) Verimlilik", "D) Maliyet azaltma", "E) Yapılan işlemi gidip yerinde teyit etmek"],ans:"E) Yapılan işlemi gidip yerinde teyit etmek",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:10,q:"Aşağıdakilerden hangisi geleneksel medya araçlarından biri değildir?",options:["A) Sinema", "B) Gazete", "C) Radyo", "D) Televizyon", "E) İnternet"],ans:"E) İnternet",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:11,q:"Aşağıdakilerden hangisi sanal dünyaların farklı isimlendirmelerinden biri değildir?",options:["A) Benzelmiş dünya", "B) Kitlesel çok oyunculu çevrim içi oyunlar", "C) Gerçek dünya", "D) Dijital dünya", "E) Dünyaya alternaf"],ans:"C) Gerçek dünya",exp:"",exams:["2023-2024 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:12,q:"Aşağıdakilerden hangisi sanal dünyaların gelişiminde 1960'lı yıllardaki gelişmelerden biridir?",options:["A) Bu dönemde sanal dünyalar mobilden masaüstü bilgisayara kadar farklı cihazlar üzerinde kullanılabilecek şekilde yaygınlaşmışr.", "B) Bu dönemde sanal dünyaların gelişimi hızlandı ve daha fazla kullanıcı ve yarım tarandan desteklendi.", "C) Bu dönemde tekst tabanlı uygulamalar sanal dünyaların ilk başlangıcı olarak ortaya çıkmışr.", "D) Sanal dünyalar ark daha da yaygın olarak kullanılmaya başlandı ve çok sayıda sektör tarandan benimsenmeye başlandı.", "E) Bu dönemde kullanıcıların kurguladıkları ortam ve senaryo gündeme gelmişr."],ans:"C) Bu dönemde tekst tabanlı uygulamalar sanal dünyaların ilk başlangıcı olarak ortaya çıkmışr.",exp:"",exams:["2023-2024 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:13,q:"Aşağıdakilerden hangisi sunum hazırlanırken dikkat edilecek hususlar arasında yer almaz?",options:["A) Slayt içeriği ile uyumlu görsel nesnelerden faydalanılmalıdır.", "B) Başlık, alt başlık ve içerik alanlarında, uygun yazı pleri kullanılmalıdır.", "C) Mümkün olduğunca çok men yer almalıdır.", "D) Animasyon ve sesler gerekği yerlerde kullanılmalıdır.", "E) Renk uyumuna dikkat edilmelidir."],ans:"C) Mümkün olduğunca çok men yer almalıdır.",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:14,q:"Aşağıdakilerden hangisi tüm yaşam döngüsü boyunca verilerin tutarlılığını, doğruluğunu ve güvenilirliğini korumayı içeren bulut bilişimde güvenlik sorunlarındandır?",options:["A) Maliyet", "B) Yetkilendirme", "C) Gizlilik", "D) Bütünlük", "E) Kimlik doğrulama"],ans:"D) Bütünlük",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:15,q:"Aşağıdakilerden hangisi yaşam boyu öğrenen özelliklerinden adaptasyon sağlayabilen özelliğinin açıklamasıdır?",options:["A) Yaşam boyu öğrenenler sürekli olarak kendilerini ve dünyayı keşfetmek için öğrenmeye açıkr.", "B) İnternet, kitap ve diğer kaynaklardan bilgi toplama becerisine sahiprler.", "C) Değişen ortam ve koşullara uyum sağlama yetenekleri mevcuur.", "D) Kendine move olma ve öğrenmeyi sürdürme istekleri her zaman vardır.", "E) Bilgisayar, cep telefonu ve diğer teknolojik araçların kullanımı konusunda yetkindirler."],ans:"C) Değişen ortam ve koşullara uyum sağlama yetenekleri mevcuur.",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:16,q:"Aşağıdakilerden hangisi yaşam boyu öğrenenlerin kendi ihyaçlarının belirlenmesi sorumluluğunun açıklamasıdır?",options:["A) Yaşam boyu öğrenenler kendilerine yapacakları öğrenmeleri takip etmeli ve sürdürmelidir.", "B) Yaşam boyu öğrenenler, öğrenmelerini etkin hale germek için akf bir rol oynamalıdır.", "C) Yaşam boyu öğrenenler üretken ve etkili öğrenme stratejilerini kullanmalı ve uygulamalıdır.", "D) Yaşam boyu öğrenenler kendilerine gereken öğrenmeleri belirlemelidir.", "E) Yaşam boyu öğrenenler teknolojik araçları ve kaynakları kullanarak öğrenmelerini desteklemelidir."],ans:"A) Yaşam boyu öğrenenler kendilerine yapacakları öğrenmeleri takip etmeli ve sürdürmelidir.",exp:"",exams:["2022-2023 Yaz Okulu", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:17,q:"I. E-posta II. Veri depolama III. Uygulama oluşturma ve test etme IV. Veri analik Yukarıda verilenlerden hangisi ya da hangileri bulut bilişim teknolojisinin temel alanlarındandır?",options:["A) I, II ve III", "B) I ve II", "C) II, III ve IV", "D) I, II, III ve IV", "E) Yalnız I"],ans:"D) I, II, III ve IV",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:18,q:"IPv4 protokolünde yaklaşık kaç adet IP adresi ürelebilir?",options:["A) 1,5 Milyon", "B) 2,5 Milyon", "C) 2,2 Milyar", "D) 4,3 Milyar", "E) 4,5 Trilyon NAHTARI"],ans:"D) 4,3 Milyar",exp:"",exams:["2022-2023 Yaz Okulu", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:19,q:"Kullanıcıya tamamen sanal dünyada bulunduğuna yönelik bir deneyim yaşatmayı hedefleyen teknolojik araç aşağıdakilerden hangisidir?",options:["A) Akıllı saat", "B) 3 boyutlu gözlük", "C) AR gözlük", "D) VR Gözlük", "E) Bluetooth kulaklık"],ans:"D) VR Gözlük",exp:"",exams:["2023-2024 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:20,q:"Nesnelerin interne ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Near Field Communicaon (NFC), kısa mesafeli bir ileşim seçeneği olup iki cihaz arasında güvenli ve çi yönlü ileşim sağlamaktadır.", "B) IOT, “internet of things, nesnelerin interne” kavramının kısaltmasıdır.", "C) Sistemin bileşenleri; denetleyiciler, sensörler ve güvenlik bileşenleri, veri ileşim altyapısı, verileri analizi eden uygulama katmanıdır.", "D) Bu kavram ilk olarak Nikola Tesla tarandan kullanılmışr.", "E) İş modellerini entegre etmek ve uyarlamak, nesnelerin internenin kuruluşlara faydalarındandır. interne” kavramının kısaltmasıdır. Bu kavram ilk olarak 1999 yılında İngiliz teknoloji uzmanı Kevin Ashton tarandan kullanılmışr"],ans:"D) Bu kavram ilk olarak Nikola Tesla tarandan kullanılmışr.",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2 Kez Çıktı!"]},
+{id:21,q:"PowerPoint programı grafik verileri için Microso Office pakenin hangi programını kullanır?",options:["A) Excel", "B) Publisher", "C) Access", "D) Outlook", "E) Word CEVAP AN"],ans:"A) Excel",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:22,q:"PowerPoint programında şekillerin tasarımını kolay bir şekilde değişrmek için kullanılan araçlar hangi grupta yer alır?",options:["A) Şekil ekle", "B) Şekil slleri", "C) WordArt slleri", "D) Yerleşr", "E) Boyut"],ans:"B) Şekil slleri",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:23,q:"Sistemlerde verileri ve programları bozmak için hazırlanan programlara ne ad verilir?",options:["A) E-posta", "B) Virüs", "C) Anvirüs", "D) Oyun", "E) İnternet NAHTARI"],ans:"B) Virüs",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:24,q:"Slayt gösterisi sırasında imleci, lazer işaretçisi şeklinde görüntülemek için aşağıdakilerden hangisi kullanılır?",options:["A) Ctrl + fare sağ düğmesi", "B) Shi + fare sol düğmesi", "C) Ctrl + fare sol düğmesi", "D) Shi + fare sağ düğmesi", "E) Ctrl + Shi + fare sol düğmesi"],ans:"C) Ctrl + fare sol düğmesi",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:25,q:"……………………………………… yetkili kişilerin bilgiyi istedikleri yer ve zamanda ulaşması ve kullanması durumudur. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) İzlenebilirlik", "B) Bütünlük", "C) Gizlilik", "D) Erişebilirlik", "E) Açıklık"],ans:"D) Erişebilirlik",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:26,q:"\"IEEE’nin 802.15.4 standartlarına uygun olarak çalışan birden fazla sayıda cihazın fiziksel dünyadaki cihazlarla (algılayıcı, tekleyici vb.) ileşime geçebilmesi ve daha az enerji ile geniş yelpazeye yayılan veri plerini aralarında kullanabilmelerine olanak sağlayan bir ileşim protokolüdür.\" tanımı aşağıdakilerden hangisidir?",options:["A) Bluetooth", "B) Hücresel veri", "C) Wi-Fi", "D) NFC", "E) 6LoWPAN"],ans:"E) 6LoWPAN",exp:"",exams:["2021-2022 Final"]},
+{id:27,q:"\"Organizasyonların ve müşterilerin kendi veri merkezlerini ve BT kaynaklarını paylaşrması veya ortak olarak kullanılmasıyla oluşan iki ya da daha fazla bulut kurulum modelini bir araya geren bulut kurulum modeline ................... denir\". \"Bilişim kaynaklarının kendi veri merkezlerinde konumlandırıldığı, üzerinden sunulan hizmetlerin kullanıcılara göre özelleşrilebildiği kontrolün servis sağlayıcıdan tam olarak müşteriye geçği kurulum modeline .................. denir\". Tanımlarda boş bırakılan yerlere sırasıyla aşağıdakilerden hangisi gerilmelidir?",options:["A) Özel-Topluluk", "B) Özel-Karma", "C) Karma-Topluluk", "D) Genel-Karma", "E) Genel-Özel"],ans:"",exp:"🚫 İptal edilmiş soru",exams:["2021-2022 Final"]},
+{id:28,q:"............. bilginin paketlere ayrılması ve paketlerin hedef bilgisayarda birleşrilmesi işini yapmaktadır. ............. bilgi paketlerinin yönlendirilmesi ve ilelmesi işini yapmaktadır. Paragraa boş bırakılan yerlere sırasıyla aşağıdakilerden hangisi gerilmelidir?",options:["A) IP - ISS", "B) ISS - DSL", "C) ISS - TCP", "D) TCP - IP", "E) DSL - IP"],ans:"D) TCP - IP",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:29,q:"Animasyonlar sekmesinde aşağıdaki gruplardan hangisi yer almaz?",options:["A) Zamanlama", "B) Önizleme", "C) Gelişmiş", "D) Animasyon", "E) Özel animasyon"],ans:"E) Özel animasyon",exp:"",exams:["2024-2025 Final"]},
+{id:30,q:"Arama işlemlerinde manksal ifadelerin ve işaretlerin kullanılması ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) And, yapılan aramada iki kelimenin birden yer alması gerekğini gösterir.", "B) Or, genellikle birbirine benzer iki kelime için kullanılır.", "C) Arama kutusuna “Masa or Sandalye” ifadesi yazıldığında içerisinde bu iki kelimeden herhangi birini bulunduran sayfalar listelenir.", "D) Near, yanında, yakınında anlamına gelen bir sözcüktür.", "E) Arama kutusuna “Çiçek and not Yapay” ifadesi yazıldığında yapay olan çiçeklerin bulunduğu sayfalar listelenir. ikinci kelimeyi bulundurmayan sayfaları aramak için kullanılır. Örneğin, arama kutusuna “Çiçek and not Yapay” ifadesi yazıldığında yapay olmayan çiçeklerin bulunduğu sayfalar listelenir."],ans:"E) Arama kutusuna “Çiçek and not Yapay” ifadesi yazıldığında yapay olan çiçeklerin bulunduğu sayfalar listelenir. ikinci kelimeyi bulundurmayan sayfaları aramak için kullanılır. Örneğin, arama kutusuna “Çiçek and not Yapay” ifadesi yazıldığında yapay olmayan çiçeklerin bulunduğu sayfalar listelenir.",exp:"",exams:["2021-2022 Final"]},
+{id:31,q:"Arama motorlarını doğru ve etkili kullanım becerisi hangi dijital okuryazarlık becerisi ile tanımlanır?",options:["A) İleşim kurma becerisi", "B) Bilgiye erişim becerisi", "C) Teknolojik alanı tanıma", "D) Uygulama yapma", "E) Sürekli öğrenme"],ans:"B) Bilgiye erişim becerisi",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:32,q:"Ağ topolojisi ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Veri yolu topolojisinde tüm cihazlar aynı ileşim hanı veya kabloyu kullanarak verileri paylaşırlar.", "B) Yıldız topolojisinde ağın ortasında HUB veya Switch benzeri bir cihaz olur.", "C) Halka topolojisinde dairesel bir veri yolu oluşturulur.", "D) Örgü topolojisinin temel manğı yıldız ve veri yolu topolojilerini birleşrerek tek bir topoloji hâline germesidir.", "E) Ağ topolojisi, ağı oluşturan bilgisayar ve cihazların fiziksel ve teorik olarak yerleşimleridir. bir adı da yıldız veri yolu topolojisidir. Bu topolojinin temel manğı yıldız ve veri yolu topolojilerini birleşrerek tek bir topoloji haline germesidir. Yani birbirinden bağımsız yıldız topolojileri bir veri yoluna bağlanarak tek topoloji haline gelmektedir. Örgü (Mesh) Topolojisi Örgü topolojisi ağda bulunan bütün bilgisayarın ve cihazların birbirine bağlı olduğu ve bağlanlardan biri kopsa bile çoğu veri pakenin doğru şekilde dağılmasını sağlayan bir topolojidir."],ans:"D) Örgü topolojisinin temel manğı yıldız ve veri yolu topolojilerini birleşrerek tek bir topoloji hâline germesidir.",exp:"",exams:["2021-2022 Final"]},
+{id:33,q:"Aşağıda verilen arama motoru parametrelerinden hangisi tüm sitelerde değil de sadece belirli bir sitede arama yapmaya imkan verir?",options:["A) Eksi", "B) Tırnak İşare", "C) Site", "D) Intle", "E) Link"],ans:"C) Site",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:34,q:"Aşağıdaki FTP komutlarından hangisi dosya göndermek için kullanılır?",options:["A) cd", "B) pwd", "C) get", "D) put", "E) dir"],ans:"D) put",exp:"",exams:["2023-2024 Final"]},
+{id:35,q:"Aşağıdaki sosyal medya plaormlarından hangisi 2004 yılında Mark Zuckerberg tarandan kurulmuştur?",options:["A) LinkedIn", "B) Facebook", "C) Twier", "D) Instagram", "E) YouTube"],ans:"B) Facebook",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:36,q:"Aşağıdaki sosyal medya plaormlarından hangisi 2005 yılında Steve Chen, Chad Hurley, ve Jawed Karim tarandan kurulmuştur?",options:["A) Instagram", "B) Facebook", "C) YouTube", "D) Twier", "E) MySpace"],ans:"C) YouTube",exp:"",exams:["2023-2024 Final"]},
+{id:37,q:"Aşağıdakilerden hangisi Açık Eğim Kaynakları'nın (AEK) yaşam boyu öğrenmedeki rolü için söylenemez?",options:["A) AEK yaşam boyu öğrenme için ücretsiz ve erişilebilir eğim kaynaklarının paylaşımını teşvik eder.", "B) AEK'lar, öğrencilerin kaliteli, güncel ve özelleşrilebilir öğrenme içeriğine erişmelerine olanak tanır.", "C) AEK ve yaşam boyu öğrenme arasındaki ilişki çok yakındır.", "D) AEK'lardan yaşam boyu öğrenmede faydalanabilir.", "E) AEK'lar yaşam boyu öğrenmede öğrenmenin maliyetli olmasını sağlar."],ans:"E) AEK'lar yaşam boyu öğrenmede öğrenmenin maliyetli olmasını sağlar.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:38,q:"Aşağıdakilerden hangisi Facebook uygulaması ile gerçekleşrilen işlevlerden biri değildir?",options:["A) Yorum yazma", "B) Dürtme", "C) Beğenme", "D) Sohbet", "E) Video listesi oluşturma"],ans:"",exp:"🚫 İptal edilmiş soru",exams:["2021-2022 Final"]},
+{id:39,q:"Aşağıdakilerden hangisi Ribble'ın oluşturduğu dijital vatandaşlığın boyutlarından biri değildir?",options:["A) Sosyal medya kullanımı", "B) Dijital güvenlik", "C) Dijital sağlık", "D) Dijital hak ve sorumluluklar", "E) Dijital okuryazarlık"],ans:"A) Sosyal medya kullanımı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:40,q:"Aşağıdakilerden hangisi Ribble'ın oluşturduğu dijital vatandaşlığın boyutlarından değildir?",options:["A) Dijital erişim", "B) Dijital devlet", "C) Dijital caret", "D) Dijital ek", "E) Dijital kanun"],ans:"B) Dijital devlet",exp:"",exams:["2024-2025 Final"]},
+{id:41,q:"Aşağıdakilerden hangisi Twier’ı diğer sosyal ağlardan ayıran temel özellikleri arasında yer almaz?",options:["A) Kullanıcıların karşılıklı takiplerinin zorunlu olmaması", "B) İle uzunluğunun 140 karakter ile sınırlı olması", "C) Çok sayıda araç (mobil cihazlar, bilgisayarlar) tarandan destekleniyor olması", "D) Masaüstü uygulamalarına (widget) ve alışılmış ara yüzün ötesinde çeşitli web uygulamalarına sahip olması", "E) Küresel ve bölgesel siyasi ve ekonomik gelişmeler açısından dünyanın bilgi kaynağı olması"],ans:"",exp:"🚫 İptal edilmiş soru",exams:["2021-2022 Bütünleme"]},
+{id:42,q:"Aşağıdakilerden hangisi anvirüs yazılımlarından biri değildir?",options:["A) Kaspersky", "B) Firewall", "C) BitDefender", "D) AVG", "E) Norton"],ans:"B) Firewall",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:43,q:"Aşağıdakilerden hangisi asıl slayn amaçlarından biri değildir?",options:["A) Yeni slayt düzenleri oluşturmak", "B) Yapılan değişikliklerin sunudaki tüm slaytlara yansılmasını sağlamak", "C) Men ve nesnelerin yer tutucu konumlarını tutmak", "D) Yazı pi sli gibi genel değişiklikler yapabilmek", "E) Nesnelere hareket kazandırmak"],ans:"E) Nesnelere hareket kazandırmak",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:44,q:"Aşağıdakilerden hangisi ağda bulunan cihazların birbirleriyle ileşim kurmasını sağlayan haberleşme protokolleri bütünüdür?",options:["A) Fiber opk", "B) TCP/IP", "C) LAN", "D) NSFNET", "E) DNS"],ans:"B) TCP/IP",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:45,q:"Aşağıdakilerden hangisi bilişim aracılığıyla yaşam boyu öğrenen olmak için öğrenme içeriği seçmeyi ifade eder?",options:["A) Öğrendiğiniz konuları uygulamalı olarak öğrenmeyi amaçlayın ve bu sayede bilgi ve becerilerinizi pekişrin.", "B) Alanınızdaki düşünce liderleri ve etkileyicileri takip ederek son gelişmeler ve trendler hakkında bilgi edinin.", "C) İlginiz veya kariyerinizle ilgili konuları öncelikli olarak seçin ve bu konularda öğrenme içeriği bulun.", "D) İnternet üzerindeki forumlar ve tarşma gruplarına kalarak diğer öğrenenlerle ve alanınızdaki uzmanlarla bağlan kurun.", "E) İnternet ve dijital teknolojileri anlamaya, kullanmaya ve değerlendirmeye yönelik becerilerinizi gelişrin."],ans:"C) İlginiz veya kariyerinizle ilgili konuları öncelikli olarak seçin ve bu konularda öğrenme içeriği bulun.",exp:"",exams:["2024-2025 Final"]},
+{id:46,q:"Aşağıdakilerden hangisi bilişimin günümüzdeki önemiyle ilgili hususlar arasında yer almaz?",options:["A) Yaşam boyu öğrenmeyi desteklemesi", "B) Global ileşim ve bilgiye erişim", "C) Bilgileri saklama", "D) Sosyal ve kültürel ileşim", "E) İş ve verimlilik arşı"],ans:"C) Bilgileri saklama",exp:"",exams:["2023-2024 Final"]},
+{id:47,q:"Aşağıdakilerden hangisi bulut bilişim türlerinden biri değildir?",options:["A) İş bulutu", "B) Genel bulut", "C) Özel bulut", "D) Topluluk bulutu", "E) Hibrit (Karma) bulut"],ans:"A) İş bulutu",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:48,q:"Aşağıdakilerden hangisi bulut bilişimin özelliklerinden biri değildir?",options:["A) Yerinde erişim", "B) Sanal makine", "C) Ölçeklenebilirlik", "D) Çevre birimlerin etkin kullanılması", "E) Çoklu plaorm desteği"],ans:"D) Çevre birimlerin etkin kullanılması",exp:"",exams:["2024-2025 Final"]},
+{id:49,q:"Aşağıdakilerden hangisi bulut tabanlı bir kelime işlemci hizmedir?",options:["A) Dokümanlar", "B) Evernote", "C) Formlar", "D) Hangouts", "E) E-tablolar"],ans:"A) Dokümanlar",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:50,q:"Aşağıdakilerden hangisi dijital okuryazarlık becerileri içinde yer almaz?",options:["A) Bulut Bilişim teknolojilerini kullanabilme", "B) Arama motorlarını kullanabilme", "C) En yeni teknolojik araçlara sahip olmak", "D) Sosyal medyayı etkili kullanma", "E) Çevrimiçi topluluklar aracılığıyla ileşim kurma"],ans:"C) En yeni teknolojik araçlara sahip olmak",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:51,q:"Aşağıdakilerden hangisi e-devlet bileşenlerinden biri değildir?",options:["A) Hukuksal altyapı", "B) Özelleşrme", "C) Koordinasyon", "D) Güvenlik ve gizlilik", "E) Teknolojik altyapı güncellenmişr."],ans:"B) Özelleşrme",exp:"",exams:["2021-2022 Final"]},
+{id:52,q:"Aşağıdakilerden hangisi elektronik posta göndermek için kullanılan bir protokoldür?",options:["A) SMTP", "B) UDP", "C) DNS", "D) TCP", "E) FTP"],ans:"A) SMTP",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:53,q:"Aşağıdakilerden hangisi eser sahibinin eseri üzerindeki manevi haklarından biri değildir?",options:["A) Eser sahibinin malik ve zilyede karşı hak", "B) Eser sahibinin adını belirtme hakkı", "C) Umuma arz hakkı", "D) Eserde değişiklik yapılmasını yasaklama hakkı", "E) Yayma hakkı"],ans:"E) Yayma hakkı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:54,q:"Aşağıdakilerden hangisi geleneksel medya araçlarından biridir?",options:["A) Instagram", "B) Facebook", "C) Twier", "D) LinkedIn", "E) Radyo"],ans:"E) Radyo",exp:"",exams:["2023-2024 Final"]},
+{id:55,q:"Aşağıdakilerden hangisi geçerli bir IP adresi değildir?",options:["A) 256.12.6.3", "B) 10.23.1.1", "C) 212.1.1.222", "D) 224.0.0.1", "E) 124.150.10.1"],ans:"A) 256.12.6.3",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:56,q:"Aşağıdakilerden hangisi ile birlikte sosyal medya plaormu gelişmeye başlamışr?",options:["A) Web 3.0", "B) Web 2.0", "C) Web 4.0", "D) Web", "E) Web 1.0"],ans:"B) Web 2.0",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:57,q:"Aşağıdakilerden hangisi mobil bağlan türü değildir?",options:["A) 3G", "B) HSDPA", "C) LTE", "D) 5G", "E) WAN"],ans:"E) WAN",exp:"",exams:["2021-2022 Final"]},
+{id:58,q:"Aşağıdakilerden hangisi sanal dünyalarda eğim ortamı tasarlarken dikkat edilmesi gereken durumlardan olan erişilebilirliğin açıklamasıdır?",options:["A) Sanal dünyadaki ekipman ve araçlar arasındaki farklılıklar en aza indirilmelidir.", "B) Sanal dünyadaki içerik sürekli olarak güncellenmeli ve öğrencilerin ihyacına göre uyarlanmalıdır.", "C) Sanal dünya, işitme ve görme engellilerinin de kullanmasına uygun olmalıdır.", "D) Sanal dünyada tasarlandığı hedefler doğrultusunda öğrenme ve akviteler planlanmalıdır.", "E) Sanal dünyada öğrencilerin kişisel bilgileri ve öğrenme verileri korunmalıdır. NAHTARI"],ans:"C) Sanal dünya, işitme ve görme engellilerinin de kullanmasına uygun olmalıdır.",exp:"",exams:["2024-2025 Final"]},
+{id:59,q:"Aşağıdakilerden hangisi sosyal medya kullanımının avantajlarından biri değildir?",options:["A) Sürekli yenilenmesi ve kolay güncellenebilmesi", "B) Kişisel mahremiye riske atması", "C) Zaman ve mekâna bağlı tutmaması", "D) İşletmeler için pazarlama ve reklam rsa sunması", "E) Hızlı ileşim kurma imkânı sunması"],ans:"B) Kişisel mahremiye riske atması",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:60,q:"Aşağıdakilerden hangisi taşınabilir bir teknoloji değildir?",options:["A) Flash disk", "B) Masaüstü bilgisayar", "C) Dizüstü bilgisayar", "D) Haza kar", "E) Akıllı telefon CEVAP AN"],ans:"B) Masaüstü bilgisayar",exp:"",exams:["2024-2025 Final"]},
+{id:61,q:"Aşağıdakilerden hangisi telif hakları açısından internen kendine özgü koşullarından kaynaklanan ihlâllerden biri değildir?",options:["A) Yeni eser türleri", "B) Kolay çoğaltma ve dağım", "C) Eser türlerinin eşitliği", "D) Patent ve lisans", "E) Etkileşimlilik ve değişkenlik"],ans:"D) Patent ve lisans",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:62,q:"Aşağıdakilerden hangisi virüs türlerinden biri değildir?",options:["A) Dosya virüsleri", "B) Mikro virüsleri", "C) Ağ virüsleri", "D) Önyükleme virüsleri", "E) Dos virüsleri"],ans:"B) Mikro virüsleri",exp:"",exams:["2023-2024 Final"]},
+{id:63,q:"Aşağıdakilerden hangisi yaygın olarak kullanılan sanallaşrma türlerinden biri değildir?",options:["A) Depolama Sanallaşrma", "B) Sunucu Sanallaşrma", "C) Nesne Sanallaşrma", "D) Masaüstü Sanallaşrma", "E) Uygulama Sanallaşrma"],ans:"C) Nesne Sanallaşrma",exp:"",exams:["2021-2022 Final"]},
+{id:64,q:"Aşağıdakilerden hangisi yaşam boyu öğrenmede MOOC'lardan faydalanmak için takip edilebilecek adımlardan biri değildir?",options:["A) Eğimleri takip edin.", "B) MOOC'lardaki ihyacınıza uygun kursları seçin.", "C) Kursu tamamlayarak serfika alın.", "D) Eğimleri duyurun.", "E) Kaydolun ve kursa başlayın."],ans:"D) Eğimleri duyurun.",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:65,q:"Belirli bir dosya pindeki sonuçları elde etmek için aşağıda verilen arama motoru parametrelerinden hangisi kullanılır?",options:["A) Inurl", "B) İki Tırnak İşare", "C) Link", "D) Filetype", "E) Yıldız İşare (*)"],ans:"D) Filetype",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:66,q:"Bilgisayar, yazıcı ve cep telefon gibi cihazların, ethernet kar, kablo, wifi, switch gibi araçlarla veri, yazılım veya donanım paylaşmasına sağlayan ortam aşağıdakilerden hangisidir?",options:["A) Ağ", "B) İşlem sistemi", "C) Topoloji", "D) TCP", "E) Koaksiyel"],ans:"A) Ağ",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:67,q:"Bilgiyi doğru ve güvenilir kaynaklardan elde etme, bilgiyi işleme ve gerekli bilgiyi alma becerisi dijital okuryazarlığın hangi özelliğidir?",options:["A) İleşim kurma becerisi", "B) Eğim alma", "C) Sürekli öğrenme", "D) Bilgiye erişim becerisi", "E) Bilgiyi seçme becerisi"],ans:"E) Bilgiyi seçme becerisi",exp:"",exams:["2024-2025 Final"]},
+{id:68,q:"Bir okuldaki öğretmenlerin haalık nöbet listesini hazırlamak için kullanılabilecek en uygun nesne aşağıdakilerden hangisidir?",options:["A) Şekil", "B) Tablo", "C) Men kutusu", "D) Grafik", "E) Resim"],ans:"B) Tablo",exp:"",exams:["2024-2025 Final"]},
+{id:69,q:"Bloglar ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Bloglar; \"web günlüğü\", \"açık günlük\", \"ağ günlüğü\", \"e- günlük\" gibi farklı şekillerde adlandırılmışr.", "B) Bloglar; kolay hazırlanabilen bir paylaşım, ileşim ve yayım aracıdır.", "C) Blog yazan kişilere \"blogger\", bloga yazı yazıp gönderme işlemine de \"bloglama\" denilmektedir.", "D) En yaygın bilinen blog servislerinden biri www.blogger.com’ dur.", "E) Bloglar, dinamik değildir. konular, görüşler, linkler sürekli değişebilir. Bir blog sitesine istenilen her şey gönderilebilir ancak bunun bütün sonuçlarından gönderici sorumlu olunur."],ans:"E) Bloglar, dinamik değildir. konular, görüşler, linkler sürekli değişebilir. Bir blog sitesine istenilen her şey gönderilebilir ancak bunun bütün sonuçlarından gönderici sorumlu olunur.",exp:"",exams:["2021-2022 Final"]},
+{id:70,q:"Boot Sector virüsleri olarak da bilinen virüs türü aşağıdakilerden hangisidir?",options:["A) Önyükleme", "B) Makro", "C) Dosya", "D) Ağ", "E) Dos CEVAP AN"],ans:"A) Önyükleme",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:71,q:"E-posta ilelerindeki “Yönlendirme (Forward, Fwd)” işleminin kullanım amacı aşağıdakilerden hangisidir?",options:["A) İlenin geldiği adresi kopyalayarak aynı adrese ile yazmak", "B) Gelen ileye cevap yazmak", "C) Gelen ileyi bir başka adrese yönlendirmek", "D) İlenin gönderildiği adresleri kopyalamak", "E) Gelen ileyi “Okunmadı” olarak işaretlemek"],ans:"C) Gelen ileyi bir başka adrese yönlendirmek",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:72,q:"FTP (File Transfer Protocol) ’ye ilişkin aşağıdakilerden hangisi yanlışr?",options:["A) Uzaktaki bir bilgisayara dosya gönderilebilir.", "B) Anonim ya da kullanıcı adı ve şifresi ile kullanılır.", "C) Dosya aktarım ileşim kuralı olarak adlandırılır.", "D) Uzaktaki bir bilgisayardan dosya alınabilir.", "E) Aynı anda görüntü ve ses bilgilerinin paylaşımıdır"],ans:"E) Aynı anda görüntü ve ses bilgilerinin paylaşımıdır",exp:"",exams:["2021-2022 Final"]},
+{id:73,q:"FTP ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Komut ve Veri olmak üzere iki ana portu vardır.", "B) Dosya Transfer protokolüdür.", "C) Quit komutu yerine bye komutu kullanılabilir.", "D) Dosyaları silmek için delete komutu kullanılır.", "E) Akf FTP de sunucu akf olarak işlem yapar."],ans:"E) Akf FTP de sunucu akf olarak işlem yapar.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:74,q:"Geleneksel BT ile bulut hizmet modelleri arasındaki yetki paylaşımını belirlemek için evde yapılan pizza ile kafede sipariş edilen pizza karşılaşrılmaktadır. Buna göre aşağıdakilerden hangisi doğru sırayla verilmişr?",options:["A) Geleneksel BT - Iaas", "B) Saas - Iaas", "C) Paas - Saas", "D) Geleneksel BT - Saas", "E) Geleneksel BT - Pass"],ans:"D) Geleneksel BT - Saas",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:75,q:"Genellikle kelime işlemci yazılımlarında bulunan virüs programı aşağıdakilerden hangisidir?",options:["A) Gizlilik", "B) Makro Yazılım", "C) Dosya Sistemi", "D) Web Komut Sistemi", "E) Yazılım Bombası"],ans:"B) Makro Yazılım",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:76,q:"Hazırlanan slayn gösterimini başlatmaya, görüntüleme ve provasını yapmaya dair ayarların bulunduğu sekme aşağıdakilerden hangisidir?",options:["A) Görünüm sekmesi", "B) Gözden geçir sekmesi", "C) Slayt gösterisi sekmesi", "D) Görüntüleme sekmesi", "E) Prova sekmesi görüntüleme ve provasını yapmaya dair ayarlar slayt gösterisi sekmesinde bulunur."],ans:"C) Slayt gösterisi sekmesi",exp:"",exams:["2021-2022 Final"]},
+{id:77,q:"I. ............. adresin ilk bölümü uygulama protokolü olarak adlandırılır. II. ............. alana sahip olan kuruluşun türünü belirr. III. ............. bilgilerin ya da dosyanın istendiği sunucu adıdır. IV. ............. sitenin yayınlandığı ülkeyi belirr. Örnek olarak \"hps://www.atauni.edu.tr\" verilen internet adresinin çözümlemesi ile ilgili olarak yukarıdaki boşluklara sırası ile gelmesi gereken ifadeler aşağıdakilerin hangisinde doğru verilmişr?",options:["A) I-hp://, II-edu, III-www.atauni, IV-tr", "B) I-tr, II-hp://, III-edu, IV-www.atauni", "C) I-hp://, II-tr, III-edu, IV-www.atauni", "D) I-hp://, II-tr, III-www.atauni, IV-edu", "E) I-www.atauni, II-hp://, III-tr, IV-edu sayfasına ulaşmak için adres sarına www.atauni.edu.tr internet adresi yazıldığında önceden tanımlanmış DNS sunucusu devreye girer ve URL adresini 194.27.49.80 nolu IP adresine dönüştürerek pake bu IP adresine yönlendirir. İnternet adresleri belli bir formata sahipr. Aşağıda hp://www.atauni.edu.tr/sinavlar/2011.html adresinin çözümlemesi yer almaktadır. (Tablo 11.2.) Tablo 11.2. İnternet Adresinin Çözümlemesi URL Bölüm adı Açıklama hp:// Transfer Protocol Adresin ilk bölümü protokol olarak adlandırılır. Bu uygulama protokolü istemci tarayıcıya dosyayı nasıl açacağını belirr. İnternet kullanıcıları çoğunlukla hp (Hypertext Transfer www.atauni Sunucu Adı Bilgilerin ya da dosyanın istendiği sunucu adıdır. Adresin sahibi tarandan belirlenir ve genellikle kurumu çağrışracak harlanması kolay bir isim kullanılır. edu Üst Seviye Alan adı (Top Level Domain gTLD) Alana sahip olan kuruluşun türünü belirr. Bu alanda karşılaşılan diğer kod ve açıklamaları aşağıdaki gibidir. com cari kuruluşlar (commercial) edu eğim kuruluşları (educaon) gov devlet kuruluşları (government) org cari olmayan kâr amacı gütmeyen kuruluşlar mil askeri kuruluşlar (military) net ağ organizasyonları (network) tr Ülke Kodu (Country Top Level Domain Sitenin yayınlandığı ülkeyi belirr."],ans:"A) I-hp://, II-edu, III-www.atauni, IV-tr",exp:"",exams:["2021-2022 Final"]},
+{id:78,q:"I. Access içindeki formlar veri tabanı içerisinde kullanıcı ara birimi ortadan kaldırmak amacıyla kullanılan nesnelerdir. II.Formlar, tablolara bilgi girişini kolaylaşran ve daha anlaşılır bir ekran görüntüsü ile çalışmayı sağlayan nesnelerdir. III.Etkili bir form, veri tabanının kullanımını işlevsel hâle gerir. Yukarıdakilerden hangisi ya da hangileri Access 2016'da kullanılan formların amaçları arasında yer almaz?",options:["A) Yalnız I", "B) Yalnız II", "C) Yalnız III", "D) I ve II", "E) II ve III veri tabanı içerisinde kullanıcı ara birimi oluşturmak amacıyla kullanılan nesnelerdir. Formlar, tablolara bilgi girişini kolaylaşran ve daha anlaşılır bir ekran görüntüsü ile çalışmayı sağlayan nesnelerdir. Etkili bir form, veri tabanının kullanımını işlevsel hâle gerir."],ans:"A) Yalnız I",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:79,q:"I. Bilgiye erişme II. İleşim kurma III. E-caret IV. Ekonomik faaliyetler Yukarıdakilerden hangisi ya da hangileri günümüzde internet ve diğer bilgi teknolojilerinin sunduğu hizmetlerdendir?",options:["A) I ve II", "B) I, II ve III", "C) I, II, III ve IV", "D) II ve III", "E) Yalnız I"],ans:"C) I, II, III ve IV",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:80,q:"I. F5 II. Shi+F5 III. Shi+F2 Yukarıdakilerden hangisi ya da hangileri herhangi bir sunuyu, sunum modunda görüntülemek için kullanılabilir?",options:["A) Yalnız I", "B) Yalnız II", "C) I ve II", "D) II ve III", "E) I, II ve III sunum modunda görüntülemek için kullanılır."],ans:"C) I ve II",exp:"",exams:["2021-2022 Final"]},
+{id:81,q:"I. Lisanssız yazılım kullanımı II. Eserlere yasadışı yollarla erişim III. Hırsızlık IV. Kredi kar dolandırıcılığı Yukarıda verilenlerden hangisi ya da hangileri web teknolojilerinde yaşanan ek problemlerdendir?",options:["A) Yalnız II", "B) II ve III", "C) I, II ve III", "D) I, II, III ve IV", "E) I ve II"],ans:"D) I, II, III ve IV",exp:"",exams:["2024-2025 Final"]},
+{id:82,q:"I. Program çalışrılabilir. II. Makro çalışrılabilir. III. Nesneler arasında geçiş yapılabilir. IV. Slaytlar arasında geçiş yapılabilir. Sunu yazılımında bulunan eylem düğmeleriyle yukarıdakilerden hangisi ya da hangileri gerçekleşrilebilir?",options:["A) Yalnız I", "B) I ve II", "C) I, II, III ve IV", "D) I, II ve IV", "E) Yalnız III"],ans:"D) I, II ve IV",exp:"",exams:["2023-2024 Final"]},
+{id:83,q:"I. Resim II. Şekil III. Grafik Yukarıdakilerden hangisi ya da hangileri powerpoint programında eklenebilir?",options:["A) Yalnız I", "B) Yalnız II", "C) I ve III", "D) II ve III", "E) I, II ve III"],ans:"E) I, II ve III",exp:"",exams:["2021-2022 Final"]},
+{id:84,q:"I. Veri tekrarını önler. II. Verilerin paylaşımını kolaylaşrır. III. Veri güvenliğini sağlar. Yukarıdakilerden hangisi ya da hangileri veri tabanı yönem sistemlerinin avantajları arasında yer alır?",options:["A) Yalnız I", "B) I ve II", "C) I ve III", "D) II ve III", "E) I, II ve III dahildir."],ans:"E) I, II ve III dahildir.",exp:"",exams:["2021-2022 Final"]},
+{id:85,q:"I. Video dersler II. Sanal dünyalar III. Sosyal ağlar Yukarıdakilerden hangisi ya da hangileri yaşam boyu öğrenmede bilişim teknolojilerinin sunduğu öğrenme kaynakları ve araçlarındandır?",options:["A) Yalnız II", "B) I ve II", "C) Yalnız I", "D) I, II ve III", "E) Yalnız III"],ans:"D) I, II ve III",exp:"",exams:["2023-2024 Final"]},
+{id:86,q:"I. Öğrenmenin sadece okul yıllarında değil hayat boyunca olması II. Her yaşta her alanda öğrenim rsa sunması III. Sosyal, kültürel, teknolojik ve ekonomik değişikliklere uyum sağlamak için bireyin kendini sürekli gelişrmesi Yaşam boyu öğrenme ile ilgili yukarıda verilenlerden hangisi ya da hangileri doğrudur?",options:["A) I, II ve III", "B) Yalnız I", "C) Yalnız III", "D) II ve III", "E) I ve II"],ans:"A) I, II ve III",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:87,q:"I. Öğrenmenin sadece okul yıllarında değil hayat boyunca olması II. Her yaşta her alanda öğrenim rsa sunması III. Sosyal, kültürel, teknolojik ve ekonomik değişikliklere uyum sağlamak için bireyin kendini sürekli gelişrmesi Yaşam boyu öğrenme ile ilgili yukarıdakilerden hangisi ya da hangileri doğrudur?",options:["A) I, II ve III", "B) I ve II", "C) Yalnız I", "D) Yalnız III", "E) II ve III"],ans:"A) I, II ve III",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:88,q:"I. İlim ve edebiyat eserleri II. Musiki eserleri III. Sinema eserleri Yukarıdakilerden hangisi ya da hangileri 5846 sayılı Fikir ve Sanat Eserleri Kanunu'nda yer alan eser türlerindendir?",options:["A) Yalnız I", "B) Yalnız II", "C) I ve II", "D) II ve III", "E) I, II ve III"],ans:"E) I, II ve III",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:89,q:"IP adresleri, 1998 yılında Birleşik Devletlerde kurulan …...……. kurumunun bir birimi olan İnternet Tahsisli Numaralar Kurumu (IANA) tarandan matemaksel olarak ürelir ve atanırlar. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) ULAKBIM", "B) ULAKNET", "C) ICANN", "D) IETF", "E) ISS"],ans:"C) ICANN",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:90,q:"Instagram'ın ilk kurulduğunda en temel özelliği aşağıdakilerden hangisidir?",options:["A) Fotoğraf ve video paylaşma", "B) Grup kurma", "C) Online alışveriş yapma", "D) Canlı yayın yapma", "E) Mesajlaşma"],ans:"A) Fotoğraf ve video paylaşma",exp:"",exams:["2024-2025 Final"]},
+{id:91,q:"Instagram'ın kuruluş tarihi aşağıdakilerden hangisidir?",options:["A) 2009", "B) 2010", "C) 2011", "D) 2012", "E) 2013"],ans:"B) 2010",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:92,q:"Kullanıcı tarandan önceden belirlenmiş güvenlik ilkelerine dayalı olarak gelen ve giden ağ trafiğini izleyen ve filtreleyen sistem aşağıdakilerden hangisidir?",options:["A) Modem", "B) Spam", "C) Norton", "D) Güvenlik duvarı", "E) Anvirüs"],ans:"D) Güvenlik duvarı",exp:"",exams:["2024-2025 Final"]},
+{id:93,q:"Mobil cihazlarda çalışmak üzere gelişrilmiş yazılımlara ne ad verilir?",options:["A) Mobil program", "B) Exe", "C) Uygulama", "D) Dmg", "E) Araç"],ans:"C) Uygulama",exp:"",exams:["2024-2025 Final"]},
+{id:94,q:"Nesnelerin animasyon özelliklerini kopyalanıp diğer nesnelere uygulamak için kullanılan araç aşağıdakilerden hangisidir?",options:["A) Biçim boyacısı", "B) Animasyon bölmesi", "C) Tekleyici", "D) Nesne boyacısı", "E) Animasyon boyacısı NAHTARI"],ans:"E) Animasyon boyacısı NAHTARI",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:95,q:"Nesnelerin animasyon özelliklerini kopyalayıp diğer nesnelere uygulamak için kullanılan araç aşağıdakilerden hangisidir?",options:["A) Nesne boyacısı", "B) Animasyon boyacısı", "C) Biçim boyacısı", "D) Tekleyici", "E) Animasyon bölmesi"],ans:"B) Animasyon boyacısı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:96,q:"Nesnenin slayt gösterisi esnasında nasıl görüntüleneceğini belirleyen animasyonları içeren animasyon grubu kategorisi aşağıdakilerden hangisidir?",options:["A) Giriş", "B) Vurgu", "C) Çıkış", "D) Başlangıç", "E) Tasarım görüntüleneceğini belirleyen animasyonları içeren animasyon grubu giriş kategorisidir."],ans:"A) Giriş",exp:"",exams:["2021-2022 Final"]},
+{id:97,q:"Nesnenin slayt gösterisi esnasında nasıl görüntüleneceğini belirleyen kategori aşağıdakilerden hangisidir?",options:["A) Çıkış", "B) Gecikme", "C) Giriş", "D) Özel yol", "E) Vurgu esnasında nasıl görüntüleneceğini belirleyen animasyonları içerir."],ans:"C) Giriş",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:98,q:"Online ödemelerin verilerini internet üzerinden aktarımını sağlayan teknoloji aşağıdakilerden hangisidir?",options:["A) SET", "B) SRV", "C) EXE", "D) DNS", "E) E-commerce"],ans:"A) SET",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:99,q:"Polyboot.B ve AnEXE virüsleri hangi virüs türüne örnek olarak verilebilir?",options:["A) Dosya virüsleri", "B) Önyükleme virüsleri", "C) Solucanlar", "D) Dos virüsleri", "E) Ağ virüsleri CEVAP AN"],ans:"B) Önyükleme virüsleri",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:100,q:"Power Point 2021 programında şekillerin sil, boyut ve konum gibi özelikleri değişrmek için kullanılan araçlar hangi sekmede yer alır?",options:["A) WordArt slleri", "B) Şekil biçimi", "C) Şekil ekle", "D) Yerleşr", "E) Boyut"],ans:"B) Şekil biçimi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:101,q:"PowerPoint programında bir metni italik yazmak için kullanılan kısayol tuş bileşeni aşağıdakilerden hangisidir?",options:["A) CTRL+P", "B) ALT+Y", "C) CTRL+Y", "D) CTRL+T", "E) ALT+T"],ans:"D) CTRL+T",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:102,q:"PowerPoint programında sunuya Word, Excel gibi programların dosyalarını eklemek için kullanılan komut aşağıdakilerden hangisidir?",options:["A) Resim", "B) Ses", "C) Nesne", "D) WordArt", "E) Simge"],ans:"C) Nesne",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:103,q:"PowerPoint slaya kullanılan geçişin sunum esnasında nasıl görüntüleneceğini görmek için hangi seçenek kullanılır?",options:["A) Önizleme", "B) Zamanlama", "C) Yürütme", "D) Efekt uygulama", "E) Yazdır görüntüleneceğini görmek için önizleme seçeneği kullanılabilir."],ans:"A) Önizleme",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:104,q:"Randex, Meve ve MrKlunky virüsleri hangi virüs türüne örnek olarak verilebilir?",options:["A) Ağ", "B) Truva a", "C) Dosya", "D) Makro", "E) Solucan"],ans:"C) Dosya",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:105,q:"Sanal dünya ile gerçek dünyayı bir araya geren teknoloji aşağıdakilerden hangisidir?",options:["A) IOT", "B) Arrılmış Gerçeklik", "C) NFC", "D) SmartSmart", "E) Multouch"],ans:"B) Arrılmış Gerçeklik",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:106,q:"Sistemde gerçekleşen tüm olayların kaydedilmesi ve istenilen zaman izlenebilmesi aşağıdaki temel ilkelerden hangisi ile ilgilidir?",options:["A) Bütünlük", "B) Erişebilirlik", "C) Gizlilik", "D) Kayıt Tutma", "E) Açıklık"],ans:"D) Kayıt Tutma",exp:"",exams:["2024-2025 Final"]},
+{id:107,q:"Slayt gösterisi esnasında nesnelere hareket kazandırmak için kullanılan seçenekler hangi sekmede yer almaktadır?",options:["A) Ekle", "B) Animasyonlar", "C) Gözden geçir", "D) Görünüm", "E) Giriş"],ans:"B) Animasyonlar",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:108,q:"Slayt gösterisi sırasında aşağıdakilerden hangisi sadece sunucuya gösterilir?",options:["A) Alt başlık alanı", "B) Not paneli", "C) Men alanı", "D) Slayt paneli", "E) Başlık alanı"],ans:"B) Not paneli",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:109,q:"Slaytlara eklenen resimlerle ilgili aşağıdakilerden hangisi yanlışr?",options:["A) Saydam renk belirlenebilir.", "B) Renk doygunluğu ayarlanabilir.", "C) Arka plan rengi ayarlanabilir.", "D) Kırpma işlemi yapılabilir.", "E) Renk tonu ayarlanabilir."],ans:"C) Arka plan rengi ayarlanabilir.",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:110,q:"Sosyal medya hesabını güvende tutmak için aşağıdakilerden hangisi yapılmalıdır?",options:["A) Arkadaşlık isteği gönderen herkes kabul edilmeli", "B) Adres ve telefon numaraları paylaşılmalı", "C) Paylaşım yapılırken konum belirlmeli", "D) Herkese açık olarak paylaşım yapılmalı", "E) Yalnız güven veren kaynaklardan gelen bağlanlara klanmalı"],ans:"E) Yalnız güven veren kaynaklardan gelen bağlanlara klanmalı",exp:"",exams:["2024-2025 Final"]},
+{id:111,q:"Sosyal medya hesabını güvende tutmak için aşağıdakilerden hangisi yapılmamalıdır?",options:["A) Güçlü bir şifre kullanılmalı", "B) Sosyal medya plaormlarında kişisel bilgiler paylaşılmamalı", "C) Bilinmeyen kaynaklardan gelen bilgilere ibar etmemeli", "D) Paylaşımlar herkese açık olarak yapılmamalı", "E) Farklı hesaplarda aynı şifre kullanılmalı"],ans:"E) Farklı hesaplarda aynı şifre kullanılmalı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:112,q:"Tablonun bir alanındaki veri, bir başka tablodan geldiğinde ya da bu alan için bir başka tablodaki veri kullanıldığında veri türü olarak aşağıdakilerden hangisi seçilmelidir?",options:["A) Hesaplanmış", "B) Arama Sihirbazı", "C) Otomak Sayı", "D) Ole Nesnesi", "E) Köprü"],ans:"B) Arama Sihirbazı",exp:"",exams:["2021-2022 Final"]},
+{id:113,q:"Verinin yetkisiz kişiler tarandan ele geçirilmeme ve yetkisiz erişime karşı korunmasına ne ad verilir?",options:["A) Gizlilik", "B) İzlenebilirlik", "C) İnkar edememe", "D) Bütünlük", "E) Erişebilirlik"],ans:"A) Gizlilik",exp:"",exams:["2023-2024 Final"]},
+{id:114,q:"Web 2.0 aşağıdakilerden hangisi tarandan ortaya konulmuştur?",options:["A) Steve Chen", "B) Jack Dorsey", "C) Tim O'Reilly", "D) Tim Berners Lee", "E) Mark Zuckerberg"],ans:"C) Tim O'Reilly",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:115,q:"Web 2.0 ile hangi tür uygulamalar popüler olmuştur?",options:["A) Web siteleri", "B) Oyun içerikli uygulamalar", "C) Haber siteleri", "D) Müzik içerikli uygulamalar", "E) Sosyal medya plaormları CEVAP AN"],ans:"E) Sosyal medya plaormları CEVAP AN",exp:"",exams:["2023-2024 Final"]},
+{id:116,q:"World Wide Web (www) ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Web sunucu uygulamaları, web içeriklerini bilgisayarın hazasından alıp istemciye sunar.", "B) Sunucuya bağlanarak web sayfalarını görüntüleyen programlar web tarayıcıdır.", "C) www, birbirine bağlanlarla ilişkilendirilmiş içeriklerin internet üzerinden ilemini sağlamaktadır.", "D) İnternet Explorer, Firefox, Chrome ve Opera gibi programlar web sayfalarında gezin için kullanılan sunuculardır.", "E) Hp, sunucu ve istemci arasındaki mesajların yapısını ve mesaj alışverişlerinin nasıl yapılacağını belirler. sayfalarını görüntüleyen programlardır. Internet Explorer, Firefox, Chrome ve Opera gibi programlar web sayfalarında gezin için kullanılan tarayıcılardır."],ans:"D) İnternet Explorer, Firefox, Chrome ve Opera gibi programlar web sayfalarında gezin için kullanılan sunuculardır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:117,q:"World Wide Web üzerindeki içerikleri toplayıp düzenledikten sonra kullanıcılara sunan internet uygulaması aşağıdakilerden hangisidir?",options:["A) Haber Grupları", "B) Video Konferans", "C) Whatsapp Web", "D) Forum", "E) Arama Motorları"],ans:"E) Arama Motorları",exp:"",exams:["2024-2025 Final"]},
+{id:118,q:"Çizgiler, kemerler, dönüşler, şekiller ve halkalar seçeneklerinden biri kullanılarak animasyonlara farklı bir yol vermeye yarayan seçenek aşağıdakilerden hangisidir?",options:["A) Hareket yolları", "B) Animasyon yolları", "C) Giriş çıkış efektleri", "D) Vurgu efektleri", "E) Yakınlaşrma ve sıçrayış hareket yolları alnda var olan sekmelerdir. NAHTARI"],ans:"A) Hareket yolları",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:119,q:"Çoklu dosya almak için aşağıdaki FTP (File Transfer Protocol) komutlarından hangisi kullanılır?",options:["A) mkdir", "B) binary", "C) rmdir", "D) mget", "E) mput"],ans:"D) mget",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:120,q:"Ölçüt kısmına sahip bir seçme sorgusu ile kayıtlara ulaşmak için aşağıdakilerden hangisi kullanılmalıdır?",options:["A) Oluştur sekmesinden Sorgu Tasarımı", "B) Tasarım sekmesinden Çalışr", "C) Sorgu Tasarımı sekmesinden Çalışr", "D) Çalışr sekmesinden Sorgu Tasarımı", "E) Tasarım sekmesinden Oluştur varolan kayıtlardan seçme sorgusu yapılacakr. personelAdi “Ahmet” olan kayıtlar görüntüleneceği için ölçüt kısmına “Ahmet” yazılır. Tasarım sekmesinden Çalışr seçeneği kullanılarak kayıtlara ulaşılır."],ans:"B) Tasarım sekmesinden Çalışr",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:121,q:"Üzerinde web uygulamalarının yüklü olduğu, web sayfalarının ve bu sayfa üzerindeki diğer kaynakların tutulduğu bilgisayarlara ne ad verilir?",options:["A) Web tarayıcı", "B) Web sunucu", "C) İstemci", "D) Web konferans", "E) Web okuyucu CEVAP AN"],ans:"B) Web sunucu",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:122,q:"İnternen ülkemize gelmesinin ardından TÜBİTAK bünyesinde kurulan Ulusal Akademik Bilgi Merkezi tarandan oluşturulan akademik araşrma ağı aşağıdakilerden hangisidir?",options:["A) BITNET", "B) ULAKNET", "C) NSFNET", "D) TÜVEKA", "E) ARPANET"],ans:"B) ULAKNET",exp:"",exams:["2023-2024 Final"]},
+{id:123,q:"İnternet ile ilgili aşağıdakilerden hangisi yanlışr?",options:["A) İnternet çalışma yapısı ibarıyla paket anahtarlamalı bir ağdır.", "B) İnternen temeli, akademik araşrmalara dayanmaktadır.", "C) İnternee bilgi alış verişi IP Protokolü ile gerçekleşrmektedir.", "D) İnternen işleyişinde ISS ile bir üst ağa bağlan sağlanmaktadır.", "E) İnternet paketleri dinamik bir yol izlemektedir. CEVAP AN"],ans:"",exp:"🚫 İptal edilmiş soru",exams:["2021-2022 Final"]},
+{id:124,q:"İnternet ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) İnternen bilinçli bir şekilde kullanılması gerekir.", "B) Virüs, truva a gibi yazılımlar zararsız yazılımlardır.", "C) Çocuk issmarı interneeki tehlikelerden biridir.", "D) İnternet üzerindeki ileşimlerde aile bilgileri, telefon numarası, adres, T.C. Kimlik No bilgileri herkesle paylaşılmamalıdır.", "E) İnternet tehditlerinden korunmak için kolayca tahmin edilmeyecek güçlü şifreler kullanılmalıdır. casus yazılımlarla kişisel bilgilerin çalınma riski vardır."],ans:"B) Virüs, truva a gibi yazılımlar zararsız yazılımlardır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:125,q:"İnternet kullanıcılarının herhangi bir konu hakkında fikir, görüş ve tecrübe paylaşımında bulundukları web sayfalarına ne ad verilir?",options:["A) Forum", "B) Anlık mesajlaşma", "C) E-posta", "D) Arama motorları", "E) Video konferans"],ans:"A) Forum",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:126,q:"İnternet ortamında başkalarına hakaret etmeme, aynı zamanda bu ortamı küfür veya aşağılayıcı ifadelerden arındırma sorumluluğunu kapsayan dijital vatandaşlık boyutu aşağıdakilerden hangisidir?",options:["A) Dijital kanun", "B) Dijital sağlık", "C) Dijital hak ve sorumluluklar", "D) Dijital güvenlik", "E) Dijital ek"],ans:"C) Dijital hak ve sorumluluklar",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:127,q:"“Bilgiler ve bilgilere erişim kanalları kime air ve hangi koşullarda erişilebilir, değişrilebilir ve kullanılabilir?” sorusu hangi ek sorunlar kapsamında incelenir?",options:["A) Gizlilik", "B) Ahlak", "C) Fikrî mülkiyet", "D) Doğruluk", "E) Erişim"],ans:"C) Fikrî mülkiyet",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:128,q:"…………….., iyi ve kötüyü, doğru ve yanlışı araşran bir ahlak felsefesidir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Ek", "B) Ahlak", "C) Erişim", "D) Gizlilik", "E) Doğruluk"],ans:"A) Ek",exp:"",exams:["2021-2022 Final"]}
+];
+const pdfMap={"2021-2022 Bütünleme": "pdfs/Temel_Bilgi_Teknolojileri_II/2021-2022_Butunleme.pdf", "2021-2022 Final": "pdfs/Temel_Bilgi_Teknolojileri_II/2021-2022_Final.pdf", "2022-2023 Yaz Okulu": "pdfs/Temel_Bilgi_Teknolojileri_II/2022-2023_Yaz_Okulu.pdf", "2023-2024 Bütünleme": "pdfs/Temel_Bilgi_Teknolojileri_II/2023-2024_Butunleme.pdf", "2023-2024 Final": "pdfs/Temel_Bilgi_Teknolojileri_II/2023-2024_Final.pdf", "2023-2024 Yaz Okulu": "pdfs/Temel_Bilgi_Teknolojileri_II/2023-2024_Yaz_Okulu.pdf", "2024-2025 Bütünleme": "pdfs/Temel_Bilgi_Teknolojileri_II/2024-2025_Butunleme.pdf", "2024-2025 Final": "pdfs/Temel_Bilgi_Teknolojileri_II/2024-2025_Final.pdf"};
+const PROGRESS_KEY="auzef-progress-Temel Bilgi Teknolojileri II";
+
+let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
+function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
+function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+function shortenLabel(e){
+  return e
+    .replace(/(\d{4})-(\d{4})/g,(_,a,b)=>a.slice(2)+'-'+b.slice(2))
+    .replace(/^(\d{4}) /,(_,y)=>y.slice(2)+' ')
+    .replace('Bütünleme','Büt');
+}
+function tagCssClass(e){
+  if(e.includes('Kez Çıktı')) return 'freq-tag';
+  if(e.includes('Üç Ders'))   return 'uc-tag';
+  if(e.includes('Yaz Okulu')) return 'yaz-tag';
+  if(e.includes('Vize'))      return 'vize-tag';
+  if(e.includes('Final'))     return 'fin-tag';
+  if(e.includes('Bütünleme')) return 'but-tag';
+  return '';
+}
+function tagTfiClass(e){
+  if(e.includes('Üç Ders'))   return 'tfi-uc';
+  if(e.includes('Yaz Okulu')) return 'tfi-yaz';
+  if(e.includes('Vize'))      return 'tfi-vize';
+  if(e.includes('Final'))     return 'tfi-fin';
+  if(e.includes('Bütünleme')) return 'tfi-but';
+  return 'tfi-other';
+}
+function highlightNeg(text){
+  var L='[a-zA-ZçğışöüÇĞİIŞÖÜ]';
+  return text.replace(
+    new RegExp(
+      // Çok kelimeli kalıplar önce
+      'doğru\\s+değil'+L+'*'
+      +'|yanlış\\s+değil'+L+'*'
+      +'|uygun\\s+değil'+L+'*'
+      +'|gerekli\\s+değil'+L+'*'
+      +'|mümkün\\s+değil'+L+'*'
+      +'|'+L+'+mamas'+L+'\\s+gerek'+L+'*'
+      +'|'+L+'+memes'+L+'\\s+gerek'+L+'*'
+      +'|değil\\s+midir?'
+      +'|değil\\s+mi(?!'+L+')'
+      // Tek kelime negatifleri
+      +'|değildir'
+      +'|yanlıştır'
+      +'|yoktur(?!'+L+')'
+      +'|olamaz(?!'+L+')'
+      +'|olmaz(?!'+L+')'
+      // -mamaktadır/-memektedir (süregelen olumsuz)
+      +'|'+L+'+mamaktadır'+L+'*'
+      +'|'+L+'+memektedir'+L+'*'
+      // -mamalıdır/-memelidir (zorunluluk olumsuz)
+      +'|'+L+'+mamalıdır'
+      +'|'+L+'+memelidir'
+      +'|'+L+'+mamalı(?!'+L+')'
+      +'|'+L+'+memeli(?!'+L+')'
+      // -maz/-mez geniş (tüm Türkçe geniş zaman olumsuz)
+      +'|'+L+'+maz(?!'+L+')'
+      +'|'+L+'+mez(?!'+L+')',
+      'gi'
+    ),
+    function(m){return '<u class="neg-hl">'+m+'</u>';}
+  );
+}
+function getProgress(){try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'{}');}catch(e){return {};}}
+function saveProgress(qid,result){
+  var p=getProgress();p[String(qid)]=result;
+  localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
+  updateProgressBar();
+  var icon=document.getElementById('prev-'+qid);
+  if(icon){icon.className='q-prev '+(result==='correct'?'q-prev-correct':'q-prev-wrong');icon.textContent=result==='correct'?'✓ Doğru':'✗ Yanlış';}
+}
+function updateProgressBar(){
+  var p=getProgress();var total=sorular.length;
+  var done=Object.keys(p).filter(function(k){return parseInt(k)<total;}).length;
+  var el=document.getElementById('prog-done');if(el)el.textContent=done;
+  var et=document.getElementById('prog-total');if(et)et.textContent=total;
+  var fill=document.getElementById('prog-fill');if(fill)fill.style.width=(total?(done/total*100):0)+'%';
+}
+function resetProgress(){
+  if(!confirm('Bu ders için tüm ilerleme sıfırlansın mı?'))return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressBar();
+  var activeTab=document.querySelector('.tab-btn.active');
+  if(activeTab)activeTab.click();
+}
+function updateStatsBar(){
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function applyTagFilter(fullLabel,tfiClass){
+  document.querySelectorAll('.question-card').forEach(card=>{
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    card.classList.toggle('tag-hidden',!exams.includes(fullLabel));
+  });
+  updateStatsBar();
+  const ind=document.getElementById('tag-filter-indicator');
+  ind.className='visible '+tfiClass;
+  ind.querySelector('.tfi-label').textContent=shortenLabel(fullLabel)+' Görüntüleniyor';
+  document.querySelector('.sidebar').classList.add('tag-filter-active');
+  // PDF button
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const val=pdfMap[fullLabel];
+    if(val){
+      const ids=Array.isArray(val)?val:[val];
+      pdfBtn.dataset.pdfIds=JSON.stringify(ids);
+      pdfBtn.dataset.pdfLabels=JSON.stringify([fullLabel]);
+      pdfBtn.dataset.pdfLabel=shortenLabel(fullLabel);
+      pdfBtn.classList.add('visible');
+    } else pdfBtn.classList.remove('visible');
+  }
+}
+function clearTagFilter(){
+  document.querySelectorAll('.question-card').forEach(c=>c.classList.remove('tag-hidden'));
+  updateStatsBar();
+  document.getElementById('tag-filter-indicator').className='';
+  document.querySelector('.sidebar').classList.remove('tag-filter-active');
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn)pdfBtn.classList.remove('visible');
+}
+let _pdfIds=[],_pdfLabels=[],_pdfIdx=0;
+function _pdfLoad(idx){
+  const frames=document.getElementById('pdfModalFrames');
+  frames.innerHTML='';
+  const f=document.createElement('iframe');
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
+  f.allowFullscreen=true;
+  frames.appendChild(f);
+  const counter=document.getElementById('pdfCounter');
+  if(_pdfIds.length>1){counter.textContent=(_pdfIdx+1)+' / '+_pdfIds.length;}
+  else{counter.textContent='';}
+  // Modal başlığını her PDF'e göre güncelle
+  const lbl=_pdfLabels[idx]?shortenLabel(_pdfLabels[idx]):null;
+  document.getElementById('pdfModalTitle').textContent=(lbl||document.getElementById('pdfOpenBtn').dataset.pdfLabel||'Sınav')+' Sınav Kağıdı';
+  document.getElementById('pdfPrev').disabled=idx===0;
+  document.getElementById('pdfNext').disabled=idx===_pdfIds.length-1;
+}
+function pdfNav(dir){
+  const next=_pdfIdx+dir;
+  if(next<0||next>=_pdfIds.length)return;
+  _pdfIdx=next;_pdfLoad(_pdfIdx);
+}
+function openPdfModal(){
+  const btn=document.getElementById('pdfOpenBtn');
+  if(!btn)return;
+  _pdfIds=JSON.parse(btn.dataset.pdfIds||'[]');
+  _pdfLabels=JSON.parse(btn.dataset.pdfLabels||'[]');
+  if(!_pdfIds.length)return;
+  _pdfIdx=0;
+  document.getElementById('pdfPrev').style.display=_pdfIds.length>1?'':'none';
+  document.getElementById('pdfNext').style.display=_pdfIds.length>1?'':'none';
+  _pdfLoad(0);
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePdfModal(){
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfModalFrames').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function renderQuestions(filter){
+  const container=document.getElementById('quiz-container');
+  container.innerHTML='';resetScore();
+  const examCount=s=>s.exams.filter(e=>!e.includes('Kez')).length;
+  let filtered;
+  if(filter==='all') filtered=[...sorular];
+  else if(filter==='banko') filtered=sorular.filter(s=>examCount(s)>=2);
+  else if(filter==='review'){const p=getProgress();filtered=sorular.filter(s=>p[String(s.id)]!=='correct');}
+  else filtered=sorular.filter(s=>s.exams.some(e=>e.includes(filter)));
+  filtered.sort((a,b)=>examCount(b)-examCount(a));
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center;color:#888;padding:30px;">Bu kategoride soru bulunamadı.</p>';document.getElementById('stats-bar').innerHTML=`<span>0<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>`;return;}
+  filtered.forEach((soru,idx)=>{
+    const card=document.createElement('div');card.className='question-card';
+    card.dataset.exams=JSON.stringify(soru.exams);
+    const tagsHTML=soru.exams.map(e=>{
+      const css=tagCssClass(e);
+      const isFreq=e.includes('Kez Çıktı');
+      const clickable=isFreq?'':' tag-clickable';
+      const data=isFreq?'':` data-full="${e.replace(/"/g,'&quot;')}" data-tfi="${tagTfiClass(e)}"`;
+      return `<span class="exam-tag${css?' '+css:''}${clickable}"${data}>${shortenLabel(e)}</span>`;
+    }).join('');
+    const ansLetter=soru.ans?soru.ans.trim().charAt(0):'';
+    const optionsHTML=soru.options.map(o=>{
+      const isCorrect=ansLetter&&o.trim().startsWith(ansLetter+')');
+      return `<li${isCorrect?' data-correct="true"':''} onclick="selectOption(this)">${o}</li>`;
+    }).join('');
+    const answerId=`answer-${idx}-${filter}`;
+    card.dataset.qid=soru.id;
+    const prevResult=getProgress()[String(soru.id)];
+    const prevHTML=prevResult?`<span class="q-prev ${prevResult==='correct'?'q-prev-correct':'q-prev-wrong'}" id="prev-${soru.id}">${prevResult==='correct'?'✓ Doğru':'✗ Yanlış'}</span>`:`<span class="q-prev" id="prev-${soru.id}"></span>`;
+    card.innerHTML=`
+      <div class="q-header">
+        <div class="q-meta"><span class="q-num">Soru ${idx+1}</span>${prevHTML}</div>
+        <div class="exam-tags">${tagsHTML}</div>
+      </div>
+      <div class="question-text">${highlightNeg(soru.q)}</div>
+      <ul class="options">${optionsHTML}</ul>
+      <button class="btn-toggle" onclick="toggleAnswer('${answerId}',this)">Cevabı Göster</button>
+      <div class="answer-area" id="${answerId}" style="${allAnswersVisible?'display:block':''}">
+        <p class="correct-ans">✔ Doğru Cevap: ${soru.ans}</p>
+        <p class="exp-text">${soru.exp}</p>
+      </div>`;
+    if(allAnswersVisible){const cl=card.querySelector('.options li[data-correct="true"]');if(cl)cl.classList.add('correct-highlight');card.querySelector('.btn-toggle').textContent='Cevabı Gizle';}
+    card.querySelectorAll('.exam-tag.tag-clickable').forEach(tag=>{
+      tag.addEventListener('click',()=>applyTagFilter(tag.dataset.full,tag.dataset.tfi));
+    });
+    card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
+    container.appendChild(card);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function searchQuestions(q){
+  q=(q||'').trim().toLowerCase();
+  var cards=document.querySelectorAll('#quiz-container .question-card');
+  var visible=0;
+  cards.forEach(function(card){
+    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    var text=(card.querySelector('.question-text')||{}).textContent||'';
+    var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
+    var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
+    card.style.display=match?'':'none';
+    if(match)visible++;
+  });
+  document.getElementById('stats-bar').innerHTML='<span>'+visible+'<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>';
+}
+function setCorrectHighlight(card,visible){card.querySelectorAll('.options li[data-correct="true"]').forEach(li=>li.classList.toggle('correct-highlight',visible));}
+function selectOption(li){
+  const card=li.closest('.question-card');if(card.dataset.answered)return;
+  card.dataset.answered='true';const isCorrect=li.dataset.correct==='true';
+  if(isCorrect){li.classList.add('correct-highlight');card.dataset.answeredResult='correct';scoreCorrect++;}
+  else{li.classList.add('wrong-highlight');card.querySelectorAll('.options li[data-correct="true"]').forEach(l=>l.classList.add('correct-highlight'));card.dataset.answeredResult='wrong';scoreWrong++;}
+  saveProgress(card.dataset.qid,isCorrect?'correct':'wrong');
+  updateScore();
+  const area=card.querySelector('.answer-area');
+  if(area&&area.style.display!=='block'){area.style.display='block';const btn=card.querySelector('.btn-toggle');if(btn)btn.textContent='Cevabı Gizle';}
+}
+function toggleAnswer(id,btn){
+  const area=document.getElementById(id);const card=btn.closest('.question-card');
+  if(area.style.display==='none'||area.style.display===''){
+    area.style.display='block';btn.textContent='Cevabı Gizle';setCorrectHighlight(card,true);
+  }else{
+    area.style.display='none';btn.textContent='Cevabı Göster';setCorrectHighlight(card,false);
+    card.querySelectorAll('.options li.wrong-highlight').forEach(li=>li.classList.remove('wrong-highlight'));
+    if(card.dataset.answeredResult==='correct')scoreCorrect=Math.max(0,scoreCorrect-1);
+    else if(card.dataset.answeredResult==='wrong')scoreWrong=Math.max(0,scoreWrong-1);
+    delete card.dataset.answered;delete card.dataset.answeredResult;updateScore();
+  }
+}
+function toggleAllAnswers(){
+  allAnswersVisible=!allAnswersVisible;
+  document.getElementById('toggleAllBtn').textContent=allAnswersVisible?'Tüm Cevapları Gizle':'Tüm Cevapları Göster';
+  document.querySelectorAll('.answer-area').forEach(a=>a.style.display=allAnswersVisible?'block':'none');
+  document.querySelectorAll('.btn-toggle').forEach(b=>b.textContent=allAnswersVisible?'Cevabı Gizle':'Cevabı Göster');
+  document.querySelectorAll('.question-card').forEach(c=>setCorrectHighlight(c,allAnswersVisible));
+}
+function filterQuestions(filter,clickedBtn){
+  clearTagFilter();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  clickedBtn.classList.add('active');allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  renderQuestions(filter);
+  // Sekme filtresi için PDF butonunu güncelle
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const TAB_FILTERS=['Final','Bütünleme','Yaz Okulu','Vize','Üç Ders'];
+    const isTabFilter=TAB_FILTERS.some(k=>filter===k||filter.includes(k));
+    if(isTabFilter){
+      const tabIds=[],tabLabels=[];
+      // pdfMap anahtarlarını filtre anahtar kelimesine göre filtrele, kronolojik sırala
+      Object.keys(pdfMap).sort().forEach(label=>{
+        if(label.includes(filter)){
+          const val=pdfMap[label];
+          const ids=Array.isArray(val)?val:[val];
+          ids.forEach(id=>{tabIds.push(id);tabLabels.push(label);});
+        }
+      });
+      if(tabIds.length){
+        pdfBtn.dataset.pdfIds=JSON.stringify(tabIds);
+        pdfBtn.dataset.pdfLabels=JSON.stringify(tabLabels);
+        pdfBtn.dataset.pdfLabel=filter;
+        pdfBtn.classList.add('visible');
+      } else {
+        pdfBtn.classList.remove('visible');
+      }
+    } else {
+      pdfBtn.classList.remove('visible');
+    }
+  }
+}
+renderQuestions('all');
+updateProgressBar();
+(function(){
+  var _tb=document.querySelector('.site-topbar');
+  var _sb=document.querySelector('.sidebar');
+  var _qc=document.getElementById('quiz-container');
+  function syncPad(){
+    if(!_sb||!_qc)return;
+    if(window.innerWidth<=720){
+      var tbH=_tb?_tb.offsetHeight:48;
+      _sb.style.top=tbH+'px';
+      _qc.style.paddingTop=_sb.offsetHeight+'px';
+    } else {
+      _sb.style.top='';
+      _qc.style.paddingTop='';
+    }
+  }
+  syncPad();
+  window.addEventListener('resize',syncPad,{passive:true});
+  var mq=window.matchMedia('(max-width:720px)');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      if(_sb)_sb.classList.toggle('scroll-collapsed',window.scrollY>90);
+      ticking=false;
+    });
+  }
+  function setup(){
+    if(mq.matches){window.addEventListener('scroll',onScroll,{passive:true});}
+    else{window.removeEventListener('scroll',onScroll);if(_sb)_sb.classList.remove('scroll-collapsed');syncPad();}
+  }
+  if(mq.addEventListener)mq.addEventListener('change',setup);
+  else mq.addListener(setup);
+  setup();
+})();
+
+/* ── Dark Mode ── */
+(function(){
+  var toggle=document.getElementById('darkModeToggle');
+  if(!toggle)return;
+  var KEY='auzef-dark-mode';
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved=localStorage.getItem(KEY);
+  var isDark=saved!==null?saved==='true':prefersDark;
+  if(isDark)document.body.classList.add('dark-mode');
+  toggle.textContent=isDark?'☀️':'🌙';
+  toggle.addEventListener('click',function(){
+    document.body.classList.toggle('dark-mode');
+    var nowDark=document.body.classList.contains('dark-mode');
+    localStorage.setItem(KEY,String(nowDark));
+    toggle.textContent=nowDark?'☀️':'🌙';
+  });
+})();
+// Tekrar Et toggle
+function toggleReview(btn){
+  var isActive=btn.classList.contains('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  clearTagFilter();
+  if(isActive){
+    var allBtn=document.querySelector('.tab-btn:first-child');
+    if(allBtn)allBtn.classList.add('active');
+    renderQuestions('all');
+  } else {
+    btn.classList.add('active');
+    renderQuestions('review');
+  }
+}
+
+</script>
+</body>
+</html>

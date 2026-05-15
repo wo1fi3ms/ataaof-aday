@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Lojistik Yönetimi – Soru Havuzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ATA-AÖF ana lacivert — UI chrome */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* Vurgu yeşili — geri bildirim / başarı */
+  --accent:#00CB54;--accent-dk:#009e40;--accent-lt:#e6faf0;
+  --gold:#e1b77e;
+  --wine:#7b1d34;--wine-dk:#5c1526;
+  --banko:#c0392b;--banko-dk:#922b21;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --opt-bg:#fafafa;--opt-border:#e4e4e7;
+  --muted:#606065;
+}
+body.dark-mode{
+  /* UI chrome — okunabilir lacivert-lavanta */
+  --green:#8899ee;--green-dk:#c0caff;--green-lt:#131c42;
+  /* Geri bildirim yeşili */
+  --accent:#00CB54;--accent-dk:#4ade80;--accent-lt:#012a14;
+  --gold:#e1b77e;
+  /* Daha ölçülü wine ve banko */
+  --wine:#a05868;--wine-dk:#7d4052;
+  --banko:#c06060;--banko-dk:#9a4848;
+  --bg:#08091e;--card-bg:#0f1230;--text:#d8daec;--border:#252d60;
+  --opt-bg:#111830;--opt-border:#252d60;
+}
+*{box-sizing:border-box;}
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0 0 48px;line-height:1.65;transition:background .25s,color .25s;}
+
+/* ── topbar ── */
+.site-topbar{position:sticky;top:0;z-index:200;background:var(--green-dk);display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-home{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;transition:all .2s;white-space:nowrap;}
+.topbar-home:hover{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-uni{font-size:.75em;color:rgba(255,255,255,.45);letter-spacing:.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-course{font-size:.88em;font-weight:700;color:#fff;}
+.dark-mode-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;transition:all .2s;color:#fff;line-height:1;}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── hero header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:32px 24px 28px;text-align:center;border-bottom:4px solid var(--gold);box-shadow:0 3px 14px rgba(0,0,0,.2);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 16px;font-size:.77em;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.92);margin-bottom:14px;text-transform:uppercase;}
+.header h1{margin:0 0 8px;font-size:1.9em;font-weight:700;letter-spacing:-.01em;}
+.header-subtitle{margin:0;font-size:.93em;color:var(--gold);font-weight:600;letter-spacing:.03em;}
+
+/* ── layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.page-layout{display:flex;gap:22px;align-items:flex-start;margin-top:24px;}
+#quiz-container{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:18px;animation:fadeIn .3s ease-in-out;}
+#quiz-container>*{min-width:0;}
+@media(max-width:900px){#quiz-container{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── sidebar ── */
+.sidebar{width:192px;flex-shrink:0;position:sticky;top:48px;display:flex;flex-direction:column;gap:8px;background:var(--card-bg);padding:14px 12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sidebar-label{font-size:.68em;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.07em;margin-top:2px;}
+.sidebar-home{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 11px;background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);border-radius:7px;font-size:.82em;font-weight:700;text-decoration:none;transition:all .2s;}
+.sidebar-home:hover{background:var(--green-lt);}
+.tabs{display:flex;flex-direction:column;gap:5px;}
+.tab-btn{background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);padding:8px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:all .2s;text-align:left;width:100%;}
+.tab-btn:hover{background:var(--green-lt);}
+.tab-btn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 3px 8px rgba(13,20,96,.28);}
+.tab-btn.tab-banko{background:#fde8e8;color:var(--banko);border-color:var(--banko);}
+.tab-btn.tab-banko:hover,.tab-btn.tab-banko.active{background:var(--banko);color:#fff;}
+body.dark-mode .tab-btn.tab-banko{background:#1e0808;color:#e08080;border-color:#7a3030;}
+body.dark-mode .tab-btn.tab-banko:hover,body.dark-mode .tab-btn.tab-banko.active{background:#7a3030;color:#fff;}
+.toggle-all-btn{background:var(--wine);color:#fff;border:none;padding:10px 11px;font-size:.84em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;box-shadow:0 3px 8px rgba(123,29,52,.28);transition:all .2s;width:100%;text-align:center;}
+.toggle-all-btn:hover{background:var(--wine-dk);transform:translateY(-1px);}
+.stats-bar{text-align:center;font-size:.77em;color:#666;font-weight:600;}
+.stats-bar>span{display:inline-block;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2px 9px;}
+.stats-short{display:none;}
+.score-panel{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.score-item{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.91em;font-weight:700;border-radius:8px;padding:7px 10px;}
+.score-item span{font-size:1.3em;font-weight:800;min-width:24px;text-align:center;}
+.score-correct-item{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+.score-wrong-item{background:#fde8e8;color:#c0392b;border:1px solid #f87171;}
+body.dark-mode .score-correct-item{background:#012a14;color:#4ade80;border-color:#025a28;}
+body.dark-mode .score-wrong-item{background:#2a0808;color:#f08888;border-color:#5a1818;}
+.sidebar-meta{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:#aaa;}
+.tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
+.tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
+body.dark-mode .tab-btn.tab-review{color:#c8963a;border-color:#7a5010;background:#1a1000;}
+body.dark-mode .tab-btn.tab-review:hover{background:#2a1a00;color:#e0b050;}
+body.dark-mode .tab-btn.tab-review.active{background:#7a5010!important;color:#fff!important;border-color:#7a5010!important;box-shadow:0 3px 8px rgba(120,80,16,.4)!important;}
+.review-info-btn{position:absolute;top:4px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;background:none;font-size:.6em;font-weight:900;line-height:13px;text-align:center;cursor:pointer;padding:0;color:inherit;opacity:.65;font-family:inherit;display:none;}
+.review-tooltip{display:none;position:absolute;top:calc(100% + 6px);right:0;width:220px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.75em;font-weight:400;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:200;text-align:left;line-height:1.5;pointer-events:none;}
+@media(min-width:721px){
+  .review-info-btn{display:block;}
+  .review-info-btn:hover+.review-tooltip,.review-info-btn:focus+.review-tooltip{display:block;}
+}
+.progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.75em;font-weight:700;color:var(--text);}
+.progress-reset{background:none;border:none;font-size:.7em;color:#aaa;cursor:pointer;padding:0;font-family:inherit;transition:color .2s;}
+.progress-reset:hover{color:var(--banko);}
+.progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+.q-prev{font-size:.8em;font-weight:700;padding:2px 7px;border-radius:4px;line-height:1.4;}
+.q-prev-correct{background:#d1fae5;color:#065f46;}
+.q-prev-wrong{background:#fde8e8;color:#c0392b;}
+body.dark-mode .q-prev-correct{background:#012a14;color:#4ade80;border:1px solid #025a28;}
+body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #5a1818;}
+
+/* ── mobile sidebar ── */
+@media(max-width:720px){
+  .page-layout{flex-direction:column;margin-top:8px;}
+  .header{display:none;}
+  .sidebar{position:fixed;top:48px;left:0;right:0;z-index:100;flex-direction:column;gap:5px;padding:8px 12px;border-radius:0;border:none;border-bottom:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.13);width:100vw!important;max-width:100vw;overflow-x:hidden;box-sizing:border-box;}
+  .sidebar-home,.sidebar-label{display:none;}
+  .tabs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:5px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:7px 12px;font-size:.8em;}
+  .sidebar-meta{flex-direction:row;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .sidebar-meta::-webkit-scrollbar{display:none;}
+  .stats-bar{flex-shrink:0;font-size:.73em;white-space:nowrap;text-align:left;}
+  .stats-bar>span{padding:2px 7px;}
+  .score-panel{flex-direction:row;gap:4px;margin-top:0;flex-shrink:0;}
+  .score-item{padding:4px 6px;font-size:.74em;gap:3px;white-space:nowrap;}
+  .score-item span{font-size:1em;min-width:14px;}
+  .stats-full{display:none;}
+  .stats-short{display:inline;}
+  .toggle-all-btn{width:100%;padding:7px 10px;font-size:.8em;}
+  .sidebar.scroll-collapsed{flex-direction:row;align-items:center;gap:6px;padding:5px 12px;}
+  .sidebar.scroll-collapsed .tab-btn:not(.active){display:none;}
+  .sidebar.scroll-collapsed nav.tabs{flex-shrink:0;overflow:visible;}
+  .sidebar.scroll-collapsed .sidebar-meta{flex:1;min-width:0;gap:5px;overflow-x:auto;}
+  .sidebar.scroll-collapsed .score-item{padding:3px 5px;}
+  .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
+  .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
+  .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
+  .sidebar.scroll-collapsed .prog-label{display:none;}
+  .sidebar.scroll-collapsed .score-label{display:none;}
+  .sidebar.scroll-collapsed .stats-full{display:none;}
+  .sidebar.scroll-collapsed .stats-short{display:inline;}
+  #quiz-container{grid-template-columns:1fr;}
+}
+
+/* ── question cards ── */
+.question-card{background:var(--card-bg);border-radius:9px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:22px 24px;border-left:5px solid var(--green);transition:box-shadow .2s;display:flex;flex-direction:column;}
+.question-card:hover{box-shadow:0 5px 18px rgba(13,20,96,.12);}
+.question-card .btn-toggle{margin-top:auto;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;border-bottom:1px solid var(--border);padding-bottom:10px;gap:10px;}
+.q-meta{display:flex;flex-direction:column;gap:3px;}
+.q-num{color:var(--green-dk);font-size:.86em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.exam-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.exam-tag{padding:2px 8px;border-radius:4px;font-size:.73em;font-weight:700;letter-spacing:.02em;}
+.uc-tag{background:#ede9fe;color:#4c1d95;}
+.vize-tag{background:#dbeafe;color:#1e3a8a;}
+.fin-tag{background:#d1fae5;color:#065f46;}
+.but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+.yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+.freq-tag{background:var(--banko);color:#fff;}
+.exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
+.exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
+.question-card.tag-hidden{display:none;}
+.sidebar.tag-filter-active .tabs,.sidebar.tag-filter-active .sidebar-home,.sidebar.tag-filter-active .sidebar-label,.sidebar.tag-filter-active .toggle-all-btn{opacity:.28;pointer-events:none;user-select:none;}
+.sidebar.tag-filter-active #tag-filter-indicator{opacity:1!important;pointer-events:auto!important;}
+#tag-filter-indicator{display:none;border-radius:7px;padding:8px 10px;font-size:.82em;font-weight:700;align-items:center;gap:6px;}
+#tag-filter-indicator.visible{display:flex;}
+#tag-filter-indicator .tfi-label{flex:1;line-height:1.3;}
+#tag-filter-indicator .tfi-close{background:none;border:none;cursor:pointer;font-size:1.1em;padding:0 2px;font-weight:900;opacity:.65;line-height:1;font-family:inherit;}
+#tag-filter-indicator .tfi-close:hover{opacity:1;}
+#tag-filter-indicator.tfi-fin{background:#d1fae5;color:#065f46;}
+#tag-filter-indicator.tfi-vize{background:#dbeafe;color:#1e3a8a;}
+#tag-filter-indicator.tfi-but{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+#tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
+#tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+#tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
+.question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
+.neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
+.q-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 12px;}
+.q-table{border-collapse:collapse!important;width:100%!important;margin:0!important;font-size:.88em;font-weight:400;white-space:normal!important;table-layout:auto;word-break:break-word;}
+.q-table th,.q-table td{border:1px solid var(--border)!important;padding:5px 9px!important;vertical-align:middle!important;}
+.q-table th{background:var(--green-lt)!important;color:var(--green-dk)!important;font-weight:700!important;text-align:center!important;}
+.q-table td{text-align:left;}
+.q-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;font-size:.95em;}
+.q-table tr:nth-child(even) td{background:var(--opt-bg);}
+.q-table tfoot td,.q-table tr:last-child td[style*="font-weight"]{font-weight:700;background:var(--green-lt);}
+body.dark-mode .q-table th{background:#1a2060!important;color:#c0caff!important;}
+body.dark-mode .options li.wrong-highlight{background:#2a0808;border-color:#7a3030;color:#f08888;}
+body.dark-mode .options li.correct-highlight{background:#012a14;border-color:#025a28;color:#4ade80;}
+@media(max-width:600px){.q-table{font-size:.78em!important;}.q-table th,.q-table td{padding:4px 6px!important;}}
+.options{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;}
+.options li{background:var(--opt-bg);padding:9px 14px;border-radius:7px;border:1px solid var(--opt-border);font-size:.96em;transition:background .22s,border-color .22s;cursor:pointer;user-select:none;color:var(--text);}
+.options li.correct-highlight{background:var(--accent-lt);border-color:var(--accent);font-weight:700;color:var(--accent-dk);}
+.options li.wrong-highlight{background:#fde8e8;border-color:#e74c3c;font-weight:700;color:#c0392b;}
+.btn-toggle{background:var(--green);color:#fff;border:none;padding:10px 0;width:100%;font-size:.96em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:background .2s;}
+.btn-toggle:hover{background:var(--green-dk);}
+.answer-area{display:none;margin-top:13px;padding:14px 16px;background:var(--accent-lt);border-left:4px solid var(--accent);border-radius:0 7px 7px 0;}
+.correct-ans{font-size:1.04em;color:var(--accent-dk);margin:0 0 7px;font-weight:700;}
+.exp-text{margin:0;color:var(--text);line-height:1.55;font-size:.92em;}
+
+/* ── PDF button & modal ── */
+.pdf-open-btn{display:none;background:var(--green);color:#fff;border:none;padding:9px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;width:100%;text-align:center;transition:background .2s;}
+.pdf-open-btn:hover{background:var(--green-dk);}
+.pdf-open-btn.visible{display:block;}
+.pdf-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);padding:16px;align-items:stretch;}
+.pdf-modal.open{display:flex;flex-direction:column;}
+.pdf-modal-inner{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.pdf-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-dk);color:#fff;font-weight:700;font-size:.9em;gap:8px;}
+.pdf-modal-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-modal-close{background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;line-height:1;padding:0 4px;opacity:.8;}
+.pdf-modal-close:hover{opacity:1;}
+.pdf-nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.1em;cursor:pointer;border-radius:5px;padding:2px 10px;line-height:1.6;transition:background .15s;}
+.pdf-nav-btn:hover{background:rgba(255,255,255,.35);}
+.pdf-nav-btn:disabled{opacity:.3;cursor:default;}
+.pdf-nav-counter{font-size:.8em;opacity:.85;white-space:nowrap;}
+#pdfModalFrames{display:flex;flex-direction:column;flex:1;min-height:0;}
+#pdfModalFrames iframe{flex:1;width:100%;border:none;min-height:0;}
+
+/* ── footer ── */
+.page-footer{text-align:center;margin-top:44px;padding:16px;font-size:.77em;color:#888;border-top:2px solid var(--border);}
+.page-footer strong{color:var(--green-dk);}
+</style>
+</head>
+<body>
+
+<div class="site-topbar">
+  <div class="topbar-left">
+    <a href="../../index.html" class="topbar-home">← Ana Sayfa</a>
+    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-course">🚚 Lojistik Yönetimi</span>
+    <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-badge">🚚 AUZEF Soru Havuzu</div>
+  <h1>Lojistik Yönetimi</h1>
+  <p class="header-subtitle">Eksiksiz Çıkmış Sorular · 📙 Final · 📗 Bütünleme · ☀️ Yaz Okulu</p>
+</div>
+
+<div class="container">
+  <div class="page-layout">
+    <div id="quiz-container"></div>
+
+    <aside class="sidebar">
+      <a href="../../index.html" class="sidebar-home">⌂ Ana Sayfa</a>
+
+      <span class="sidebar-label">Filtrele</span>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="filterQuestions('all',this)">Tüm Sorular</button>
+        <button class="tab-btn" onclick="filterQuestions('Final',this)">📙 Final</button>
+        <button class="tab-btn" onclick="filterQuestions('Bütünleme',this)">📗 Bütünleme</button>
+        <button class="tab-btn" onclick="filterQuestions('Yaz Okulu',this)">☀️ Yaz Okulu</button>
+        <button class="tab-btn tab-banko" onclick="filterQuestions('banko',this)">🔥 Çok Çıkanlar</button>
+        <button class="tab-btn tab-review" onclick="toggleReview(this)">🔄 Devam Et
+          <span class="review-info-btn" onclick="event.stopPropagation()" tabindex="0">ℹ</span>
+          <div class="review-tooltip">Daha önce doğru cevapladığın sorular çıkarılarak teste devam eder.</div>
+        </button>
+      </nav>
+
+      <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div id="tag-filter-indicator">
+        <span class="tfi-label"></span>
+        <button class="tfi-close" onclick="clearTagFilter()">✕</button>
+      </div>
+      <button id="pdfOpenBtn" class="pdf-open-btn" onclick="openPdfModal()">📄 Sınav PDF Göster</button>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span><span id="prog-done">0</span> / <span id="prog-total">0</span><span class="prog-label"> tamamlandı</span></span>
+          <button class="progress-reset" onclick="resetProgress()" title="İlerlemeyi sıfırla">sıfırla</button>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="score-panel">
+          <div class="score-item score-correct-item">✓ <span id="score-correct">0</span><span class="score-label"> Doğru</span></div>
+          <div class="score-item score-wrong-item">✗ <span id="score-wrong">0</span><span class="score-label"> Yanlış</span></div>
+        </div>
+      </div>
+      <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+    </aside>
+  </div>
+
+  <div class="page-footer">
+    <strong>Lojistik Yönetimi</strong> · Çıkmış Sorular Soru Havuzu · 131 Soru
+  </div>
+</div>
+
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <div class="pdf-modal-header">
+      <span class="pdf-modal-title" id="pdfModalTitle">Sınav Kağıdı</span>
+      <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfNav(-1)">&#8249;</button>
+      <span class="pdf-nav-counter" id="pdfCounter"></span>
+      <button class="pdf-nav-btn" id="pdfNext" onclick="pdfNav(1)">&#8250;</button>
+      <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    </div>
+    <div id="pdfModalFrames"></div>
+  </div>
+</div>
+
+<script>
+const sorular=[
+{id:0,q:"Aşağıdakilerden hangisi dünyada ve Türkiye'de lojisk uygulamaları arasında yer almaz?",options:["A) Çevreci Lojisk Uygulamaları", "B) Sürdürülebilir Lojisk Uygulamaları", "C) E-Ticaret Lojisk Uygulamaları", "D) Maliyet Odaklı Lojisk Uygulamaları", "E) İsra Arrma Odaklı Lojisk Uygulamaları Örnek Teşkil Edecek Lojisk Uygulamaları başlığı alnda uygulamalar verilmişr. İsra arrma odaklı bir uygulama söz konusu değildir."],ans:"E) İsra Arrma Odaklı Lojisk Uygulamaları Örnek Teşkil Edecek Lojisk Uygulamaları başlığı alnda uygulamalar verilmişr. İsra arrma odaklı bir uygulama söz konusu değildir.",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2024-2025 Final", "3 Kez Çıktı!"]},
+{id:1,q:"Aşağıdakilerden hangisi yeşil lojisk faaliyetleri arasında yer almaz?",options:["A) Yeşil ürem", "B) Yeşil san alma/tedarik", "C) Yeşil paketleme", "D) Yeşil depolama", "E) Yeşil taşıma"],ans:"A) Yeşil ürem",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:2,q:"Firmaların tükecilere bir ürün veya hizmet sunduğu, tükecilerin ise o ürün veya hizmet için ödemede bulunduğu e- caret modeli aşağıdakilerden hangisidir?",options:["A) B2C", "B) C2B", "C) B2B", "D) C2G", "E) C2C"],ans:"A) B2C",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2024-2025 Bütünleme", "3 Kez Çıktı!"]},
+{id:3,q:"Aşağıdaki yazılım çeşitlerinden hangisi temelinde iş zekâsı uygulamaları ile çalışır?",options:["A) Analik CRM", "B) ERP", "C) SRM", "D) WMS", "E) MRP"],ans:"A) Analik CRM",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:4,q:"Aşağıdakilerden hangisi dış caree ödeme yöntemlerinden biri değildir?",options:["A) Peşin", "B) Mal mukabili", "C) İş yerinde teslim", "D) Vesaik mukabili", "E) Akredif"],ans:"C) İş yerinde teslim",exp:"",exams:["2021-2022 Final", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:5,q:"Aşağıdakilerden hangisi dış kaynak kullanımının risklerinden biridir?",options:["A) Hedeflerin belirlenmesi", "B) Süreç performans göstergelerinin belirlenmesi", "C) Sözleşmenin yapılması", "D) Süreç kırılmaları", "E) Süreç uyumlandırmasının yapılması"],ans:"D) Süreç kırılmaları",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:6,q:"Aşağıdakilerden hangisi etkinlik kavramının formülüdür?",options:["A) Gerçekleşen Ürem / Beklenen (planlanan)", "B) Girdi / Çık", "C) Gerçekleşen Kâr / Beklenen Kâr", "D) Çık / Girdi", "E) Standart Performans / Gerçekleşen (Fiili) Performans NAHTARI"],ans:"E) Standart Performans / Gerçekleşen (Fiili) Performans NAHTARI",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:7,q:"Aşağıdakilerden hangisi her dış caret işleminde mutlaka kullanılan belgelerden biri değildir?",options:["A) Taşıma belgeleri", "B) Menşe şahadetnamesi", "C) Konsolosluk faturası", "D) Ticari fatura", "E) Gümrük beyannamesi"],ans:"C) Konsolosluk faturası",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:8,q:"Aşağıdakilerden hangisi işletmeler açısından uluslararası operasyonları teşvik eden faktörlerden biri değildir?",options:["A) Yeni pazarlarda artan talep", "B) Yerel pazarın özellikleri", "C) Ölçek ekonomilerini hedefleyen üreciler", "D) Tedarikçilere olan talebin artması", "E) Piyasa taleplerinin benzeşmesi"],ans:"B) Yerel pazarın özellikleri",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:9,q:"Aşağıdakilerden hangisi kurum içi yetkinlikleri gelişrmek amacıyla yapılması gereken en önemli lojisk uygulama alanlarından biri değildir?",options:["A) Taşıma kapasitesi planlaması", "B) Lojisk ağ tasarımı", "C) Global sevkiyat planlaması", "D) Görünürlük ve etkinlik yönemi", "E) Tesliman zamanında olması"],ans:"E) Tesliman zamanında olması",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:10,q:"Aşağıdakilerden hangisi küresel pazarın temel unsurlarından biri değildir?",options:["A) Stok azaltmaya odaklanmak", "B) Küresel markalar ve perakendeciler", "C) Üremin düşük maliyetli ekonomilere yönelmesi", "D) Küresel caret", "E) Beklenler"],ans:"E) Beklenler",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:11,q:"Aşağıdakilerden hangisi lojisk sistemlerin analizinde ve tasarımında kullanılan ve sayısal olarak tanımlanamayan nitel performans ölçütlerinden biridir?",options:["A) Tedarikçi performansı", "B) Maliyet en küçüklemesi", "C) Temin süresinin en küçüklenmesi", "D) Ürün gecikmelerinin en küçüklenmesi", "E) Kâr en büyüklemesi Lojisk sistemlerin analizinde ve tasarımında kullanılan ve sayısal olarak tanımlanamayan nitel performans ölçütleri şu şekildedir:  Müşteri memnuniye: Müşteri memnuniyet seviyesi alınan ürün veya hizmetle belirlenir. Bu durum iç ve dış müşterilere uygulanabilir.  Esneklik: Lojisk sistemlerin talepteki dalgalanmalara verebileceği cevabın seviyesidir.  Bilgi ve malzeme akış entegrasyonu: Lojisk sistem içerisinde var olan tüm aşamaların arasındaki bilgi akışı ve malzeme taşınmasının entegrasyon seviyesidir.  Etkili risk yönemi: Lojisk sistemlerin hepsi birden fazla risk ögesi içerir. Etkili risk yönemi ise bu risklerin olasılığını veya etkisini en küçüklemenin seviyesi olarak tanımlanır.  Tedarikçi performansı: Hammaddelerin zamanında ve iyi koşullar alnda ürem firmalarına dağılma seviyesidir."],ans:"A) Tedarikçi performansı",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:12,q:"Aşağıdakilerden hangisi lojisğin 7 doğrusu arasında yer almaz?",options:["A) Doğru Fire", "B) Doğru Zaman", "C) Doğru Müşteri", "D) Doğru Miktar", "E) Doğru Ürün NAHTARI"],ans:"A) Doğru Fire",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:13,q:"Aşağıdakilerden hangisi lojisğin güvenilirlik kapsamındaki performans göstergesidir?",options:["A) Transit süre (sefer süresi)", "B) Sipariş çevrim süresi", "C) Zamanında teslimat oranı", "D) Depo doluluk oranı", "E) Araç doluluk oranı Teslimat Oranı (%)= Söz verilen tarihte (müşteri ile anlaşılan) Teslim Edilen Sipariş Sayısı/Toplam Sipariş Sayısı"],ans:"C) Zamanında teslimat oranı",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:14,q:"Aşağıdakilerden hangisi performans yöneminin amaçlarından biri değildir?",options:["A) Stratejik amaç", "B) Takk amaç", "C) Operasyonel amaç", "D) Planlama amacı", "E) İç yönem amacı NAHTARI"],ans:"C) Operasyonel amaç",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:15,q:"Aşağıdakilerden hangisi vesaik mukabili işlemde taraflardan biri değildir?",options:["A) Amir/sacı", "B) Gönderi bankası", "C) Gümrük idaresi", "D) Tahsil bankası", "E) Alıcı"],ans:"C) Gümrük idaresi",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:16,q:"Aşağıdakilerden hangisi yalın lojisk uygulamalarının amaçlarından biridir?",options:["A) Maliyet odaklı çalışmak", "B) Çalışma sürelerini arrmak", "C) Fazla mesai yapmak", "D) İsra azaltmak", "E) Kapasite arşı sağlamak"],ans:"D) İsra azaltmak",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:17,q:"Aşağıdakilerden hangisi yalın yönem araçlarından biri değildir?",options:["A) Standart İş ve İş Talimatları", "B) ABC Analizi", "C) Değer Analizi", "D) Kaizen", "E) 5S – Görsel Yönem"],ans:"B) ABC Analizi",exp:"",exams:["2023-2024 Bütünleme", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:18,q:"Aşağıdakilerden hangisi yeşil san alma/tedarik uygulamalarına örnek olarak verilebilir?",options:["A) Bir seferde taşınan yük miktarının arrılması", "B) İşletme içi mal hareketliliğinin mümkün olduğunca azallması", "C) Stoklar için alan kullanımının iyileşrilmesi", "D) Opmum ağ tasarımı", "E) Çevresel kriterleri gözeten tedarikçilerle çalışılması"],ans:"E) Çevresel kriterleri gözeten tedarikçilerle çalışılması",exp:"",exams:["2023-2024 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:19,q:"Aşağıdakilerden hangisi yeşil taşıma uygulamalarına örnek olarak verilemez?",options:["A) Yenilenebilir enerji kaynağı kullanan taşıtlarla yapılan taşımalar", "B) Ham madde tedariğinde çevreye duyarlı tedarikçilerle çalışmak", "C) Taşıma araçlarının dolu gidiş-dönüş yapmalarının sağlanması", "D) Dağım süreçlerinde opmum rota ve çizelgelerin oluşturması", "E) Taşıma faaliyetlerinde kara yolu taşımacılığını mümkün olduğunca azaltan çözümler"],ans:"B) Ham madde tedariğinde çevreye duyarlı tedarikçilerle çalışmak",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:20,q:"B2C e-caret hizme ülkemizde en çok tercih edilen e-caret türü olmakla birlikte aynı zamanda uluslararası kullanımı da son derece yaygındır. B2C e-caret tarzında özellikle mal ve hizmetlerin sunumu sadece online kanallardan olacağı için ürünün ve hizmen son kullanıcıya detayları ile aktarılması yüksek adee saş gerçekleşmesi için önem arz etmektedir. B2C'de fiyatlar ve ürünler açık ve net şekilde yayınlanır. Ürünün teslim koşulları, garan koşulları, fiya ve diğer özellikleri üreci veya sacı tarandan tek taraflı belirlenir ve tükecinin önüne sunulur. B2C e-caret hizme aşağıdakilerden hangisidir?",options:["A) İşletmeden Tükeciye E-Ticaret", "B) Tükeciden İşletmeye E-Ticaret", "C) Tükeciden Tükeciye E-Ticaret", "D) Vatandaştan Devlet Kurum ve Kuruluşlarına E-Ticaret", "E) İşletmeden Devlet Kurum ve Kuruluşlarına E-Ticaret (B2C) İnternet kullanımının artması ile birlikte son kullanıcılar pek çok farklı kanaldan ürün veya hizmetlere ulaşabiliyor oldular. B2C e-caret hizme ülkemizde en çok tercih edilen e- caret türü olmakla birlikte aynı zamanda uluslararası kullanımıda son derece yaygındır. İnternet kullanımının artması ile birlikte son kullanıcılar farklı ülkelerdeki alışveriş kanallarını ziyaret edip, fiyat karşılaşrması yapıp kendileri için en uygun opsiyonu değerlendirmektedirler. B2C e-caret tarzında özellikle mal ve hizmetlerin sunumu sadece online kanallardan olacağı için ürünün ve hizmen son kullanıcıya detayları ile aktarılması yüksek adee saş gerçekleşmesi için önem arz etmektedir (Han, 2018). B2C’de fiyatlar ve ürünler açık ve net şekilde yayınlanır. Ürünün teslim koşulları, garan koşulları, fiya ve diğer özellikleri üreci veya sacı tarandan tek taraflı belirlenir ve tükecinin önüne sunulur. B2C'de tükeciler şahıs da olabilir perakendeci bir saş kanalı da."],ans:"A) İşletmeden Tükeciye E-Ticaret",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:21,q:"I. Dış çevreden gelen tehditlerin farkındalığının artması II. Rakiplerin stratejilerinin daha iyi anlaşılması III. Çalışanların verimliliğinin arrılması Yukarıdakilerden hangisi ya da stratejik yönemin faydaları arasında yer alır?",options:["A) I, II ve III", "B) II ve III", "C) I ve III", "D) Yalnız II", "E) Yalnız I CEVAP AN"],ans:"A) I, II ve III",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:22,q:"I. Ürem II. Depolama III. Paketleme / ambalajlama IV. Muayene Yukarıda verilenlerden hangisi ya da hangileri lojisk yönemi içerisinde sayılamaz?",options:["A) Yalnız I", "B) I ve II", "C) I ve III", "D) III ve IV", "E) I, II, III ve IV taşımacılık, depolama, paketleme / ambalajlama, muayene gibi faaliyetlere ek olarak sipariş yönemi, stok yönemi, sigortalama ve gümrükleme fonksiyonlarını da için de barındırmaktadır. Bu faaliyetlerden içinde birçok açıdan en önemlisi taşımacılıkr. NAHTARI"],ans:"A) Yalnız I",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:23,q:"Ortalama 2.000 dönümden büyük bir alana sahip, bölgesindeki tüm ülkelere yük gönderebilen ve alabilen, en az bir küresel ve bir ulusal ulaşrma koridoru üzerinde olan, tüm lojisk ve gümrük hizmetlerinin verildiği, içinde en az üç taşıma modu veya bu modlara etkin bağlanları ile en az iki intermodal terminali olan lojisk merkezdir. Tanımı yapılan lojisk merkez türü aşağıdakilerden hangisidir?",options:["A) Uluslararası Lojisk Merkez", "B) Yerel Lojisk Merkez", "C) Bölgesel Lojisk Merkez", "D) İkincil Aktarma Merkezi", "E) Birincil Aktarma Merkezi"],ans:"A) Uluslararası Lojisk Merkez",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:24,q:"İşletmelerin taşıma, depolama, stok yönemi, ambalajlama, elleçleme ve bilgi yönemi gibi lojisk faaliyetlerinde oluşan maliyetleri düşürmek için kullanılan lojisk stratejisi aşağıdakilerden hangisidir?",options:["A) Süreç stratejileri", "B) Pazar stratejileri", "C) Bilgi stratejileri", "D) Kanal stratejileri", "E) Dış kaynak kullanım stratejileri"],ans:"A) Süreç stratejileri",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:25,q:"İşletmenin uzun dönemde yaşamını devam erebilmek, sürdürülebilir rekabet üstünlüğü ve ortalama kâr üzerinde geri sağlayabilmek amacıyla, elindeki, ürem kaynaklarını etkili ve verimli olarak kullanılmasına ne ad verilir?",options:["A) Stratejik Planlama", "B) Uzun Dönemli Planlama", "C) Stratejik Yönem", "D) Kurumsal Yönem", "E) Takk Planlama"],ans:"C) Stratejik Yönem",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:26,q:"............. problemi, gezgin sacı probleminin çok sayıda araç ve ilave kısıtlar eklenmesi ile gelişrilmiş hâlidir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Araç rotalama", "B) En yakın komşuluk sezgiseli", "C) Tavlama benzemi", "D) Tabu arama", "E) Genek algoritma CEVAP AN"],ans:"A) Araç rotalama",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:27,q:"Ağır tonajlı ve taşıma mesafesi belirli bir değerin üzerinde olan (Türkiye'de bu mesafe 400-500 km olarak kabul edilebilir) ve daha çok ham madde gibi dökme ve değeri çok yüksek olmayan ürünlerin taşınmasında aşağıdakilerden hangisi tercih edilir?",options:["A) Demir yolu", "B) Deniz yolu", "C) Kara yolu", "D) Hava yolu", "E) Boru ha"],ans:"A) Demir yolu",exp:"",exams:["2024-2025 Final"]},
+{id:28,q:"Aşağıda verilen geri kazanım yöntemlerinden hangisinde yeni ürün garansi söz konusudur?",options:["A) Yeniden kullanım", "B) Ürün yamyamlaşrma", "C) Yenileme", "D) Yeniden ürem", "E) Geri dönüşüm"],ans:"D) Yeniden ürem",exp:"",exams:["2024-2025 Final"]},
+{id:29,q:"Aşağıdaki faaliyetlerden hangisi işletmenin temel faaliyetlerinden biri değildir?",options:["A) Yönetsel Faaliyetler", "B) Tedarik ve Girdi Lojisği", "C) Pazarlama ve Saş Faaliyetleri", "D) Ürem ve Operasyon Faaliyetleri", "E) Depolama Faaliyetleri"],ans:"A) Yönetsel Faaliyetler",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:30,q:"Aşağıdaki metasezgisel algoritmalardan hangisi tek çözüm üreten bir algoritmadır?",options:["A) Genek Algoritma", "B) Tavlama Benzem", "C) Yapay Arı Kolonisi Algoritması", "D) Parçacık Sürü Opmizasyon Algoritması", "E) Karınca Kolonisi Algoritması"],ans:"B) Tavlama Benzem",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:31,q:"Aşağıdaki sezgisel yöntemlerden hangisi ulaşrma tablosu hazırlandıktan sonra tablodaki en düşük maliyetli olan taşımayı seçen yöntemdir?",options:["A) İki Aşamalı Yöntemi", "B) Vogel Yaklaşımı Yöntemi", "C) Tasarruf Algoritması", "D) Kuzey-Ba Yöntemi", "E) Minimum Maliyet Yöntemi"],ans:"E) Minimum Maliyet Yöntemi",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:32,q:"Aşağıdaki sezgisel yöntemlerden hangisi ulaşrma tablosu hazırlandıktan sonra tablodaki her bir sar ve sütundaki en düşük iki maliyetli taşımaları seçerek ceza değerlerini hesaplayan yöntemdir?",options:["A) Tasarruf algoritması", "B) Minimum maliyet yöntemi", "C) Kuzey-ba yöntemi", "D) İki aşamalı yöntem", "E) Vogel yaklaşımı yöntemi"],ans:"E) Vogel yaklaşımı yöntemi",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:33,q:"Aşağıdaki yöntemlerden hangisi sürekli değişkenli doğrusal problemlerin çözümünde kullanılmaktadır?",options:["A) Delphi Yöntemi", "B) Kesme Düzlemi Algoritması", "C) Sır-Bir Saklı Sayma Algoritması", "D) Dal-Sınır Algoritması", "E) Simpleks Yöntem"],ans:"E) Simpleks Yöntem",exp:"",exams:["2024-2025 Final"]},
+{id:34,q:"Aşağıdaki ürünlerden hangisinin yapısı geri dönüşüm için uygun değildir?",options:["A) Kâğıt ürünleri", "B) Plask ürünler", "C) Otomobil", "D) Değerli metallerden ürelmiş ürünler", "E) Cam ürünler"],ans:"C) Otomobil",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:35,q:"Aşağıdakilerden hangi teknolojiyle, akıllı sözleşmeler yoluyla cari ilişkiler ve dokümanlar otomaze edilebilir ve üst düzey güvenlik sağlanabilir?",options:["A) IoT", "B) Wifi", "C) Web server", "D) Blok zinciri (Blockchain)", "E) RFID"],ans:"D) Blok zinciri (Blockchain)",exp:"",exams:["2024-2025 Final"]},
+{id:36,q:"Aşağıdakilerden hangisi Depo Yönem Sistemi'nin sağladığı faydalardan biri değildir?",options:["A) Stok doğruluğunu arrır.", "B) Müşteri hizmetlerini iyileşrir.", "C) Esneklik ve çevikliği arrır.", "D) İşgücü maliyetlerini azalr.", "E) Ürem süreçlerini kısalr."],ans:"E) Ürem süreçlerini kısalr.",exp:"",exams:["2024-2025 Final"]},
+{id:37,q:"Aşağıdakilerden hangisi Lojisk Standartlar Sistemi (LSS)'nin verimlilik odaklı ölçütlerinden biridir?",options:["A) İş kazası oranları", "B) Fire ve hasar oranları", "C) Depo ortalama çevrim süresi", "D) Stokların doğruluğu", "E) Depo yerleşim hata oranı"],ans:"C) Depo ortalama çevrim süresi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:38,q:"Aşağıdakilerden hangisi Mükemmel Sipariş Karşılama Oranı ölçütlerinden biri değildir?",options:["A) Sevk Edilen Miktar Doğruluğu", "B) Hasarsız Teslimat", "C) Sevk Aracı Doluluk Oranı", "D) Sevk ve Ödeme Evrakı Doğruluğu", "E) Sevk Edilen Ürün Doğruluğu"],ans:"C) Sevk Aracı Doluluk Oranı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:39,q:"Aşağıdakilerden hangisi Tedarik Zinciri Lojisk Yönemi'nin amaçlarından biri değildir?",options:["A) Tüm lojisk sistemleri iyileşrmek", "B) Müşteri memnuniyeni arrmak", "C) İşletmelerin kendi temel yetkinlik faaliyetlerine daha fazla odaklanmak", "D) San alımda rekabetçiliği arrmak", "E) Talep ve tedariği dengede tutmak"],ans:"C) İşletmelerin kendi temel yetkinlik faaliyetlerine daha fazla odaklanmak",exp:"",exams:["2023-2024 Final"]},
+{id:40,q:"Aşağıdakilerden hangisi Tedarik Zinciri Risk Yönemi kapsamında uygulanabilecek başlıca çözüm yöntemlerinden biridir?",options:["A) Tahminde Bulunma", "B) Azaltma", "C) Destek Alma", "D) Yardım İsteme", "E) Eski Örnekleri İnceleme"],ans:"B) Azaltma",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:41,q:"Aşağıdakilerden hangisi bir 3PL firmasının izlemesi gereken performans göstergelerinin özelliklerinin tamamını bemler?",options:["A) Zamansallık, müşteri kalitesi", "B) Zamansallık, ölçülebilirlik, İzlenebilirlik", "C) Teslimat hızı, izlenebilirlik", "D) Kalite kontrolü, teslimat hızı", "E) Teslimat güvenlirliği, stok kontrolü"],ans:"B) Zamansallık, ölçülebilirlik, İzlenebilirlik",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:42,q:"Aşağıdakilerden hangisi bir ürünün yaklaşık maliyet hesaplamasında göz önünde bulundurulması gereken faktörlerden biri değildir?",options:["A) Eskime", "B) Taşıma maliyetleri", "C) Mevsimsellik", "D) Hasar", "E) İndirimli saşlar"],ans:"C) Mevsimsellik",exp:"",exams:["2023-2024 Final"]},
+{id:43,q:"Aşağıdakilerden hangisi bitmiş ürün depolama ile ilgilidir?",options:["A) Ham madde ve bileşenleri çıkarıldığı yere ya da yapıldığı yere yakın bir yerde depolanır.", "B) Üremin farklı aşamalarında ürelen ürünleri geçici olarak depolamak için kullanılır.", "C) Üreciler, toptancılar ve perakendeciler adına saşa hazır ürünler depolar.", "D) Farklı kaynaklardan ürünler alır ve müşteriye veya bir ürem hana ileriye yönelik teslimat için birleşrir.", "E) Ürünlerin bir araya gerildikleri ve ürem hana teslim edilmek üzere sıralandıkları bir merkez içerebilirler. üreciler, toptancılar ve perakendeciler adına saşa hazır ürünler depolar. Talepte beklenen arşlar/ azalışlar ve mevsimsellikler ile başa çıkmak için şirketlerin hazırlıklı olmalarını mümkün kılan bir tampon veya güvenlik stoku sağlarlar."],ans:"C) Üreciler, toptancılar ve perakendeciler adına saşa hazır ürünler depolar.",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:44,q:"Aşağıdakilerden hangisi büyük hacimli küçük siparişleri yönetmek için özel olarak tasarlanmış ve donalmış depoların kullanıldığı merkezlerdir?",options:["A) Çapraz sevkiyat merkezleri", "B) Tersine lojisk merkezleri", "C) Toplu taşıma merkezleri", "D) İkmal merkezleri", "E) Ayrışrma merkezleri"],ans:"D) İkmal merkezleri",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:45,q:"Aşağıdakilerden hangisi demir yolu taşımacılığında kullanılan temel vagon plerinden biri değildir?",options:["A) Kapalı (habis) vagon", "B) Plaorm vagon", "C) Sarnıçlı vagon", "D) Salon vagon", "E) Ağır yük vagonu (habis) vagon, yüksek kenarlı açık vagon, plaorm vagon, sarnıçlı vagon, ağır yük vagonu, özel vagon şeklinde sıralanabilir."],ans:"D) Salon vagon",exp:"",exams:["2021-2022 Final"]},
+{id:46,q:"Aşağıdakilerden hangisi depo yerine karar verirken göz önünde bulundurulması gereken özel faktörlerden biri değildir?",options:["A) Arazi maliye, kira ve fiyatlar", "B) Ucuz ve kalifiye iş gücüne erişim", "C) Taşıma ağlarına erişim", "D) Ürem tesisinin büyüklüğü", "E) Tedarikçilere ve imalatçılara yakınlık CEVAP AN"],ans:"D) Ürem tesisinin büyüklüğü",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:47,q:"Aşağıdakilerden hangisi dış caree taraflar arasındaki para harekenin uluslararası düzenlenmiş prosedürleridir?",options:["A) INCOTERMS", "B) Gümrük vergisi", "C) Taşıma yöntemleri", "D) İthalat", "E) Ödeme Yöntemleri"],ans:"E) Ödeme Yöntemleri",exp:"",exams:["2024-2025 Final"]},
+{id:48,q:"Aşağıdakilerden hangisi dış kaynak kullanımı (outsourcing) gerilerinden biri olamaz?",options:["A) Şirketlerin kendi çekirdek (core) faaliyetlerine daha fazla odaklanmak", "B) Maliyet avantajı sağlamak", "C) Değişken maliyetleri sabit maliyetler hâline dönüştürmek", "D) Pazara erişim hızını yükseltmek", "E) İlgili tedarikçinin ölçeğinden, uzmanlığından yarım ve yaracılık gücünden yararlanmak"],ans:"C) Değişken maliyetleri sabit maliyetler hâline dönüştürmek",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:49,q:"Aşağıdakilerden hangisi dış kaynak kullanımın yararlarından biri değildir?",options:["A) Destekleyici faaliyetlere sabit yarımı azaltmak", "B) Başabaş noktasındaki maliyetleri düşürmek", "C) Hizmet kalitesini arrmak", "D) Temel faaliyetlerin maliyetlerini değişken maliyetlere dönüştürmek", "E) Esnekliği arrmak"],ans:"D) Temel faaliyetlerin maliyetlerini değişken maliyetlere dönüştürmek",exp:"",exams:["2023-2024 Final"]},
+{id:50,q:"Aşağıdakilerden hangisi dış kaynak kullanımının yararlarından biri değildir?",options:["A) Maliyetleri düşürmek", "B) Sabit yarımı azaltmak", "C) Pazar payını azaltmak", "D) Temel faaliyetlere odaklanarak rekabet gücünü arrmak", "E) Dış kaynak sağlayıcının tecrübesinden faydalanmak"],ans:"C) Pazar payını azaltmak",exp:"",exams:["2021-2022 Final"]},
+{id:51,q:"Aşağıdakilerden hangisi e-lojisk faaliyet alanlarından biri değildir?",options:["A) Ambalajlama ve yükleme", "B) Ürem", "C) Geri dönüşüm", "D) Müşteri hizmetleri", "E) Stok planlama ve kontrol sıralamak mümkündür:  Depolama  Ambalajlama ve Yükleme  Sanalma  Taşıma Yönemi  Geri Dönüşüm  Stok Planlama ve Kontrol  Talep Tahmini  Müşteri Hizmetleri  Sipariş Süreci  Diğer Hizmetler"],ans:"B) Ürem",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:52,q:"Aşağıdakilerden hangisi e-lojisk faaliyetlerde kullanılmakta olan bilişim teknolojileri ve yazılımlardan biri değildir?",options:["A) Elektronik Veri Değişimi (EDI)", "B) Depo Yönem Sistemi (WMS)", "C) Arpanet", "D) Extranet", "E) Intranet"],ans:"C) Arpanet",exp:"",exams:["2024-2025 Final"]},
+{id:53,q:"Aşağıdakilerden hangisi e-lojisğin prensiplerinden biri değildir?",options:["A) Hızlı olma", "B) Değişime uyum sağlama", "C) Güvenilirlik", "D) Yeterlilik", "E) Takip edilebilir olma"],ans:"A) Hızlı olma",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:54,q:"Aşağıdakilerden hangisi farklı araç kapasiteleri ile sevkiyat gerçekleşeceğinde kullanılacak araç rotalama problemi türüdür?",options:["A) Çoklu depoya sahip araç rotalama", "B) Asimetrik araç rotalama", "C) Bölünmüş talebe sahip araç rotalama", "D) Karma kapasiteli araç rotalama", "E) Belirsiz talebe sahip araç rotalama"],ans:"D) Karma kapasiteli araç rotalama",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:55,q:"Aşağıdakilerden hangisi farklı bilgi türlerini toplama ve dijital formata dönüştürme işlemini ifade eder?",options:["A) SRM", "B) Blok zinciri", "C) Akıllı fabrika", "D) Dijitalleşrme", "E) Simülasyon"],ans:"D) Dijitalleşrme",exp:"",exams:["2023-2024 Final"]},
+{id:56,q:"Aşağıdakilerden hangisi geleneksel lojisk ve tersine lojisk faaliyetlerin her ikisi için de geçerlidir?",options:["A) “hız” önemli bir kriterdir.", "B) Tek noktadan (tedarikçi/ üreci/depo gibi) çok noktaya dağım yapılır.", "C) Stok kontrol uygulamaları tutarlıdır.", "D) “kalite” önemli bir kriterdir.", "E) Ürün/malzeme akışı vardır."],ans:"E) Ürün/malzeme akışı vardır.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:57,q:"Aşağıdakilerden hangisi hava yolu taşımacılığının başlıca avantajlarından biri değildir?",options:["A) Taşıma süresinin kısa ve esnekliğin yüksek olması", "B) Taşıma ve elleçleme süreçlerinde yüksek güvenlik düzeyi", "C) Küçük boyutlu yüklerin taşınmasına elverişli olması", "D) Değerli ve hassas yüklerin hasarsız taşınabilmesi", "E) Birim taşıma fiyatlarının sezonsal dalgalanmalardan etkilenmeyip sabit olması"],ans:"E) Birim taşıma fiyatlarının sezonsal dalgalanmalardan etkilenmeyip sabit olması",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:58,q:"Aşağıdakilerden hangisi imalat sektörünün küreselleşmesi nedeniyle oluşmuş eğilimlerden biri değildir?",options:["A) Hızlı teknolojik değişimler", "B) Küresel değer zincirleri", "C) Küresel kaynak kullanımı", "D) Beklenler", "E) Küresel rekabet"],ans:"D) Beklenler",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:59,q:"Aşağıdakilerden hangisi internen en temel işlevlerinden biri değildir?",options:["A) Eğlence", "B) E-lojisk", "C) FTP", "D) E-caret", "E) E-mail"],ans:"B) E-lojisk",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:60,q:"Aşağıdakilerden hangisi ithalat işlemlerinde alınan vergilerden biri değildir?",options:["A) Katma Değer Vergisi", "B) Gümrük Vergisi", "C) Damga Vergisi", "D) Özel Tükem Vergisi", "E) Kurumlar Vergisi"],ans:"E) Kurumlar Vergisi",exp:"",exams:["2023-2024 Final"]},
+{id:61,q:"Aşağıdakilerden hangisi kuş ve balık sürülerinin sosyal davranışlarından esinlenerek gelişrilmiş bir metasezgisel algoritmadır?",options:["A) Tavlama benzem", "B) Genek algoritma", "C) Parçacık sürü opmizasyon algoritması", "D) Yapay arı kolonisi algoritması", "E) Tabu arama"],ans:"C) Parçacık sürü opmizasyon algoritması",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:62,q:"Aşağıdakilerden hangisi liman terminal alanlarından biri değildir?",options:["A) Ro-Ro terminalleri", "B) Konteyner terminalleri", "C) Paletli yük terminalleri", "D) Dökme yük terminalleri", "E) Sıvı yük terminalleri"],ans:"C) Paletli yük terminalleri",exp:"",exams:["2023-2024 Final"]},
+{id:63,q:"Aşağıdakilerden hangisi lojisk uygulama alanlarından biri değildir?",options:["A) Stok hızını arrır.", "B) Reklam gelirini arrır.", "C) Anlamlı metrikler kullanır.", "D) Envanter kontrolünü arrır.", "E) Yalın lojisk yönemi uygular."],ans:"B) Reklam gelirini arrır.",exp:"",exams:["2023-2024 Final"]},
+{id:64,q:"Aşağıdakilerden hangisi lojisk uygulamalarının faydalarından biri değildir?",options:["A) Yalın lojisk / tedarik zinciri yönemi uygulaması", "B) Stok hızının artması", "C) Ucuza araç san alınması", "D) Tedarikçi performansını arrması", "E) Envanter verimini en üst düzeye çıkarması"],ans:"C) Ucuza araç san alınması",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:65,q:"Aşağıdakilerden hangisi lojisk ve tedarik zinciri operasyonlarında bilgi teknolojisi kullanmanın amaçlarından biri değildir?",options:["A) Veri toplamak", "B) Tam görünürlüğü engellemek", "C) Veriye erişmek", "D) Veri analizi", "E) Ortaklarla iş birliği yapabilmek operasyonlarında, bilgi teknolojisi kullanmanın AMAÇLARI şu şekilde sıralanabilir: • 1) Üremden teslimata veya san alma noktasına kadar, her ürün hakkında “bilgi toplamak” ve zincire kalan tüm taraflar için tam “görünürlük” sağlamak (Veri toplamak): Siparişler ve durumları hakkındaki veriler, verimli bir tedarik zincirini yönetmenin önemli bir parçasıdır. Buna bazen “izlenebilirlik” te denir. Bu aşamada ilerleyen bölümlerde anlalacak olan barkod, RFID, haa internet çözümlerinin yaygınlaşmasıyla IoT sistemleri, bu sürece katkı sağlamaktadır • 2) Bir sistemdeki gerekli bir veriye, “tek bir temas noktasından” erişebilmek (Veriye Erişmek): Tek bir veri temas veya veri giriş noktası, tekil veri girişi, tutarlılık sağlar. Çoğu şirkee Kurumsal Kaynak Planlama (ERP) sistemlerinin piyasaya sürülmesi, (çoğu şirken hâlâ tam olarak temiz veriye sahip olmamasına rağmen), bu sorunları büyük ölçüde çözmüştür. Firmalar arası veriye erişim ve veri transferinde EDI ile başlayan süreçte ark Blockchain teknolojisi konuşulmaktadır. Bu sayede hem saydamlık hem de güvenlik üst düzeyde olabilecekr. • 3) Faaliyet planlarını ve analizlerini, tüm tedarik zincirindeki enformasyona dayanarak “analiz” edebilmek (Veri analizi): Verileri analiz etme ihyacı, birçok sektördeki artan değişim hızı ve çeşitli sensörler ve internet üzerindeki faaliyetlerden (rakip fiyatlandırma gibi) elde edilen yeni veriler (genellikle büyük veri olarak adlandırılır) nedeniyle, daha da belirgin hâle gelmişr. Eskiden veri analizleri, ya hazır yazılımlarla ya da Excel çalışma sayfaları aracılığıyla yapılırdı ve BT departmanlarına bağımlılık söz konusuydu. “Analik çözümleri” sağlama ile ilgili, iki önemli gelişme olmuştur. İlk olarak, R ve Python gibi yeni dillerle makine öğreniminin (bazen yapay zekâ olarak adlandırılır) kullanımı artmışr ve güçlü içerikli yetenekler sağlamışr. İkincisi, Amazon Web Servisleri, Microso Azure ve diğer bulut sağlayıcıları aracılığıyla bulut bilişimin genişleme kolaylığıdır. Bu, büyük verilere, ucuz belleğe ve ölçeklenebilir bilgi işlem gücüne erişim sağlamaktadır ve bu nedenle büyük analik modelleri çalışrma imkânı doğmuştur. • 4) Tedarik zinciri ortaklarıyla, “işbirliği” yapabilmek (Ortaklarla ortak çalışmak): Tedarik zinciri işbirliğinde, Tedarikçi İlişkileri Yönemi (SRM) ve Müşteri İlişkileri Yönemi (CRM) gibi gelişmiş sistemler, işleri kolaylaşrır. Yukarıda belirğimiz gibi, “bulut hizmetler” şirketler arasında işbirliğini kolaylaşrmışr ve bunu destekleyen yazılımların kullanımı ve erişimi daha kolaylaşmışr"],ans:"B) Tam görünürlüğü engellemek",exp:"",exams:["2021-2022 Final"]},
+{id:66,q:"Aşağıdakilerden hangisi lojiskte verimlilik arrma yaklaşımlarından biri değildir?",options:["A) Çapraz Sevkiyat", "B) Döngüsel Sefer", "C) Ürem Çizelgeleme", "D) Lojisk Ağ Tasarımı", "E) Tedarik Zinciri Yönemi"],ans:"C) Ürem Çizelgeleme",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:67,q:"Aşağıdakilerden hangisi lojisğe sahip pazarlama stratejileri arasında yer alır?",options:["A) Araç filosunu her yıl arrma", "B) Ürünü müşteriye zamanında ulaşrma", "C) Her bölgede depo edinme", "D) Maliyet odaklı olmama", "E) Kalite süreçlerine önem vermeme"],ans:"B) Ürünü müşteriye zamanında ulaşrma",exp:"",exams:["2021-2022 Final"]},
+{id:68,q:"Aşağıdakilerden hangisi maliyet odaklı lojisk uygulamalarında birkaç şirken bir araya gelmesiyle yapılan çözüm arayışına verilen isimdir?",options:["A) İntermodal taşımacılık", "B) Akıllı issna yönemi", "C) Konsolidasyon", "D) Depo Yönem Sistemi", "E) Ulaşrma Yönem Sistemi"],ans:"C) Konsolidasyon",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:69,q:"Aşağıdakilerden hangisi sacı için asgari sorumluluk ifade eden teslim şeklidir?",options:["A) EXW", "B) FOB", "C) CIF", "D) DAT", "E) DDP"],ans:"A) EXW",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:70,q:"Aşağıdakilerden hangisi sürdürülebilirlik performans ölçüm modelinin sosyal boyutu ile ilgilidir?",options:["A) Verimlilik", "B) İshdam", "C) Finansal performans", "D) Hizmet performansı", "E) İş sürekliliği CEVAP AN"],ans:"B) İshdam",exp:"",exams:["2024-2025 Final"]},
+{id:71,q:"Aşağıdakilerden hangisi süreç kırılmalarının bir sebebi değildir?",options:["A) Süreç uyumlandırma maliyetlerinin azımsanması", "B) Süreç uyumlandırma çalışmalarının yetersizliği", "C) Dış kaynak sağlayıcının işbirliği yapabilme kabiliyenin azlığı", "D) Kontrol kaybı", "E) Süreç uyumlandırma çalışmalarına üst yönem desteğinin azlığı"],ans:"A) Süreç uyumlandırma maliyetlerinin azımsanması",exp:"",exams:["2024-2025 Final"]},
+{id:72,q:"Aşağıdakilerden hangisi taraflar arasındaki eşyaya ilişkin fiziksel hareketlerin, uluslararası mevzuatlar çerçevesinde düzenlenmiş ve prosedüre edilerek 11 başlık hâlinde toplanmış şekline verilen addır?",options:["A) CMR konvansiyonu", "B) Gümrük tarife istask pozisyonu", "C) Ödeme yöntemi", "D) INCOTERMS", "E) İhracat beyannamesi CEVAP AN"],ans:"D) INCOTERMS",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:73,q:"Aşağıdakilerden hangisi uluslararası faaliyetlerle ilgili karşılaşılabilecek riskler arasında yer almaz?",options:["A) Kültürel farklılıklar", "B) Dil farklılığı", "C) Değişken maliyetler", "D) Altyapı yetersizlikleri", "E) Yerel pazardaki talep"],ans:"E) Yerel pazardaki talep",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:74,q:"Aşağıdakilerden hangisi yarım stoklarına örnek olarak verilemez?",options:["A) Alkollü içecekler", "B) Sanat eserleri", "C) Değerli metaller", "D) Ankalar", "E) Bilgisayar donanımları tutuldukça artabilir. Bunlara kaliteli şaraplar ve alkollü içkiler, purolar, değerli metaller ve taşlar, ankalar ve sanat eserleri örnek gösterilebilir. CEVAP AN"],ans:"E) Bilgisayar donanımları tutuldukça artabilir. Bunlara kaliteli şaraplar ve alkollü içkiler, purolar, değerli metaller ve taşlar, ankalar ve sanat eserleri örnek gösterilebilir. CEVAP AN",exp:"",exams:["2021-2022 Final"]},
+{id:75,q:"Aşağıdakilerden hangisi yeşil lojisk kapsamındaki uygulamalardan biri değildir?",options:["A) Daha az gürültü kirliliği yaratan ulaşım araçlarının seçimi", "B) Daha az hava kirliliği yaratan ulaşım araçlarının seçimi", "C) Enerjiden tasarruf sağlayan taşıma araçlarının kullanımı", "D) Düşük maliyetli lojisk uygulamaları", "E) Geri kazanılabilir ambalaj malzemesi kullanımı"],ans:"D) Düşük maliyetli lojisk uygulamaları",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:76,q:"Aşağıdakilerden hangisi yumurta üremi yapan bir işletmenin temel faaliyedir?",options:["A) Ürem planlama", "B) Navlun", "C) Sevk", "D) Gümrükleme", "E) Depolama"],ans:"A) Ürem planlama",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:77,q:"Aşağıdakilerden hangisi çevreci yaklaşımın artmasına neden olan unsurlardandır?",options:["A) Sosyal Sorumluluk", "B) Piyasa Koşulları", "C) Yerel Pazarın Özellikleri", "D) Ekonomik Endeksler", "E) Çalışanların Beklenleri NAHTARI"],ans:"A) Sosyal Sorumluluk",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:78,q:"Aşağıdakilerden hangisi özelleşrme veya alt montaj ürünleri depolarında yürütülen faaliyetlerden biri değildir?",options:["A) Saşa hazır ürünleri depolanması", "B) Ülkeye özgü ürünlerin işlenmesi", "C) Ürünlere farklı özellik ve yazılımların yüklenmesi", "D) Özel ambalajların veya eketlerin değişrilmesi veya eklenmesi", "E) Tanım faaliyetleri için gerilen ürünlerin depolanması"],ans:"A) Saşa hazır ürünleri depolanması",exp:"",exams:["2023-2024 Final"]},
+{id:79,q:"Aşağıdakilerden hangisi ürünler, müşteriler, pazarlar, dağım merkezleri/depolar, tesisler, finans, nitelikler ve hava durumu gibi uçtan uca tedarik zincirinin tüm ilgili varlıkları arasındaki ilişkilerin dijital bir temsilidir?",options:["A) Yapay zekâ", "B) RPA", "C) Siber güvenlik", "D) 3D yazıcılar", "E) Dijital tedarik zinciri ikizleri"],ans:"E) Dijital tedarik zinciri ikizleri",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:80,q:"Aşağıdakilerden hangisi şirketlerin, stok devir sürelerini ve maliyetlerini azaltmak için kullandıkları yöntemlerden biridir?",options:["A) Belgeleme", "B) Etkinlik yönemi", "C) Transit birleşrme", "D) Anlamlı metrikler kullanılması", "E) Tedarik zincirinin bölümlere ayrılması"],ans:"C) Transit birleşrme",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:81,q:"Aşağıdakilerden hangisi, Bowersox ve Daugherty (1987) tarandan gelişrilen lojisk stratejilerinden değildir?",options:["A) Pazar stratejisi", "B) Süreç stratejisi", "C) Ürün stratejisi", "D) Bilgi stratejisi", "E) Kanal stratejisi"],ans:"C) Ürün stratejisi",exp:"",exams:["2024-2025 Final"]},
+{id:82,q:"Aşağıdakilerinden hangisinde Verimlilik Çemberi'nin adımları sırasıyla doğru olarak verilmişr?",options:["A) Verimlilik Planlaması, Verimlilik Gelişrmesi, Verimlilik Ölçümü, Verimlilik Değerlendirmesi", "B) Verimlilik Planlaması, Verimlilik Gelişrmesi, Verimlilik Değerlendirmesi, Verimlilik Ölçümü", "C) Verimlilik Planlaması, Verimlilik Değerlendirmesi, Verimlilik Ölçümü, Verimlilik Gelişrmesi", "D) Verimlilik Ölçümü, Verimlilik Değerlendirmesi, Verimlilik Gelişrmesi, Verimlilik Planlaması", "E) Verimlilik Ölçümü, Verimlilik Değerlendirmesi, Verimlilik Planlaması, Verimlilik Gelişrmesi"],ans:"D) Verimlilik Ölçümü, Verimlilik Değerlendirmesi, Verimlilik Gelişrmesi, Verimlilik Planlaması",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:83,q:"B2C e-caret hizme aşağıdakilerden hangisidir?",options:["A) Tükeciden İşletmeye E-Ticaret", "B) İşletmeden Devlet Kurum ve Kuruluşlarına E-Ticaret", "C) İşletmeden Tükeciye E-Ticaret", "D) Vatandaştan Devlet Kurum ve Kuruluşlarına E-Ticaret", "E) Tükeciden Tükeciye E-Ticaret"],ans:"C) İşletmeden Tükeciye E-Ticaret",exp:"",exams:["2023-2024 Final"]},
+{id:84,q:"Bilgisayar sistemlerinin ve makinelerin verileri sürekli ve otomak olarak işleyebilme ve gerçek zamanlı veya yakın zamana ait çıklar ve öngörüler sunma yeteneklerini ifade eden teknoloji aşağıdakilerden hangisidir?",options:["A) Akıllı fabrika", "B) Otonom araçlar ve robotlar", "C) Yapay zekâ", "D) Robok süreç otomasyonu", "E) Gerçek zamanlı veri işleme zamanlı veri işleme, bilgisayar sistemlerinin ve makinelerin verileri sürekli ve otomak olarak işleyebilme ve gerçek zamanlı veya yakın zamana ait çıklar ve öngörüler sunma yeteneklerini ifade eder (epicor, 2019)."],ans:"E) Gerçek zamanlı veri işleme zamanlı veri işleme, bilgisayar sistemlerinin ve makinelerin verileri sürekli ve otomak olarak işleyebilme ve gerçek zamanlı veya yakın zamana ait çıklar ve öngörüler sunma yeteneklerini ifade eder (epicor, 2019).",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:85,q:"Bir işletmenin sektördeki rakiplerinin üstesinden gelmesini sağlayan, müşterisine değer yaratan yetkinliklerine ne ad verilir?",options:["A) Stratejik yönem", "B) Rekabet avantajı", "C) Maliyet avantajı", "D) Ayrıcalıklı üstünlükler", "E) Karşılaşrılmalı avantajlar"],ans:"B) Rekabet avantajı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:86,q:"Dağım faaliye aşağıdakilerden hangisinde yer almaz?",options:["A) 1. par lojisk", "B) 2. par lojisk", "C) 3. par lojisk", "D) 4. par lojisk", "E) 5. par lojisk 3PL, 4PL, 5PL Kavramları ve ilgili faaliyet verilmişr."],ans:"A) 1. par lojisk",exp:"",exams:["2021-2022 Final"]},
+{id:87,q:"Dağım faaliye aşağıdakilerin hangisinde yer almaz?",options:["A) 1. par lojisk", "B) 2. par lojisk", "C) 3. par lojisk", "D) 4. par lojisk", "E) 5. par lojisk 3PL, 4PL, 5PL Kavramları ve ilgili faaliyet verilmişr."],ans:"A) 1. par lojisk",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:88,q:"Demir yolu istasyonlarında yükleme yapılırken yük ve ray güvenliği açısından dingil başına düşen ağırlıklara dikkat edilir. Buna göre, E kategorisi için dingil başına düşen maksimum ağırlık aşağıdakilerden hangisidir?",options:["A) 16 ton", "B) 18 ton", "C) 20 ton", "D) 22 ton", "E) 25 ton ağırlık aşağıdaki tabloda gösterildiği gibidir. Tablo 4.1.Dingil Başına Düşen Maksimum Ağırlıklar Hat Kategorisi Maksimum Ağırlık A 16 ton B 18 ton C 20 ton D 22,5 ton E 25 ton"],ans:"E) 25 ton ağırlık aşağıdaki tabloda gösterildiği gibidir. Tablo 4.1.Dingil Başına Düşen Maksimum Ağırlıklar Hat Kategorisi Maksimum Ağırlık A 16 ton B 18 ton C 20 ton D 22,5 ton E 25 ton",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:89,q:"Depo yönem sistemleriyle ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Ürün gönderiminde meydana gelebilecek hata olasılığını azaltabilir.", "B) Şirketlerin siparişleri daha hızlı bir şekilde yerine germesini sağlar.", "C) Genellikle bir nakliye yönem sistemi veya bir stok yönem sistemi ile birlikte veya bütünleşik olarak kullanılır.", "D) Depo sayısındaki arş, verimliliğini olumsuz etkiler.", "E) Bir depodaki günlük işlemleri kontrol etmeye ve yönetmeye yardımcı olan bir yazılım uygulamasıdır. bir depodaki günlük işlemleri kontrol etmeye ve yönetmeye yardımcı olan bir yazılım uygulamasıdır. Bir DYS yazılımı, stok tutma ve azaltmaya rehberlik eder, siparişlerin toplanmasını ve gönderilmesini opmize eder ve stok yenileme konusunda tavsiyelerde bulunur."],ans:"D) Depo sayısındaki arş, verimliliğini olumsuz etkiler.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:90,q:"Dış kaynak kullanımı hangi seviyedeki iş birliğini hedefler?",options:["A) Takk Seviye", "B) Stratejik Seviye", "C) Kalite Seviyesi", "D) Operasyonel Seviye", "E) Uzmanlık Seviyesi CEVAP AN"],ans:"B) Stratejik Seviye",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:91,q:"EAN13 barkod pinde, ilk 3 basamak hangi enformasyona karşılık gelir?",options:["A) Ülke kodu", "B) Ürün kodu", "C) Marka kodu", "D) Kontrol basamağı", "E) Firma kodu"],ans:"A) Ülke kodu",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:92,q:"Enflasyon, millî gelir, para ve maliye polikaları, işsizlik, faiz oranları, ürem faktör maliye, iş çevrimleri, dış ödemeler bilançosu gibi unsurlar çevre değişkenlerinden hangisinin kapsamında yer alır?",options:["A) Polik çevre", "B) Teknolojik çevre", "C) Yasal çevre", "D) Uluslararası çevre", "E) Ekonomik çevre"],ans:"E) Ekonomik çevre",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:93,q:"Geri dönen ürünün özelliğini tamamen kaybetmemiş sağlam parça/parçalarının benzer ya da aynı özellikteki başka ürünlerde kullanılmasıdır. Tanımı yapılan faaliyet aşağıdakilerden hangisidir?",options:["A) Yeniden ürem", "B) Yeniden kullanım ve tamir", "C) Geri dönüşüm", "D) Yenileme", "E) Ürün yamyamlaşrma"],ans:"E) Ürün yamyamlaşrma",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:94,q:"Geri dönen ürünün özelliğini tamamen kaybetmemiş sağlam parça/parçalarının benzer ya da aynı özellikteki başka ürünlerde kullanılmasıdır. Yukarıda tanımı yapılan faaliyet aşağıdakilerden hangisidir?",options:["A) Ürün yamyamlaşrma", "B) Geri dönüşüm", "C) Yeniden ürem", "D) Yenileme", "E) Yeniden kullanım ve tamir dönen ürünün özelliğini tamamen kaybetmemiş sağlam parça/parçalarının benzer ya da aynı özellikteki başka ürünlerde kullanılmasıdır."],ans:"A) Ürün yamyamlaşrma",exp:"",exams:["2021-2022 Final"]},
+{id:95,q:"Hamule senedi olarak da bilinen CIM belgesi hangi mod ile yapılan taşımalarda kullanılır?",options:["A) Boru ha", "B) Deniz yolu", "C) Demir yolu", "D) Hava yolu", "E) Kara yolu"],ans:"C) Demir yolu",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:96,q:"I. Deniz yolu konşimentosu II. Demir yolu hamule senedi III. Sigorta poliçesi Yukarıdakilerden hangisi ya da hangileri dış caree kullanılan taşıma belgeleri arasında yer alır?",options:["A) Yalnız III", "B) Yalnız I", "C) Yalnız II", "D) I ve II", "E) I, II ve III"],ans:"D) I ve II",exp:"",exams:["2024-2025 Final"]},
+{id:97,q:"I. Depo tasarımı II. Belirsiz talep III. Stok konsolidasyon Yukarıdakilerden hangisi ya da hangileri çapraz sevkiyat sisteminin doğru işlemesini engelleyen unsurlardan biri değildir?",options:["A) II ve III", "B) Yalnız I", "C) I ve II", "D) Yalnız II", "E) Yalnız III"],ans:"E) Yalnız III",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:98,q:"I. Emisyonları arrma II. Ak ürün miktarının azallması III. Tükelen enerji miktarının azallması Yukarıdakilerden hangisi ya da hangileri lojisk uygulamalarının sürdürülebilirliğe katkı sağladığı alanlar arasında yer alır?",options:["A) Yalnız I", "B) Yalnız II", "C) Yalnız III", "D) I ve II", "E) II ve III sürdürülebilirliğe katkı sağladığı alanlardan birisi emisyonları azaltmak üzerinedir. Arrmak değildir."],ans:"E) II ve III sürdürülebilirliğe katkı sağladığı alanlardan birisi emisyonları azaltmak üzerinedir. Arrmak değildir.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:99,q:"I. Herkesin ihyaçlarını dikkate alan sosyal gelişim II. Çevrenin etkin bir şekilde korunması III. Doğal kaynakların tedbirsiz kullanımı Yukarıdakilerden hangisi ya da hangileri sürdürülebilirlik kavramının yaklaşımları içerisinde yer alır?",options:["A) Yalnız I", "B) Yalnız II", "C) I ve II", "D) II ve III", "E) I, II ve III Sürdürülebilirlik yaklaşımları verilmişr."],ans:"C) I ve II",exp:"",exams:["2021-2022 Final"]},
+{id:100,q:"I. Kesme Düzlemi Algoritması II. Dal-Sınır Algoritması III. Vogel Yaklaşımı Yöntemi Yukarıdaki yöntemlerden hangisi ya da hangileri tam sayılı doğrusal programlama için kullanılabilir?",options:["A) Yalnız I", "B) Yalnız III", "C) I ve II", "D) II ve III", "E) I, II ve III Programlama: Karar değişkenlerinin tümü kesikli değişken olduğu durumlardaki matemaksel modelleme türüdür. Bu yöntemlerin en bilenenleri; Dal-Sınır Algoritması, Sır-Bir Saklı Sayma Algoritmasıve Kesme Düzlemi Algoritması’dır."],ans:"C) I ve II",exp:"",exams:["2021-2022 Final"]},
+{id:101,q:"I. Lojisk Merkezler II. Kentsel Aktarma Merkezleri III. Yakıt Dolum Merkezleri IV. Dış Ticaret Merkezleri Yukarıdakilerden hangisi ya da hangileri lojisk faaliyetleriyle ilgili alanlardandır?",options:["A) Yalnız I", "B) Yalnız II", "C) I ve III", "D) III ve IV", "E) I, II ve IV amaçlara yönelik lojisk alanlar bulunmaktadır. Bu konuda bir terminoloji birliği sağlamak amacıyla söz konusu alanların faaliyet amaçlarına göre bir sınıflandırılması yapılmışr. Lojisk faaliyetlerle ilgili alanları; • Lojisk Merkezler, • Kentsel Aktarma Merkezleri, • Dış Ticaret Merkezleri, • Terminaller ve • Parklanma Alanları olarak beş temel sınıfa ayırabiliriz. NAHTARI"],ans:"E) I, II ve IV amaçlara yönelik lojisk alanlar bulunmaktadır. Bu konuda bir terminoloji birliği sağlamak amacıyla söz konusu alanların faaliyet amaçlarına göre bir sınıflandırılması yapılmışr. Lojisk faaliyetlerle ilgili alanları; • Lojisk Merkezler, • Kentsel Aktarma Merkezleri, • Dış Ticaret Merkezleri, • Terminaller ve • Parklanma Alanları olarak beş temel sınıfa ayırabiliriz. NAHTARI",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:102,q:"I. Ticari fatura II. Giriş / Çıkış Gümrük Beyannamesi III. Menşe Şahadetnamesi IV. Sigorta Belgeleri Yukarıdakilerden hangisi ya da hangileri her dış caret işleminde mutlaka kullanılan belgeler arasında yer alır?",options:["A) Yalnız III", "B) II ve III", "C) I, II, III ve IV", "D) III ve IV", "E) I, III ve IV CEVAP AN"],ans:"C) I, II, III ve IV",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:103,q:"I. Ürem kesinleri için önlem almak II. Mevsimsel üremi yönetmek III. Ham madde ve mamul fiyatlarındaki dalgalanmayı önlemek IV. Tükecinin belirli ürünlere yönelmesini sağlamak Yukarıda verilenlerden hangileri stok tutma nedenleri arasında yer alır?",options:["A) II, III ve IV", "B) I ve II", "C) I, II ve III", "D) I, II, III ve IV", "E) I ve IV"],ans:"C) I, II ve III",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:104,q:"Kenn çeperlerinde ve ana arterler yakınında kurulan, r ve kamyon bazlı araçlardaki yüklerin diğer hafif cari araçlara veya ikincil aktarma merkezlerine gidecek diğer araçlara yüklerin konsolide edilerek aktarıldığı alanlardır. Hakkında bilgi verilen merkez aşağıdakilerden hangisidir?",options:["A) Yük ve yolcu aktarma merkezleri", "B) Kara aktarma merkezleri", "C) Ana ve yan aktarma merkezleri", "D) Birincil aktarma merkezleri", "E) Hava ve deniz aktarma merkezleri"],ans:"D) Birincil aktarma merkezleri",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:105,q:"Konteyner limanlarına fonksiyonel olarak bağlı ancak mekân olarak ayrı, büyük ölçekli, gelişmiş katma değerli lojisk hizmetler verilen, endüstriyel ve cari faaliyetlerin gerçekleşrildiği dış caret merkezi pi aşağıdakilerden hangisidir?",options:["A) Serbest ekonomi bölgesi", "B) Serbest bölge", "C) Dağım parkı", "D) Serbest ürem bölgesi", "E) Özel ekonomik bölge"],ans:"C) Dağım parkı",exp:"",exams:["2024-2025 Final"]},
+{id:106,q:"Lojisk kavramı aşağıdaki faaliyetlerden hangisini içermez?",options:["A) Sigorta", "B) Saş", "C) Gümrük", "D) Paketleme ve katma değerli hizmetler", "E) Muayene ve gözem (transportaon) ve depolama (warehousing) ana faaliyetleri ile paketleme (packing), katma değerli hizmetler (value added services), gümrük (customs clearance), sipariş yönemi (order management / customer services), stok yönemi (inventory management), sigorta (insurance), muayene ve gözem (inspecon) tamamlayıcı faaliyetlerinden oluşan bir bütünleşik fonksiyondur (Şekil 1.1.). Lojisk, ürün/yükün çıkış ve varış noktaları arasındaki tüm malzeme hareketlerinin eşgüdümüdür."],ans:"B) Saş",exp:"",exams:["2021-2022 Final"]},
+{id:107,q:"Lojisk merkezler özelinde, ülkemizde lojisk ile ilgili yasal çerçevede bazı belirsizliklerin bulunması sebebiyle farklı yapılanma modelleri olduğu görülmektedir. Bu doğrultuda zaman içinde bazı merkezler kurulmuştur. Aşağıdakilerden hangisi zaman içinde kurulan merkezler arasında yer almaz?",options:["A) Şehirler arası otobüs terminalleri", "B) TCDD (Türkiye Cumhuriye Devlet Demiryolları) lojisk merkezleri", "C) Lojisk serbest bölgeleri", "D) Gümrük ve caret merkezleri", "E) Kamu özel sektör ortaklığında lojisk merkezleri"],ans:"A) Şehirler arası otobüs terminalleri",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:108,q:"Michael Porter'a göre, destek değer zincir faaliyetleri .................................. şeklinde sıralanmaktadır. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) yönetsel faaliyetleri, saş sonrası hizmetler, teknoloji gelişrme, insan kaynakları yönemi", "B) yönetsel faaliyetleri, tedarik faaliyetler, teknoloji gelişrme, insan kaynakları yönemi", "C) depolama &amp; dağım lojisği, pazarlama, saş sonrası hizmetler teknoloji gelişrme", "D) ürem ve operasyonlar, depolama &amp; dağım lojisği, pazarlama ve saş", "E) tedarik ve girdi lojisği, teknoloji gelişrme, insan kaynakları yönemi, saş pazarlama"],ans:"A) yönetsel faaliyetleri, saş sonrası hizmetler, teknoloji gelişrme, insan kaynakları yönemi",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:109,q:"Ortalama 2.000 dönümden büyük bir alana sahip, bölgesindeki tüm ülkelere yük gönderebilen ve alabilen, en az bir küresel ve bir ulusal ulaşrma koridoru üzerinde olan, tüm lojisk ve gümrük hizmetlerinin verildiği, içinde en az üç taşıma modu veya bu modlara etkin bağlanları ile en az iki intermodal terminali olan lojisk merkezdir. Yukarıda tanımı yapılan lojisk merkez aşağıdakilerden hangisidir?",options:["A) Yerel Lojisk Merkez", "B) Bölgesel Lojisk Merkez", "C) Uluslararası Lojisk Merkez", "D) Birincil Aktarma Merkezi", "E) İkincil Aktarma Merkezi büyük bir alana sahip, bölgesindeki tüm ülkelere yük gönderebilen ve alabilen, en az bir küresel ve bir ulusal ulaşrma koridoru üzerinde olan, tüm lojisk ve gümrük hizmetlerinin verildiği, içinde en az üç taşıma modu veya bu modlara etkin bağlanları ile en az iki intermodal terminali olan lojisk merkezdir"],ans:"C) Uluslararası Lojisk Merkez",exp:"",exams:["2021-2022 Final"]},
+{id:110,q:"Ortalama 2.000 dönümden büyük bir alana sahip, bölgesindeki tüm ülkelere yük gönderebilen ve alabilen, en az bir küresel ve bir ulusal ulaşrma koridoru üzerinde olan, tüm lojisk ve gümrük hizmetlerinin verildiği, içinde en az üç taşıma modu veya bu modlara etkin bağlanları ile en az iki intermodal terminali olan lojisk merkezdir. Yukarıda tanımı yapılan lojisk merkez hangisidir?",options:["A) Yerel Lojisk Merkez", "B) Bölgesel Lojisk Merkez", "C) Uluslararası Lojisk Merkez", "D) Birincil Aktarma Merkezi", "E) İkincil Aktarma Merkezi büyük bir alana sahip, bölgesindeki tüm ülkelere yük gönderebilen ve alabilen, en az bir küresel ve bir ulusal ulaşrma koridoru üzerinde olan, tüm lojisk ve gümrük hizmetlerinin verildiği, içinde en az üç taşıma modu veya bu modlara etkin bağlanları ile en az iki intermodal terminali olan lojisk merkezdir"],ans:"C) Uluslararası Lojisk Merkez",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:111,q:"Rakiplerine göre en düşük maliyetle müşterileri tarandan kabul edilebilir özelliklere sahip mal veya hizmetleri üreterek maliyet avantajı elde eden strateji türü aşağıdakilerden hangisidir?",options:["A) Maliyet Liderliği", "B) Odak Stratejiler", "C) Bütünleşik Stratejiler", "D) Çeşitlendirme Stratejileri", "E) Farklılaşrma Stratejisi NAHTARI"],ans:"A) Maliyet Liderliği",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:112,q:"San alma ya da tedarik; ürün, malzeme ve hizmetlerin kimden/nereden temin edileceği konusundaki kararlarla sonuçlanan bir faaliyetler serisidir. Tanımı yapılan faaliyet aşağıdakilerden hangisidir?",options:["A) Teslimat", "B) Kaynak kullanımı", "C) Taşıma", "D) Küresel pazar", "E) Dağım kanalları"],ans:"B) Kaynak kullanımı",exp:"",exams:["2024-2025 Final"]},
+{id:113,q:"Taşıma mesafesi arkça birim yük mesafe başına düşen taşıma maliyenin düşmesi aşağıdakilerden hangisinin tanımıdır?",options:["A) Mesafe ekonomisi", "B) Ölçek ekonomisi", "C) Pazarlama ekonomisi", "D) Ekipman dengesi", "E) Taşıma fiya"],ans:"A) Mesafe ekonomisi",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:114,q:"Taşıma modlarının değişik avantajları bulunmaktadır. Özellikle uluslararası taşımacılık dikkate alındığında hız faktörünün önemli olmadığı ve taşıma maliyenin önemsendiği mod hangisidir?",options:["A) Kara yolu", "B) Deniz yolu", "C) Demir yolu", "D) Kombine taşıma", "E) Hava yolu"],ans:"B) Deniz yolu",exp:"",exams:["2023-2024 Final"]},
+{id:115,q:"Taşımacılık maliyenin toplam içsel lojisk maliyet içindeki oranı genelde hangi aralıktadır?",options:["A) %5-8", "B) %15-25", "C) %40-60", "D) %4-6", "E) %20-30"],ans:"C) %40-60",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:116,q:"Taşımanın başlangıç ve biş aşamalarındaki kısa mesafelerde karayolunun kullanıldığı ve aradaki uzun mesafeli taşımanın demir, nehir, kanal veya deniz yolu ile yapıldığı taşımacılık sistemi aşağıdakilerden hangisidir?",options:["A) Intermodal Taşımacılık", "B) Senkromodal Taşımacılık", "C) Kombine Taşımacılık", "D) Opmal Taşımacılık", "E) Çok Modlu Taşımacılık"],ans:"C) Kombine Taşımacılık",exp:"",exams:["2024-2025 Final"]},
+{id:117,q:"Tedarik zincirinde temel olarak iki tür riskten bahsetmek mümkündür. Bunlar, iç riskler ve dış risklerdir. Aşağıdakilerden hangisi iç riskler kategorisinde yer alır?",options:["A) Geç teslimatlar", "B) Fiyat arşları", "C) Deprem", "D) Savaş", "E) Kasırga iki tür riskten bahsetmek mümkündür. Bunlar iç riskler ve dış risklerdir. İç riskler; geç teslimatlar, fazla stok, kötü tahminler, finansal riskler, küçük kazalar, insan hatası, bilgi teknolojisi sistemindeki hatalar gibi normal operasyonlarda ortaya çıkan risklerdir. Dış riskler; deprem, kasırga, savaş gibi tedarik zinciri dışından kaynaklanan risklerdir. Örneğin, saldırılar, hastalık salgınları, fiyat arşları, caret ortaklarıyla ilgili sorunlar, hammadde sıkınsı, suç, finansal düzensizlikler v.b."],ans:"A) Geç teslimatlar",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:118,q:"Tedarik zincirinin başlangıcından sonuna kadar robok, otomasyon ve RFID gibi teknolojileri kullanan lojisk hizmet sağlayıcılarına ne ad verilir?",options:["A) 1PL", "B) 4PL", "C) 5PL", "D) 3PL", "E) 2PL"],ans:"C) 5PL",exp:"",exams:["2024-2025 Final"]},
+{id:119,q:"Tır, iş makinesi, otomobil vb. karayolu araçlarının kendi tekerlekleri üzerinde yüklenerek taşındığı gemi pi hangisidir?",options:["A) Dökme yük gemisi", "B) Konteyner gemisi", "C) Genel yük gemisi", "D) Ro-Ro gemisi", "E) Mavna otomobil vb. karayolu araçlarının kendi tekerlekleri üzerinde yüklenerek taşındığı gemilerdir."],ans:"D) Ro-Ro gemisi",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:120,q:"Ulaşrma problemleri doğrusal programlama probleminin özel bir şeklidir. Bu problem çeşidinde konu belirli kaynaklardan belirli hedeflere ürün taşınmasıdır. Bahsedilen ulaşrma probleminin başlangıç çözümü için aşağıdaki yöntemlerden hangisi en iyi başlangıç çözümünün ürelmesini amaçlar?",options:["A) Minimum Maliyet Yöntemi", "B) Simplex Yöntemi", "C) Kuzey-Ba Yöntemi", "D) Vogel Yaklaşımı Yöntemi", "E) Büyük M Yöntemi"],ans:"D) Vogel Yaklaşımı Yöntemi",exp:"",exams:["2023-2024 Final"]},
+{id:121,q:"Uluslararası lojisk uygulamaları, bir ülkenin ...................... caret ortakları tarandan değerlendirilmesini sağlar. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) Gelişmiş", "B) Kalifiye", "C) Yerli", "D) Yeni", "E) Düşük maliyetli"],ans:"B) Kalifiye",exp:"",exams:["2024-2025 Final"]},
+{id:122,q:"Uluslararası taşımalarda kullanılan CMR belgesi hangi mod için geçerlidir?",options:["A) Boru ha", "B) Deniz yolu", "C) Hava yolu", "D) Kara yolu", "E) Demir yolu"],ans:"D) Kara yolu",exp:"",exams:["2023-2024 Final"]},
+{id:123,q:"Uluslararası ve/veya ulusal taşımacılık, lojisk ve ürünlerin dağımı ile ilgili tüm faaliyetlerin kümelendirilerek; farklı işletmeler tarandan özmal/kiralık bina, arsa veya araçlar kullanarak gerçekleşrilebilmesi için lojisk amaçlı düzenlenmiş, farklı taşıma modlarına etkin bağlanları olan özel bölge aşağıdakilerden hangisidir?",options:["A) Dış caret merkezi", "B) Terminal", "C) Parklanma alanı", "D) Lojisk merkez", "E) Kentsel aktarma merkezi"],ans:"D) Lojisk merkez",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:124,q:"Yerel pazara hizmet veren ulusal lojisk firmaları aşağıdaki unsurlardan hangisi hakkında haberdar olma avantajına sahipr?",options:["A) Beklenler", "B) Pazarın altyapısı ve tüm unsurları", "C) Mevsimsel koşullar", "D) Yabancı müşteriler", "E) Uluslararası rakipler"],ans:"B) Pazarın altyapısı ve tüm unsurları",exp:"",exams:["2023-2024 Final"]},
+{id:125,q:"İhracatçı ve ithalatçı arasındaki saş sözleşmesi tamamlandığında kesinleşen fiyatlar çerçevesinde cari faturaya dönüştürülen belge aşağıdakilerden hangisidir?",options:["A) Konsolosluk faturası", "B) Proforma fatura", "C) Bill of lading", "D) Çeki listesi", "E) Gümrük beyannamesi"],ans:"B) Proforma fatura",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:126,q:"İthalatçının san aldığı malın bedelini, malı teslim aldıktan sonra yapılan sözleşmeye göre belirlenen tarihte ödeme yapmasını sağlayan ödeme yöntemi aşağıdakilerden hangisidir?",options:["A) Mal mukabili ödeme", "B) Peşin ödeme", "C) Taksitli ödeme", "D) Akredifli ödeme", "E) Kabul kredili ödeme Against Good – Deferred Payment ) İthalatçının san aldığı malın bedelini, malı teslim aldıktan sonra yapılan sözleşmeye göre belirlenen tarihte ödeme yapmasını sağlayan ödeme yöntemidir."],ans:"A) Mal mukabili ödeme",exp:"",exams:["2021-2022 Final"]},
+{id:127,q:"İşletmeler, yurt dışında faaliyetlerini gerçekleşrirken işletmenin bulunduğu ana ülkeye özgü davranış ve yönem biçimini esas almaktadır, ifadesi aşağıdaki yaklaşımlardan hangisini tanımlamaktadır?",options:["A) Etnosentrik Yaklaşım", "B) Polisentrik Yaklaşım", "C) Geosentrik Yaklaşım", "D) Küresel Yaklaşım", "E) Yerel Yaklaşım"],ans:"A) Etnosentrik Yaklaşım",exp:"",exams:["2021-2022 Final"]},
+{id:128,q:"İşletmelerin dış ve iç çevre analizlerinden sonra stratejik planların oluşturulmasının ilk aşamasına ne ad verilir?",options:["A) Vizyon ve misyon belirlenmesi", "B) Stratejilerin seçimi", "C) Stratejilerin uygulanması", "D) Stratejik kontrol", "E) Uzun dönemli amaçların belirlenmesi sonra stratejik planların oluşturulmasının ilk aşaması işletmenin vizyon ve misyonun belirlenmesidir. Vizyon işletmenin uzun vadede, gelecekte ne yapması gerekğine dair bir görüş sağlar, o işlemenin gelecekte olmak istediği noktayı işaret etmektedir. Misyon ise işletmenin varlık nedenini, kendini nasıl bir işletme olarak gördüğünü, rekabet etmek istediği işletmeleri, hizmet sunmak istediği müşterilerini, ürünlerini tüm paydaşlarına anlağı bildirgedir. Misyonla işletmeler; “Ben kimim?”, “Ne üreyorum?”, “Kime ürem yapıyorum?”, “Değerlerim neler?” gibi soruların cevabını verirler."],ans:"A) Vizyon ve misyon belirlenmesi",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:129,q:"İşletmelerin faaliyetlerini sürdürdüğü, ürem için girdilerini temin eği, üreği mal ve hizmetleri müşterilerine sağı ve kendi gibi benzer ürem yapan firmalar ile rekabet içinde bulunduğu çevreye ne ad verilir?",options:["A) Sektör çevresi", "B) Teknolojik çevre", "C) Uluslararası çevre", "D) Demografik çevre", "E) Sosyokültürel Çevre faaliyetlerini sürdürdüğü, ürem için girdilerini temin eği, üreği mal ve hizmetleri müşterilerine sağı ve kendi gibi benzer ürem yapan firmalar ile rekabet içinde bulunduğu çevredir."],ans:"A) Sektör çevresi",exp:"",exams:["2021-2022 Final"]},
+{id:130,q:"İşletmelerin, marka, saygınlık, imaj, teknolojik yenilikler, dayanıklılık gibi farklılıklar ile değer yaratarak uyguladığı stratejiye ne ad verilir?",options:["A) Çeşitlendirme stratejileri", "B) Maliyet liderliği", "C) Bütünleşik stratejiler", "D) Farklılaşrma stratejisi", "E) Yaygınlaşrma stratejileri NAHTARI"],ans:"D) Farklılaşrma stratejisi",exp:"",exams:["2024-2025 Final"]}
+];
+const pdfMap={"2021-2022 Bütünleme": "pdfs/Lojistik_Yonetimi/2021-2022_Butunleme.pdf", "2021-2022 Final": "pdfs/Lojistik_Yonetimi/2021-2022_Final.pdf", "2022-2023 Yaz Okulu": "pdfs/Lojistik_Yonetimi/2022-2023_Yaz_Okulu.pdf", "2023-2024 Bütünleme": "pdfs/Lojistik_Yonetimi/2023-2024_Butunleme.pdf", "2023-2024 Final": "pdfs/Lojistik_Yonetimi/2023-2024_Final.pdf", "2023-2024 Yaz Okulu": "pdfs/Lojistik_Yonetimi/2023-2024_Yaz_Okulu.pdf", "2024-2025 Bütünleme": "pdfs/Lojistik_Yonetimi/2024-2025_Butunleme.pdf", "2024-2025 Final": "pdfs/Lojistik_Yonetimi/2024-2025_Final.pdf"};
+const PROGRESS_KEY="auzef-progress-Lojistik Y\u00f6netimi";
+
+let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
+function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
+function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+function shortenLabel(e){
+  return e
+    .replace(/(\d{4})-(\d{4})/g,(_,a,b)=>a.slice(2)+'-'+b.slice(2))
+    .replace(/^(\d{4}) /,(_,y)=>y.slice(2)+' ')
+    .replace('Bütünleme','Büt');
+}
+function tagCssClass(e){
+  if(e.includes('Kez Çıktı')) return 'freq-tag';
+  if(e.includes('Üç Ders'))   return 'uc-tag';
+  if(e.includes('Yaz Okulu')) return 'yaz-tag';
+  if(e.includes('Vize'))      return 'vize-tag';
+  if(e.includes('Final'))     return 'fin-tag';
+  if(e.includes('Bütünleme')) return 'but-tag';
+  return '';
+}
+function tagTfiClass(e){
+  if(e.includes('Üç Ders'))   return 'tfi-uc';
+  if(e.includes('Yaz Okulu')) return 'tfi-yaz';
+  if(e.includes('Vize'))      return 'tfi-vize';
+  if(e.includes('Final'))     return 'tfi-fin';
+  if(e.includes('Bütünleme')) return 'tfi-but';
+  return 'tfi-other';
+}
+function highlightNeg(text){
+  var L='[a-zA-ZçğışöüÇĞİIŞÖÜ]';
+  return text.replace(
+    new RegExp(
+      // Çok kelimeli kalıplar önce
+      'doğru\\s+değil'+L+'*'
+      +'|yanlış\\s+değil'+L+'*'
+      +'|uygun\\s+değil'+L+'*'
+      +'|gerekli\\s+değil'+L+'*'
+      +'|mümkün\\s+değil'+L+'*'
+      +'|'+L+'+mamas'+L+'\\s+gerek'+L+'*'
+      +'|'+L+'+memes'+L+'\\s+gerek'+L+'*'
+      +'|değil\\s+midir?'
+      +'|değil\\s+mi(?!'+L+')'
+      // Tek kelime negatifleri
+      +'|değildir'
+      +'|yanlıştır'
+      +'|yoktur(?!'+L+')'
+      +'|olamaz(?!'+L+')'
+      +'|olmaz(?!'+L+')'
+      // -mamaktadır/-memektedir (süregelen olumsuz)
+      +'|'+L+'+mamaktadır'+L+'*'
+      +'|'+L+'+memektedir'+L+'*'
+      // -mamalıdır/-memelidir (zorunluluk olumsuz)
+      +'|'+L+'+mamalıdır'
+      +'|'+L+'+memelidir'
+      +'|'+L+'+mamalı(?!'+L+')'
+      +'|'+L+'+memeli(?!'+L+')'
+      // -maz/-mez geniş (tüm Türkçe geniş zaman olumsuz)
+      +'|'+L+'+maz(?!'+L+')'
+      +'|'+L+'+mez(?!'+L+')',
+      'gi'
+    ),
+    function(m){return '<u class="neg-hl">'+m+'</u>';}
+  );
+}
+function getProgress(){try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'{}');}catch(e){return {};}}
+function saveProgress(qid,result){
+  var p=getProgress();p[String(qid)]=result;
+  localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
+  updateProgressBar();
+  var icon=document.getElementById('prev-'+qid);
+  if(icon){icon.className='q-prev '+(result==='correct'?'q-prev-correct':'q-prev-wrong');icon.textContent=result==='correct'?'✓ Doğru':'✗ Yanlış';}
+}
+function updateProgressBar(){
+  var p=getProgress();var total=sorular.length;
+  var done=Object.keys(p).filter(function(k){return parseInt(k)<total;}).length;
+  var el=document.getElementById('prog-done');if(el)el.textContent=done;
+  var et=document.getElementById('prog-total');if(et)et.textContent=total;
+  var fill=document.getElementById('prog-fill');if(fill)fill.style.width=(total?(done/total*100):0)+'%';
+}
+function resetProgress(){
+  if(!confirm('Bu ders için tüm ilerleme sıfırlansın mı?'))return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressBar();
+  var activeTab=document.querySelector('.tab-btn.active');
+  if(activeTab)activeTab.click();
+}
+function updateStatsBar(){
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function applyTagFilter(fullLabel,tfiClass){
+  document.querySelectorAll('.question-card').forEach(card=>{
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    card.classList.toggle('tag-hidden',!exams.includes(fullLabel));
+  });
+  updateStatsBar();
+  const ind=document.getElementById('tag-filter-indicator');
+  ind.className='visible '+tfiClass;
+  ind.querySelector('.tfi-label').textContent=shortenLabel(fullLabel)+' Görüntüleniyor';
+  document.querySelector('.sidebar').classList.add('tag-filter-active');
+  // PDF button
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const val=pdfMap[fullLabel];
+    if(val){
+      const ids=Array.isArray(val)?val:[val];
+      pdfBtn.dataset.pdfIds=JSON.stringify(ids);
+      pdfBtn.dataset.pdfLabels=JSON.stringify([fullLabel]);
+      pdfBtn.dataset.pdfLabel=shortenLabel(fullLabel);
+      pdfBtn.classList.add('visible');
+    } else pdfBtn.classList.remove('visible');
+  }
+}
+function clearTagFilter(){
+  document.querySelectorAll('.question-card').forEach(c=>c.classList.remove('tag-hidden'));
+  updateStatsBar();
+  document.getElementById('tag-filter-indicator').className='';
+  document.querySelector('.sidebar').classList.remove('tag-filter-active');
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn)pdfBtn.classList.remove('visible');
+}
+let _pdfIds=[],_pdfLabels=[],_pdfIdx=0;
+function _pdfLoad(idx){
+  const frames=document.getElementById('pdfModalFrames');
+  frames.innerHTML='';
+  const f=document.createElement('iframe');
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
+  f.allowFullscreen=true;
+  frames.appendChild(f);
+  const counter=document.getElementById('pdfCounter');
+  if(_pdfIds.length>1){counter.textContent=(_pdfIdx+1)+' / '+_pdfIds.length;}
+  else{counter.textContent='';}
+  // Modal başlığını her PDF'e göre güncelle
+  const lbl=_pdfLabels[idx]?shortenLabel(_pdfLabels[idx]):null;
+  document.getElementById('pdfModalTitle').textContent=(lbl||document.getElementById('pdfOpenBtn').dataset.pdfLabel||'Sınav')+' Sınav Kağıdı';
+  document.getElementById('pdfPrev').disabled=idx===0;
+  document.getElementById('pdfNext').disabled=idx===_pdfIds.length-1;
+}
+function pdfNav(dir){
+  const next=_pdfIdx+dir;
+  if(next<0||next>=_pdfIds.length)return;
+  _pdfIdx=next;_pdfLoad(_pdfIdx);
+}
+function openPdfModal(){
+  const btn=document.getElementById('pdfOpenBtn');
+  if(!btn)return;
+  _pdfIds=JSON.parse(btn.dataset.pdfIds||'[]');
+  _pdfLabels=JSON.parse(btn.dataset.pdfLabels||'[]');
+  if(!_pdfIds.length)return;
+  _pdfIdx=0;
+  document.getElementById('pdfPrev').style.display=_pdfIds.length>1?'':'none';
+  document.getElementById('pdfNext').style.display=_pdfIds.length>1?'':'none';
+  _pdfLoad(0);
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePdfModal(){
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfModalFrames').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function renderQuestions(filter){
+  const container=document.getElementById('quiz-container');
+  container.innerHTML='';resetScore();
+  const examCount=s=>s.exams.filter(e=>!e.includes('Kez')).length;
+  let filtered;
+  if(filter==='all') filtered=[...sorular];
+  else if(filter==='banko') filtered=sorular.filter(s=>examCount(s)>=2);
+  else if(filter==='review'){const p=getProgress();filtered=sorular.filter(s=>p[String(s.id)]!=='correct');}
+  else filtered=sorular.filter(s=>s.exams.some(e=>e.includes(filter)));
+  filtered.sort((a,b)=>examCount(b)-examCount(a));
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center;color:#888;padding:30px;">Bu kategoride soru bulunamadı.</p>';document.getElementById('stats-bar').innerHTML=`<span>0<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>`;return;}
+  filtered.forEach((soru,idx)=>{
+    const card=document.createElement('div');card.className='question-card';
+    card.dataset.exams=JSON.stringify(soru.exams);
+    const tagsHTML=soru.exams.map(e=>{
+      const css=tagCssClass(e);
+      const isFreq=e.includes('Kez Çıktı');
+      const clickable=isFreq?'':' tag-clickable';
+      const data=isFreq?'':` data-full="${e.replace(/"/g,'&quot;')}" data-tfi="${tagTfiClass(e)}"`;
+      return `<span class="exam-tag${css?' '+css:''}${clickable}"${data}>${shortenLabel(e)}</span>`;
+    }).join('');
+    const ansLetter=soru.ans?soru.ans.trim().charAt(0):'';
+    const optionsHTML=soru.options.map(o=>{
+      const isCorrect=ansLetter&&o.trim().startsWith(ansLetter+')');
+      return `<li${isCorrect?' data-correct="true"':''} onclick="selectOption(this)">${o}</li>`;
+    }).join('');
+    const answerId=`answer-${idx}-${filter}`;
+    card.dataset.qid=soru.id;
+    const prevResult=getProgress()[String(soru.id)];
+    const prevHTML=prevResult?`<span class="q-prev ${prevResult==='correct'?'q-prev-correct':'q-prev-wrong'}" id="prev-${soru.id}">${prevResult==='correct'?'✓ Doğru':'✗ Yanlış'}</span>`:`<span class="q-prev" id="prev-${soru.id}"></span>`;
+    card.innerHTML=`
+      <div class="q-header">
+        <div class="q-meta"><span class="q-num">Soru ${idx+1}</span>${prevHTML}</div>
+        <div class="exam-tags">${tagsHTML}</div>
+      </div>
+      <div class="question-text">${highlightNeg(soru.q)}</div>
+      <ul class="options">${optionsHTML}</ul>
+      <button class="btn-toggle" onclick="toggleAnswer('${answerId}',this)">Cevabı Göster</button>
+      <div class="answer-area" id="${answerId}" style="${allAnswersVisible?'display:block':''}">
+        <p class="correct-ans">✔ Doğru Cevap: ${soru.ans}</p>
+        <p class="exp-text">${soru.exp}</p>
+      </div>`;
+    if(allAnswersVisible){const cl=card.querySelector('.options li[data-correct="true"]');if(cl)cl.classList.add('correct-highlight');card.querySelector('.btn-toggle').textContent='Cevabı Gizle';}
+    card.querySelectorAll('.exam-tag.tag-clickable').forEach(tag=>{
+      tag.addEventListener('click',()=>applyTagFilter(tag.dataset.full,tag.dataset.tfi));
+    });
+    card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
+    container.appendChild(card);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function searchQuestions(q){
+  q=(q||'').trim().toLowerCase();
+  var cards=document.querySelectorAll('#quiz-container .question-card');
+  var visible=0;
+  cards.forEach(function(card){
+    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    var text=(card.querySelector('.question-text')||{}).textContent||'';
+    var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
+    var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
+    card.style.display=match?'':'none';
+    if(match)visible++;
+  });
+  document.getElementById('stats-bar').innerHTML='<span>'+visible+'<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>';
+}
+function setCorrectHighlight(card,visible){card.querySelectorAll('.options li[data-correct="true"]').forEach(li=>li.classList.toggle('correct-highlight',visible));}
+function selectOption(li){
+  const card=li.closest('.question-card');if(card.dataset.answered)return;
+  card.dataset.answered='true';const isCorrect=li.dataset.correct==='true';
+  if(isCorrect){li.classList.add('correct-highlight');card.dataset.answeredResult='correct';scoreCorrect++;}
+  else{li.classList.add('wrong-highlight');card.querySelectorAll('.options li[data-correct="true"]').forEach(l=>l.classList.add('correct-highlight'));card.dataset.answeredResult='wrong';scoreWrong++;}
+  saveProgress(card.dataset.qid,isCorrect?'correct':'wrong');
+  updateScore();
+  const area=card.querySelector('.answer-area');
+  if(area&&area.style.display!=='block'){area.style.display='block';const btn=card.querySelector('.btn-toggle');if(btn)btn.textContent='Cevabı Gizle';}
+}
+function toggleAnswer(id,btn){
+  const area=document.getElementById(id);const card=btn.closest('.question-card');
+  if(area.style.display==='none'||area.style.display===''){
+    area.style.display='block';btn.textContent='Cevabı Gizle';setCorrectHighlight(card,true);
+  }else{
+    area.style.display='none';btn.textContent='Cevabı Göster';setCorrectHighlight(card,false);
+    card.querySelectorAll('.options li.wrong-highlight').forEach(li=>li.classList.remove('wrong-highlight'));
+    if(card.dataset.answeredResult==='correct')scoreCorrect=Math.max(0,scoreCorrect-1);
+    else if(card.dataset.answeredResult==='wrong')scoreWrong=Math.max(0,scoreWrong-1);
+    delete card.dataset.answered;delete card.dataset.answeredResult;updateScore();
+  }
+}
+function toggleAllAnswers(){
+  allAnswersVisible=!allAnswersVisible;
+  document.getElementById('toggleAllBtn').textContent=allAnswersVisible?'Tüm Cevapları Gizle':'Tüm Cevapları Göster';
+  document.querySelectorAll('.answer-area').forEach(a=>a.style.display=allAnswersVisible?'block':'none');
+  document.querySelectorAll('.btn-toggle').forEach(b=>b.textContent=allAnswersVisible?'Cevabı Gizle':'Cevabı Göster');
+  document.querySelectorAll('.question-card').forEach(c=>setCorrectHighlight(c,allAnswersVisible));
+}
+function filterQuestions(filter,clickedBtn){
+  clearTagFilter();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  clickedBtn.classList.add('active');allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  renderQuestions(filter);
+  // Sekme filtresi için PDF butonunu güncelle
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const TAB_FILTERS=['Final','Bütünleme','Yaz Okulu','Vize','Üç Ders'];
+    const isTabFilter=TAB_FILTERS.some(k=>filter===k||filter.includes(k));
+    if(isTabFilter){
+      const tabIds=[],tabLabels=[];
+      // pdfMap anahtarlarını filtre anahtar kelimesine göre filtrele, kronolojik sırala
+      Object.keys(pdfMap).sort().forEach(label=>{
+        if(label.includes(filter)){
+          const val=pdfMap[label];
+          const ids=Array.isArray(val)?val:[val];
+          ids.forEach(id=>{tabIds.push(id);tabLabels.push(label);});
+        }
+      });
+      if(tabIds.length){
+        pdfBtn.dataset.pdfIds=JSON.stringify(tabIds);
+        pdfBtn.dataset.pdfLabels=JSON.stringify(tabLabels);
+        pdfBtn.dataset.pdfLabel=filter;
+        pdfBtn.classList.add('visible');
+      } else {
+        pdfBtn.classList.remove('visible');
+      }
+    } else {
+      pdfBtn.classList.remove('visible');
+    }
+  }
+}
+renderQuestions('all');
+updateProgressBar();
+(function(){
+  var _tb=document.querySelector('.site-topbar');
+  var _sb=document.querySelector('.sidebar');
+  var _qc=document.getElementById('quiz-container');
+  function syncPad(){
+    if(!_sb||!_qc)return;
+    if(window.innerWidth<=720){
+      var tbH=_tb?_tb.offsetHeight:48;
+      _sb.style.top=tbH+'px';
+      _qc.style.paddingTop=_sb.offsetHeight+'px';
+    } else {
+      _sb.style.top='';
+      _qc.style.paddingTop='';
+    }
+  }
+  syncPad();
+  window.addEventListener('resize',syncPad,{passive:true});
+  var mq=window.matchMedia('(max-width:720px)');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      if(_sb)_sb.classList.toggle('scroll-collapsed',window.scrollY>90);
+      ticking=false;
+    });
+  }
+  function setup(){
+    if(mq.matches){window.addEventListener('scroll',onScroll,{passive:true});}
+    else{window.removeEventListener('scroll',onScroll);if(_sb)_sb.classList.remove('scroll-collapsed');syncPad();}
+  }
+  if(mq.addEventListener)mq.addEventListener('change',setup);
+  else mq.addListener(setup);
+  setup();
+})();
+
+/* ── Dark Mode ── */
+(function(){
+  var toggle=document.getElementById('darkModeToggle');
+  if(!toggle)return;
+  var KEY='auzef-dark-mode';
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved=localStorage.getItem(KEY);
+  var isDark=saved!==null?saved==='true':prefersDark;
+  if(isDark)document.body.classList.add('dark-mode');
+  toggle.textContent=isDark?'☀️':'🌙';
+  toggle.addEventListener('click',function(){
+    document.body.classList.toggle('dark-mode');
+    var nowDark=document.body.classList.contains('dark-mode');
+    localStorage.setItem(KEY,String(nowDark));
+    toggle.textContent=nowDark?'☀️':'🌙';
+  });
+})();
+// Tekrar Et toggle
+function toggleReview(btn){
+  var isActive=btn.classList.contains('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  clearTagFilter();
+  if(isActive){
+    var allBtn=document.querySelector('.tab-btn:first-child');
+    if(allBtn)allBtn.classList.add('active');
+    renderQuestions('all');
+  } else {
+    btn.classList.add('active');
+    renderQuestions('review');
+  }
+}
+
+</script>
+</body>
+</html>

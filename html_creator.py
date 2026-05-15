@@ -72,6 +72,24 @@ DERS_CONFIG = {
         "emoji":   "🚑",
         "pdf_dir": "1_sinif/bahar/pdfs/Ilk_Yardim_ve_Acil_Saglik_Hizmetleri",
     },
+    "Kimyasal Maddeler ve Tehlikeleri": {
+        "excel":   "1_sinif/bahar/Kimyasal_Maddeler_ve_Tehlikeleri_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Kimyasal_Maddeler_ve_Tehlikeleri_Soru_Bankasi.html",
+        "emoji":   "⚗️",
+        "pdf_dir": "1_sinif/bahar/pdfs/Kimyasal_Maddeler_ve_Tehlikeleri",
+    },
+    "Lojistik Yönetimi": {
+        "excel":   "1_sinif/bahar/Lojistik_Yonetimi_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Lojistik_Yonetimi_Soru_Bankasi.html",
+        "emoji":   "🚚",
+        "pdf_dir": "1_sinif/bahar/pdfs/Lojistik_Yonetimi",
+    },
+    "Temel Bilgi Teknolojileri II": {
+        "excel":   "1_sinif/bahar/Temel_Bilgi_Teknolojileri_II_Soru_Bankasi.xlsx",
+        "output":  "1_sinif/bahar/Temel_Bilgi_Teknolojileri_II_Soru_Bankasi.html",
+        "emoji":   "💻",
+        "pdf_dir": "1_sinif/bahar/pdfs/Temel_Bilgi_Teknolojileri_II",
+    },
     "Algoritmalar ve Programlamaya Giriş": {
         "excel":  "Data/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.xlsx",
         "output": "1_sinif/bahar/Algoritmalar_ve_Programlamaya_Giris_Soru_Bankasi.html",

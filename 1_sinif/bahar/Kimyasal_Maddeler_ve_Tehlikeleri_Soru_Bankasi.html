@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Kimyasal Maddeler ve Tehlikeleri – Soru Havuzu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ATA-AÖF ana lacivert — UI chrome */
+  --green:#0d1460;--green-dk:#080e46;--green-lt:#e8eaf6;
+  /* Vurgu yeşili — geri bildirim / başarı */
+  --accent:#00CB54;--accent-dk:#009e40;--accent-lt:#e6faf0;
+  --gold:#e1b77e;
+  --wine:#7b1d34;--wine-dk:#5c1526;
+  --banko:#c0392b;--banko-dk:#922b21;
+  --bg:#f7f7f8;--card-bg:#fff;--text:#202428;--border:#e4e4e7;
+  --opt-bg:#fafafa;--opt-border:#e4e4e7;
+  --muted:#606065;
+}
+body.dark-mode{
+  /* UI chrome — okunabilir lacivert-lavanta */
+  --green:#8899ee;--green-dk:#c0caff;--green-lt:#131c42;
+  /* Geri bildirim yeşili */
+  --accent:#00CB54;--accent-dk:#4ade80;--accent-lt:#012a14;
+  --gold:#e1b77e;
+  /* Daha ölçülü wine ve banko */
+  --wine:#a05868;--wine-dk:#7d4052;
+  --banko:#c06060;--banko-dk:#9a4848;
+  --bg:#08091e;--card-bg:#0f1230;--text:#d8daec;--border:#252d60;
+  --opt-bg:#111830;--opt-border:#252d60;
+}
+*{box-sizing:border-box;}
+body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0 0 48px;line-height:1.65;transition:background .25s,color .25s;}
+
+/* ── topbar ── */
+.site-topbar{position:sticky;top:0;z-index:200;background:var(--green-dk);display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-home{display:inline-flex;align-items:center;gap:5px;font-size:.78em;font-weight:700;color:rgba(255,255,255,.75);text-decoration:none;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;transition:all .2s;white-space:nowrap;}
+.topbar-home:hover{background:rgba(255,255,255,.12);color:#fff;}
+.topbar-uni{font-size:.75em;color:rgba(255,255,255,.45);letter-spacing:.03em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-course{font-size:.88em;font-weight:700;color:#fff;}
+.dark-mode-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:5px 11px;font-size:1.05em;cursor:pointer;transition:all .2s;color:#fff;line-height:1;}
+.dark-mode-btn:hover{background:rgba(255,255,255,.25);transform:scale(1.08);}
+
+/* ── hero header ── */
+.header{background:linear-gradient(160deg,var(--green-dk) 0%,var(--green) 100%);color:#fff;padding:32px 24px 28px;text-align:center;border-bottom:4px solid var(--gold);box-shadow:0 3px 14px rgba(0,0,0,.2);}
+.header-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 16px;font-size:.77em;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.92);margin-bottom:14px;text-transform:uppercase;}
+.header h1{margin:0 0 8px;font-size:1.9em;font-weight:700;letter-spacing:-.01em;}
+.header-subtitle{margin:0;font-size:.93em;color:var(--gold);font-weight:600;letter-spacing:.03em;}
+
+/* ── layout ── */
+.container{max-width:1200px;margin:0 auto;padding:0 16px;}
+.page-layout{display:flex;gap:22px;align-items:flex-start;margin-top:24px;}
+#quiz-container{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:18px;animation:fadeIn .3s ease-in-out;}
+#quiz-container>*{min-width:0;}
+@media(max-width:900px){#quiz-container{grid-template-columns:1fr;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── sidebar ── */
+.sidebar{width:192px;flex-shrink:0;position:sticky;top:48px;display:flex;flex-direction:column;gap:8px;background:var(--card-bg);padding:14px 12px;border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sidebar-label{font-size:.68em;font-weight:700;text-transform:uppercase;color:#aaa;letter-spacing:.07em;margin-top:2px;}
+.sidebar-home{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 11px;background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);border-radius:7px;font-size:.82em;font-weight:700;text-decoration:none;transition:all .2s;}
+.sidebar-home:hover{background:var(--green-lt);}
+.tabs{display:flex;flex-direction:column;gap:5px;}
+.tab-btn{background:var(--card-bg);color:var(--green-dk);border:2px solid var(--green);padding:8px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:all .2s;text-align:left;width:100%;}
+.tab-btn:hover{background:var(--green-lt);}
+.tab-btn.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 3px 8px rgba(13,20,96,.28);}
+.tab-btn.tab-banko{background:#fde8e8;color:var(--banko);border-color:var(--banko);}
+.tab-btn.tab-banko:hover,.tab-btn.tab-banko.active{background:var(--banko);color:#fff;}
+body.dark-mode .tab-btn.tab-banko{background:#1e0808;color:#e08080;border-color:#7a3030;}
+body.dark-mode .tab-btn.tab-banko:hover,body.dark-mode .tab-btn.tab-banko.active{background:#7a3030;color:#fff;}
+.toggle-all-btn{background:var(--wine);color:#fff;border:none;padding:10px 11px;font-size:.84em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;box-shadow:0 3px 8px rgba(123,29,52,.28);transition:all .2s;width:100%;text-align:center;}
+.toggle-all-btn:hover{background:var(--wine-dk);transform:translateY(-1px);}
+.stats-bar{text-align:center;font-size:.77em;color:#666;font-weight:600;}
+.stats-bar>span{display:inline-block;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2px 9px;}
+.stats-short{display:none;}
+.score-panel{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.score-item{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.91em;font-weight:700;border-radius:8px;padding:7px 10px;}
+.score-item span{font-size:1.3em;font-weight:800;min-width:24px;text-align:center;}
+.score-correct-item{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+.score-wrong-item{background:#fde8e8;color:#c0392b;border:1px solid #f87171;}
+body.dark-mode .score-correct-item{background:#012a14;color:#4ade80;border-color:#025a28;}
+body.dark-mode .score-wrong-item{background:#2a0808;color:#f08888;border-color:#5a1818;}
+.sidebar-meta{display:flex;flex-direction:column;gap:6px;margin-top:2px;}
+.search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
+.search-box:focus{border-color:var(--accent);}
+.search-box::placeholder{color:#aaa;}
+.tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
+.tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
+body.dark-mode .tab-btn.tab-review{color:#c8963a;border-color:#7a5010;background:#1a1000;}
+body.dark-mode .tab-btn.tab-review:hover{background:#2a1a00;color:#e0b050;}
+body.dark-mode .tab-btn.tab-review.active{background:#7a5010!important;color:#fff!important;border-color:#7a5010!important;box-shadow:0 3px 8px rgba(120,80,16,.4)!important;}
+.review-info-btn{position:absolute;top:4px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;background:none;font-size:.6em;font-weight:900;line-height:13px;text-align:center;cursor:pointer;padding:0;color:inherit;opacity:.65;font-family:inherit;display:none;}
+.review-tooltip{display:none;position:absolute;top:calc(100% + 6px);right:0;width:220px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:.75em;font-weight:400;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.15);z-index:200;text-align:left;line-height:1.5;pointer-events:none;}
+@media(min-width:721px){
+  .review-info-btn{display:block;}
+  .review-info-btn:hover+.review-tooltip,.review-info-btn:focus+.review-tooltip{display:block;}
+}
+.progress-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.progress-label{display:flex;justify-content:space-between;align-items:center;font-size:.75em;font-weight:700;color:var(--text);}
+.progress-reset{background:none;border:none;font-size:.7em;color:#aaa;cursor:pointer;padding:0;font-family:inherit;transition:color .2s;}
+.progress-reset:hover{color:var(--banko);}
+.progress-bar-bg{height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease;}
+.q-prev{font-size:.8em;font-weight:700;padding:2px 7px;border-radius:4px;line-height:1.4;}
+.q-prev-correct{background:#d1fae5;color:#065f46;}
+.q-prev-wrong{background:#fde8e8;color:#c0392b;}
+body.dark-mode .q-prev-correct{background:#012a14;color:#4ade80;border:1px solid #025a28;}
+body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #5a1818;}
+
+/* ── mobile sidebar ── */
+@media(max-width:720px){
+  .page-layout{flex-direction:column;margin-top:8px;}
+  .header{display:none;}
+  .sidebar{position:fixed;top:48px;left:0;right:0;z-index:100;flex-direction:column;gap:5px;padding:8px 12px;border-radius:0;border:none;border-bottom:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.13);width:100vw!important;max-width:100vw;overflow-x:hidden;box-sizing:border-box;}
+  .sidebar-home,.sidebar-label{display:none;}
+  .tabs{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:5px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:7px 12px;font-size:.8em;}
+  .sidebar-meta{flex-direction:row;align-items:center;gap:6px;flex-wrap:nowrap;margin-top:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .sidebar-meta::-webkit-scrollbar{display:none;}
+  .stats-bar{flex-shrink:0;font-size:.73em;white-space:nowrap;text-align:left;}
+  .stats-bar>span{padding:2px 7px;}
+  .score-panel{flex-direction:row;gap:4px;margin-top:0;flex-shrink:0;}
+  .score-item{padding:4px 6px;font-size:.74em;gap:3px;white-space:nowrap;}
+  .score-item span{font-size:1em;min-width:14px;}
+  .stats-full{display:none;}
+  .stats-short{display:inline;}
+  .toggle-all-btn{width:100%;padding:7px 10px;font-size:.8em;}
+  .sidebar.scroll-collapsed{flex-direction:row;align-items:center;gap:6px;padding:5px 12px;}
+  .sidebar.scroll-collapsed .tab-btn:not(.active){display:none;}
+  .sidebar.scroll-collapsed nav.tabs{flex-shrink:0;overflow:visible;}
+  .sidebar.scroll-collapsed .sidebar-meta{flex:1;min-width:0;gap:5px;overflow-x:auto;}
+  .sidebar.scroll-collapsed .score-item{padding:3px 5px;}
+  .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
+  .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
+  .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
+  .sidebar.scroll-collapsed .prog-label{display:none;}
+  .sidebar.scroll-collapsed .score-label{display:none;}
+  .sidebar.scroll-collapsed .stats-full{display:none;}
+  .sidebar.scroll-collapsed .stats-short{display:inline;}
+  #quiz-container{grid-template-columns:1fr;}
+}
+
+/* ── question cards ── */
+.question-card{background:var(--card-bg);border-radius:9px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:22px 24px;border-left:5px solid var(--green);transition:box-shadow .2s;display:flex;flex-direction:column;}
+.question-card:hover{box-shadow:0 5px 18px rgba(13,20,96,.12);}
+.question-card .btn-toggle{margin-top:auto;}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:13px;border-bottom:1px solid var(--border);padding-bottom:10px;gap:10px;}
+.q-meta{display:flex;flex-direction:column;gap:3px;}
+.q-num{color:var(--green-dk);font-size:.86em;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.exam-tags{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.exam-tag{padding:2px 8px;border-radius:4px;font-size:.73em;font-weight:700;letter-spacing:.02em;}
+.uc-tag{background:#ede9fe;color:#4c1d95;}
+.vize-tag{background:#dbeafe;color:#1e3a8a;}
+.fin-tag{background:#d1fae5;color:#065f46;}
+.but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+.yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+.freq-tag{background:var(--banko);color:#fff;}
+.exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
+.exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
+.question-card.tag-hidden{display:none;}
+.sidebar.tag-filter-active .tabs,.sidebar.tag-filter-active .sidebar-home,.sidebar.tag-filter-active .sidebar-label,.sidebar.tag-filter-active .toggle-all-btn{opacity:.28;pointer-events:none;user-select:none;}
+.sidebar.tag-filter-active #tag-filter-indicator{opacity:1!important;pointer-events:auto!important;}
+#tag-filter-indicator{display:none;border-radius:7px;padding:8px 10px;font-size:.82em;font-weight:700;align-items:center;gap:6px;}
+#tag-filter-indicator.visible{display:flex;}
+#tag-filter-indicator .tfi-label{flex:1;line-height:1.3;}
+#tag-filter-indicator .tfi-close{background:none;border:none;cursor:pointer;font-size:1.1em;padding:0 2px;font-weight:900;opacity:.65;line-height:1;font-family:inherit;}
+#tag-filter-indicator .tfi-close:hover{opacity:1;}
+#tag-filter-indicator.tfi-fin{background:#d1fae5;color:#065f46;}
+#tag-filter-indicator.tfi-vize{background:#dbeafe;color:#1e3a8a;}
+#tag-filter-indicator.tfi-but{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
+#tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
+#tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
+#tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
+.question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
+.neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
+.q-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 12px;}
+.q-table{border-collapse:collapse!important;width:100%!important;margin:0!important;font-size:.88em;font-weight:400;white-space:normal!important;table-layout:auto;word-break:break-word;}
+.q-table th,.q-table td{border:1px solid var(--border)!important;padding:5px 9px!important;vertical-align:middle!important;}
+.q-table th{background:var(--green-lt)!important;color:var(--green-dk)!important;font-weight:700!important;text-align:center!important;}
+.q-table td{text-align:left;}
+.q-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'Courier New',monospace;font-size:.95em;}
+.q-table tr:nth-child(even) td{background:var(--opt-bg);}
+.q-table tfoot td,.q-table tr:last-child td[style*="font-weight"]{font-weight:700;background:var(--green-lt);}
+body.dark-mode .q-table th{background:#1a2060!important;color:#c0caff!important;}
+body.dark-mode .options li.wrong-highlight{background:#2a0808;border-color:#7a3030;color:#f08888;}
+body.dark-mode .options li.correct-highlight{background:#012a14;border-color:#025a28;color:#4ade80;}
+@media(max-width:600px){.q-table{font-size:.78em!important;}.q-table th,.q-table td{padding:4px 6px!important;}}
+.options{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;}
+.options li{background:var(--opt-bg);padding:9px 14px;border-radius:7px;border:1px solid var(--opt-border);font-size:.96em;transition:background .22s,border-color .22s;cursor:pointer;user-select:none;color:var(--text);}
+.options li.correct-highlight{background:var(--accent-lt);border-color:var(--accent);font-weight:700;color:var(--accent-dk);}
+.options li.wrong-highlight{background:#fde8e8;border-color:#e74c3c;font-weight:700;color:#c0392b;}
+.btn-toggle{background:var(--green);color:#fff;border:none;padding:10px 0;width:100%;font-size:.96em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;transition:background .2s;}
+.btn-toggle:hover{background:var(--green-dk);}
+.answer-area{display:none;margin-top:13px;padding:14px 16px;background:var(--accent-lt);border-left:4px solid var(--accent);border-radius:0 7px 7px 0;}
+.correct-ans{font-size:1.04em;color:var(--accent-dk);margin:0 0 7px;font-weight:700;}
+.exp-text{margin:0;color:var(--text);line-height:1.55;font-size:.92em;}
+
+/* ── PDF button & modal ── */
+.pdf-open-btn{display:none;background:var(--green);color:#fff;border:none;padding:9px 11px;font-size:.82em;font-weight:700;font-family:inherit;border-radius:7px;cursor:pointer;width:100%;text-align:center;transition:background .2s;}
+.pdf-open-btn:hover{background:var(--green-dk);}
+.pdf-open-btn.visible{display:block;}
+.pdf-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.65);padding:16px;align-items:stretch;}
+.pdf-modal.open{display:flex;flex-direction:column;}
+.pdf-modal-inner{background:#fff;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.pdf-modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--green-dk);color:#fff;font-weight:700;font-size:.9em;gap:8px;}
+.pdf-modal-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-modal-close{background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;line-height:1;padding:0 4px;opacity:.8;}
+.pdf-modal-close:hover{opacity:1;}
+.pdf-nav-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.1em;cursor:pointer;border-radius:5px;padding:2px 10px;line-height:1.6;transition:background .15s;}
+.pdf-nav-btn:hover{background:rgba(255,255,255,.35);}
+.pdf-nav-btn:disabled{opacity:.3;cursor:default;}
+.pdf-nav-counter{font-size:.8em;opacity:.85;white-space:nowrap;}
+#pdfModalFrames{display:flex;flex-direction:column;flex:1;min-height:0;}
+#pdfModalFrames iframe{flex:1;width:100%;border:none;min-height:0;}
+
+/* ── footer ── */
+.page-footer{text-align:center;margin-top:44px;padding:16px;font-size:.77em;color:#888;border-top:2px solid var(--border);}
+.page-footer strong{color:var(--green-dk);}
+</style>
+</head>
+<body>
+
+<div class="site-topbar">
+  <div class="topbar-left">
+    <a href="../../index.html" class="topbar-home">← Ana Sayfa</a>
+    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-course">⚗️ Kimyasal Maddeler ve Tehlikeleri</span>
+    <button id="darkModeToggle" class="dark-mode-btn" aria-label="Dark Mode" title="Karanlık Mod">🌙</button>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-badge">⚗️ AUZEF Soru Havuzu</div>
+  <h1>Kimyasal Maddeler ve Tehlikeleri</h1>
+  <p class="header-subtitle">Eksiksiz Çıkmış Sorular · 📙 Final · 📗 Bütünleme · ☀️ Yaz Okulu</p>
+</div>
+
+<div class="container">
+  <div class="page-layout">
+    <div id="quiz-container"></div>
+
+    <aside class="sidebar">
+      <a href="../../index.html" class="sidebar-home">⌂ Ana Sayfa</a>
+
+      <span class="sidebar-label">Filtrele</span>
+      <nav class="tabs">
+        <button class="tab-btn active" onclick="filterQuestions('all',this)">Tüm Sorular</button>
+        <button class="tab-btn" onclick="filterQuestions('Final',this)">📙 Final</button>
+        <button class="tab-btn" onclick="filterQuestions('Bütünleme',this)">📗 Bütünleme</button>
+        <button class="tab-btn" onclick="filterQuestions('Yaz Okulu',this)">☀️ Yaz Okulu</button>
+        <button class="tab-btn tab-banko" onclick="filterQuestions('banko',this)">🔥 Çok Çıkanlar</button>
+        <button class="tab-btn tab-review" onclick="toggleReview(this)">🔄 Devam Et
+          <span class="review-info-btn" onclick="event.stopPropagation()" tabindex="0">ℹ</span>
+          <div class="review-tooltip">Daha önce doğru cevapladığın sorular çıkarılarak teste devam eder.</div>
+        </button>
+      </nav>
+
+      <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div id="tag-filter-indicator">
+        <span class="tfi-label"></span>
+        <button class="tfi-close" onclick="clearTagFilter()">✕</button>
+      </div>
+      <button id="pdfOpenBtn" class="pdf-open-btn" onclick="openPdfModal()">📄 Sınav PDF Göster</button>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span><span id="prog-done">0</span> / <span id="prog-total">0</span><span class="prog-label"> tamamlandı</span></span>
+          <button class="progress-reset" onclick="resetProgress()" title="İlerlemeyi sıfırla">sıfırla</button>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="stats-bar" id="stats-bar"></div>
+        <div class="score-panel">
+          <div class="score-item score-correct-item">✓ <span id="score-correct">0</span><span class="score-label"> Doğru</span></div>
+          <div class="score-item score-wrong-item">✗ <span id="score-wrong">0</span><span class="score-label"> Yanlış</span></div>
+        </div>
+      </div>
+      <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAllAnswers()">Tüm Cevapları Göster</button>
+    </aside>
+  </div>
+
+  <div class="page-footer">
+    <strong>Kimyasal Maddeler ve Tehlikeleri</strong> · Çıkmış Sorular Soru Havuzu · 124 Soru
+  </div>
+</div>
+
+<div class="pdf-modal" id="pdfModal">
+  <div class="pdf-modal-inner">
+    <div class="pdf-modal-header">
+      <span class="pdf-modal-title" id="pdfModalTitle">Sınav Kağıdı</span>
+      <button class="pdf-nav-btn" id="pdfPrev" onclick="pdfNav(-1)">&#8249;</button>
+      <span class="pdf-nav-counter" id="pdfCounter"></span>
+      <button class="pdf-nav-btn" id="pdfNext" onclick="pdfNav(1)">&#8250;</button>
+      <button class="pdf-modal-close" onclick="closePdfModal()">✕</button>
+    </div>
+    <div id="pdfModalFrames"></div>
+  </div>
+</div>
+
+<script>
+const sorular=[
+{id:0,q:"Aşağıdaki maddelerden hangisi yangın söndürmede kullanılmaz?",options:["A) Su", "B) Köpük", "C) CO", "D) HFC-227", "E) Oksijen gazı"],ans:"E) Oksijen gazı",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Bütünleme", "2024-2025 Final", "3 Kez Çıktı!"]},
+{id:1,q:"Aşağıdaki özelliklerden hangisi kimyasal maddelerin bir arada bulunabilme yani uyumlu ya da uyumsuz olma özelliklerinden biri değildir?",options:["A) Tehlike sını", "B) pH değeri", "C) Genel kimyasal yapısı", "D) Maddenin hâli", "E) Maddenin kolay üremi bulunabilme, yani uyumlu ya da uyumsuz olma özellikleri; • Tehlike sını (parlayıcı, toksik, oksitleyici vb.), • pH değeri (asidik, bazik vb.), • Genel kimyasal yapısı (organik ya da inorganik), • Maddenin hâli (ka, sıvı ve gaz)"],ans:"E) Maddenin kolay üremi bulunabilme, yani uyumlu ya da uyumsuz olma özellikleri; • Tehlike sını (parlayıcı, toksik, oksitleyici vb.), • pH değeri (asidik, bazik vb.), • Genel kimyasal yapısı (organik ya da inorganik), • Maddenin hâli (ka, sıvı ve gaz)",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "3 Kez Çıktı!"]},
+{id:2,q:"Aşağıdakilerden hangisi kimyasal risklerden biri değildir?",options:["A) Zehirli maddelerin üremi, dönüşümü veya paketlenmesi", "B) Bayılcı maddelere maruz kalma", "C) Mutajen maddelerle çalışma", "D) Patlayıcı maddelerin ürem tesisleri", "E) Elektrik akımına kapılma risklerdendir."],ans:"E) Elektrik akımına kapılma risklerdendir.",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2023-2024 Final", "3 Kez Çıktı!"]},
+{id:3,q:"Aşağıdakilerden hangisi kullanımı yasak olan kimyasal maddeler arasında yer almaz?",options:["A) 2-nailamin ve tuzları", "B) 1,4-Diklorobenzen", "C) 4-aminodifenil ve tuzları", "D) Benzidin ve tuzları", "E) 4-nitrodifenil"],ans:"B) 1,4-Diklorobenzen",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2024-2025 Final", "3 Kez Çıktı!"]},
+{id:4,q:"Aşağıdakilerden hangisinde bir yanma olayının gerçekleşmesi için gereken üçlü bileşen doğru olarak verilmişr?",options:["A) Yanıcı madde, ısı ve oksijen", "B) Yanıcı madde, sıcaklık ve karbondioksit", "C) Oksijen, ısı ve tutuşturucu", "D) Oksijen, ısı ve sıcaklık", "E) Yanıcı madde, karbondioksit ve ısı"],ans:"A) Yanıcı madde, ısı ve oksijen",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2024-2025 Bütünleme", "3 Kez Çıktı!"]},
+{id:5,q:"I. İnsan sağlığı ile ilgili bbi ürünler II. Veterinerlikle ilgili bbi ürünler III. İnsan sağlığı ile ilgili temizlik ürünleri Kimyasal maddelerin zararlarıyla ilgili kanun ve yönetmelikler son kullanıcıya nihai ürün olarak ulaşan yukarıdaki madde ve karışımlardan hangisini ya da hangilerini kapsamaz?",options:["A) I ve II", "B) II ve III", "C) I ve III", "D) Yalnız I", "E) Yalnız III"],ans:"A) I ve II",exp:"",exams:["2023-2024 Final", "2023-2024 Yaz Okulu", "2024-2025 Bütünleme", "3 Kez Çıktı!"]},
+{id:6,q:"Küresel Uyumlaşrılmış Sistem'e (GHS) göre, \"H\" ibaresi aşağıdakilerden hangisini temsil eder?",options:["A) Önlem ifadeleri", "B) Risk kodları", "C) Ayrım ifadeleri", "D) Zarar ifadeleri", "E) Depolama kodları (GHS) sisteminde eski AB sınıflandırma sisteminde geçen R- ibarelerinin (Risk Phrases) yerini Tehlike Cümleleri/Zarar ifadeleri (H-İfadeleri/H-İbareleri: Hazard Statements) ve S- ibarelerinin (Safety Phrases) yerini Önlem Cümleleri/Önlem İfadeleri (P-İfadeleri/P-İbareleri: Precauonary Statements) almışr. Zarar İfadeleri: H • H200 Serisi: Fiziksel zarar ifadeleri ve kodları • H300 Serisi: Sağlığa ilişkin zarar ifadeleri ve kodları • H400 Serisi: Çevresel zarar ifadeleri ve kodları • İlave zarar ifadeleri ve kodları • Fiziksel özellikler • Sağlığa ilişkin özellikler • Bazı karışımlara ilişkin ilave eket unsurları/bilgileri CEVAP AN"],ans:"D) Zarar ifadeleri",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2023-2024 Final", "3 Kez Çıktı!"]},
+{id:7,q:"Toz maskelerinin kullanımıyla ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Selülozik elyaan yapılmış basit maskelerdir.", "B) Oksijen yetersizliği durumunda yararlıdır.", "C) 0,2 – 5.0 mikron arasındaki tozlara karşı kullanılır.", "D) Kullanma süresi çok kısadır.", "E) Sadece ağız ve burun bölgesini kapar. sorularından 10. sorudur."],ans:"B) Oksijen yetersizliği durumunda yararlıdır.",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2023-2024 Yaz Okulu", "3 Kez Çıktı!"]},
+{id:8,q:"Aşağıdaki tehlikelerden hangisi mesleki tehlikelerden biri değildir?",options:["A) Kimyasal tehlikeler", "B) Biyolojik tehlikeler", "C) Pisikososyal tehlikeler", "D) Mevsimsel tehlikeler", "E) Fiziksel tehlikeler"],ans:"D) Mevsimsel tehlikeler",exp:"",exams:["2021-2022 Bütünleme", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:9,q:"Aşağıdakilerden hangisi depolamada dikkat edilecek hususlar arasında yer almaz?",options:["A) Sıcaklık", "B) Havalandırma", "C) Depolama maliye", "D) Kimyasalların uyum-uyumsuzluğu", "E) Kimyasalların alevlenebilme özelliği"],ans:"C) Depolama maliye",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:10,q:"Aşağıdakilerden hangisi doğal gaz içinde yer almaz?",options:["A) Bütan", "B) Naalin", "C) Etan", "D) Propan", "E) Metan"],ans:"B) Naalin",exp:"",exams:["2023-2024 Final", "2024-2025 Final", "2 Kez Çıktı!"]},
+{id:11,q:"Aşağıdakilerden hangisi gazların tehlikeli etkilerinden korunma yolları arasında yer almaz?",options:["A) Patlama risklerinin belirlenmesi", "B) Patlayıcı ortamın oluşmasının önlenmesi veya yok edilmesi", "C) Konsantrasyonların arrılması", "D) Tehlikeli bölgelerin sınıflandırılması", "E) Gaz tüplerinin eketlenmesi önlenmesi mümkün değil ise, patlama için azami konsantrasyonunun oluşmasının engellenmesi gerekir. Gazlar ve tozlar havada belli konsantrasyona erişklerinde patlama riski oluştururlar. Eğer oksijen konsantrasyonu veya gaz konsantrasyonu güvenilir sınırlarda tutulabilirse, patlama tehlikesi engellenmiş olur."],ans:"C) Konsantrasyonların arrılması",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:12,q:"Aşağıdakilerden hangisi ile temas hâlinde tansiyonda düşme görülebilir?",options:["A) Parlacılarla", "B) Yakıcı maddelerle", "C) Yumuşacılarla", "D) Gümüş parlacılarıyla", "E) Ağarcılarla"],ans:"C) Yumuşacılarla",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:13,q:"Aşağıdakilerden hangisi radyasyondan korunma ile ilgili uluslararası kuruluşlar arasında yer almaz?",options:["A) Uluslararası Radyolojik Korunma Komitesi", "B) Birleşmiş Milletler Atomik Radyasyonun Etkileri Bilimsel Komitesi", "C) Uluslararası Atom Enerjisi Ajansı", "D) Avrupa Atom Enerjisi Topluluğu", "E) Türkiye Atom Enerjisi Kurumu yönetmeliklere göre, TAEK’den izin alınmadan radyasyon üreten tesis ve cihazlar herhangi bir amaç için bulundurulamaz, kurulamaz ve kullanılamaz. Ancak TAEK ulusal bir kurumdur. Uluslararası kurumlar arasında yer almaz. NAHTARI"],ans:"E) Türkiye Atom Enerjisi Kurumu yönetmeliklere göre, TAEK’den izin alınmadan radyasyon üreten tesis ve cihazlar herhangi bir amaç için bulundurulamaz, kurulamaz ve kullanılamaz. Ancak TAEK ulusal bir kurumdur. Uluslararası kurumlar arasında yer almaz. NAHTARI",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:14,q:"Aşağıdakilerden hangisi sıvı çevre kirleci UN3082 maddelerden biri değildir?",options:["A) Kresil difenil fosfat", "B) İzodesil akrilat", "C) Triel benzen", "D) Bül benzil fitalat", "E) Fenbütadin oksit KİRLETİCİLERİ UN3077'dir. 8. ünitenin 6. ve 7. sayfalarındadır cevabı."],ans:"E) Fenbütadin oksit KİRLETİCİLERİ UN3077'dir. 8. ünitenin 6. ve 7. sayfalarındadır cevabı.",exp:"",exams:["2021-2022 Final", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:15,q:"Aşağıdakilerden hangisi tehlikeli durumlara örnek olmaz?",options:["A) Yetersiz ya da gereğinden fazla aydınlatma", "B) Emniyetsiz şekilde yükleme, isfleme veya taşıma", "C) Emniyetsiz yöntem ve şartlarda çalışma", "D) Emniyetsiz yapılmış olan aletler ve makineler", "E) Yetersiz kişisel koruyucu donanımlar isfleme veya taşıma,\" tehlikeli davranışr."],ans:"B) Emniyetsiz şekilde yükleme, isfleme veya taşıma",exp:"",exams:["2021-2022 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:16,q:"Aşağıdakilerden hangisi yangın çıkmaması için alınacak önlemler arasında yer almaz?",options:["A) Yanıcı maddelerin akları lavabolara dökülmemelidir.", "B) Yanıcı maddeler istenilen ısıcılarda ısılmalıdır.", "C) Yanıcı özelliğe sahip maddelerle çalışıldıktan sonra, ilgili maddeler hemen çalışma ortamından uzaklaşrılmalıdır.", "D) İçerisinden doğal gaz, tüp gaz gibi gazların geçği borular sık sık kontrol edilmelidir.", "E) Alevle çalışılacak ortamın yakınlarında kolay alev alabilen maddeler bulundurulmamalıdır. sorularından 10. sorudur."],ans:"B) Yanıcı maddeler istenilen ısıcılarda ısılmalıdır.",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Bütünleme", "2 Kez Çıktı!"]},
+{id:17,q:"Aşağıdakilerden hangisi yüksek gürültünün olduğu yerlerde çalışan personelin kesinlikle kullanması gereken bir kişisel koruyucu donanımdır?",options:["A) Hava beslemeli maske", "B) Tam akusk baret", "C) Elask aksamlı muhafazalı gözlük", "D) Miğferli siper", "E) Yalıtkan ayakkabı"],ans:"B) Tam akusk baret",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:18,q:"Bir iş yerinde çalışanlardan herhangi birinin kanının 100 ml'sindeki kurşun seviyesi kaç mikrogram'dan (μg) fazla ise, bbi gözem yapılır?",options:["A) 52", "B) 64", "C) 13", "D) 21", "E) 40"],ans:"E) 40",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:19,q:"Birçok kimyasal, piyasada cari isimleri ile tanınmaktadır. Ticari olarak anbakteriyel temizleyici olarak kullanılan kimyasal aşağıdakilerden hangisidir?",options:["A) İzopropanol", "B) Triklosan", "C) Rodensitler", "D) Sülfirik asit", "E) Kresol NAHTARI"],ans:"B) Triklosan",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:20,q:"Havadaki oksijen oranının düşmesiyle meydana gelebilecek olumsuzluklarla ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Oksijen oranı % 12 – 14 olursa; derin soluma, nabızda hızlanma ve koordinasyon bozukluğu", "B) Oksijen oranı % 10 – 12 olursa; baş dönmesi, istekli hareketlerde güçlük", "C) Oksijen oranı % 8 – 10 olursa; bulan, kusma, baygınlık, yüzde solukluk", "D) Oksijen oranı % 6 – 8 olursa; felç", "E) Oksijen oranı % 4 olursa; çok kısa bir zamanda ölüm"],ans:"D) Oksijen oranı % 6 – 8 olursa; felç",exp:"",exams:["2022-2023 Yaz Okulu", "2023-2024 Final", "2 Kez Çıktı!"]},
+{id:21,q:"I. Yüksek düzeyde yalıtkan plask baretler II. Alüminyum baretler III. Boneler Yukarıdakilerden hangisi ya da hangileri sıcak çalışma ortamlarında kullanılacak olan baş koruyucu plerindendir?",options:["A) Yalnız II", "B) Yalnız I", "C) Yalnız III", "D) II ve III", "E) I, II ve III"],ans:"A) Yalnız II",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:22,q:"Kararsız elementlerin dışarıdan bir müdahale olmadan ışıma yapmasına ne ad verilir?",options:["A) Parçalanma", "B) Doğal radyoakflik", "C) Yapay radyoakflik", "D) Çekirdeklere tanecik ekleme", "E) İzotop oluşturma"],ans:"B) Doğal radyoakflik",exp:"",exams:["2022-2023 Yaz Okulu", "2024-2025 Bütünleme", "2 Kez Çıktı!"]},
+{id:23,q:"Kimyasal maddeler ve karışımların Avrupa Birliği Sınıflandırma, Eketlendirme ve Paketleme (CLP) Sistemi ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Birleşmiş Milletler Global Uyumluluk Sistemi ile uyumlandırılmışr.", "B) Piktogramlar, tehlikeli bir ürünün kullanımıyla bağlanlı tehlikenin doğasını ifade eder.", "C) Önlem (P) ifadeleri, ürünün sadece güvenli taşınması ile ilgilidir.", "D) Tehlike (H) ifadeleri, tehlikeli bir ürünün tehlikesinin doğasını açıklar, buna uygun olan yerlerde tehlikenin derecesi de dâhildir.", "E) Uyarı kelimesi, ürünün potansiyel bir tehlikesi konusunda uyarıda bulunmak için tehlikenin göreli ciddiyet seviyesini belirr. güvenli kullanım yollarını ve ürüne kaza sonucu maruz kaldığınız takdirde ne tür tedbirler almanız gerekğini açıklar."],ans:"C) Önlem (P) ifadeleri, ürünün sadece güvenli taşınması ile ilgilidir.",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2 Kez Çıktı!"]},
+{id:24,q:"PCB veya PCT içeriği …………. fazla olmayan karışımlar, ADR (Tehlikeli Maddelerin Karayolu ile Taşınmasına İlişkin Avrupa Anlaşması) hükümlerine tabi değildir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) 50 mg/kg", "B) 75 mg/kg", "C) 90 mg/kg", "D) 100 mg/kg", "E) 150 mg/kg NAHTARI"],ans:"A) 50 mg/kg",exp:"",exams:["2021-2022 Bütünleme", "2021-2022 Final", "2 Kez Çıktı!"]},
+{id:25,q:"Radyoakf maddeler tarandan dışarıya salınan enerjiye ne ad verilir?",options:["A) Termal enerji", "B) Rüzgâr enerjisi", "C) Radyasyon enerjisi", "D) Soğurma enerjisi", "E) Termik enerji"],ans:"C) Radyasyon enerjisi",exp:"",exams:["2023-2024 Bütünleme", "2023-2024 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:26,q:"Solvent maruziyenden sinir sisteminin zarar görmesi olayına ne ad verilir?",options:["A) Nörotoksisite", "B) Kriz", "C) Koma", "D) Bunama", "E) Yanma"],ans:"A) Nörotoksisite",exp:"",exams:["2021-2022 Bütünleme", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:27,q:"Uzun süre saf azot gazı soluyan bir kişi için aşağıdaki ifadelerden hangisi doğrudur?",options:["A) Azot, inert bir gaz olduğu için canlı üzerinde olumsuz bir etki yapmaz.", "B) Azot, toksin bir gaz olduğu için ölüme yol açar.", "C) Azot patlamaya ve yaralanmaya sebep olabilir.", "D) Solunan oksijen azalacağı için kişi boğularak ölür.", "E) Azot vücua yararlı maddelere dönüşür."],ans:"D) Solunan oksijen azalacağı için kişi boğularak ölür.",exp:"",exams:["2021-2022 Final", "2022-2023 Yaz Okulu", "2 Kez Çıktı!"]},
+{id:28,q:"1 mol su (H2O) içinde toplam olarak kaç tane atom vardır? (Avagadro sayısını = N)",options:["A) 2N/3", "B) 2N", "C) N/3", "D) 3N", "E) N"],ans:"D) 3N",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:29,q:"Akf bir metal, kendisinden daha az akf bir metal iyonuna etki ederse aşağıdaki olaylardan hangisi oluşur?",options:["A) Az akf metal serbest hâle geçer.", "B) Az akf metalin anyonu oluşur.", "C) Az akf metalin katyonu oluşur.", "D) Kendi serbest hâle geçer.", "E) Kendisinin anyonu oluşur."],ans:"A) Az akf metal serbest hâle geçer.",exp:"",exams:["2023-2024 Final"]},
+{id:30,q:"Atmosfere yayılarak solunduklarında ciddi sağlık problemleri ve şiddetli sızılara yol açabilen gazlara toksik (zehirli) gazlar denir. Aşağıdakilerden hangisi toksik bir gaz değildir?",options:["A) H S", "B) CH", "C) CO", "D) Cl", "E) NH"],ans:"B) CH",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:31,q:"Aşağıdaki elementlerden hangisi radyoakf değildir?",options:["A) Uranyum", "B) Kurşun", "C) Radyum", "D) Polonyum", "E) Toryum"],ans:"B) Kurşun",exp:"",exams:["2023-2024 Final"]},
+{id:32,q:"Aşağıdaki kavram ve birimlerinden hangisi radyasyon dozunu ölçmek ile ilgili değildir?",options:["A) Akvite-Becquerel", "B) Yarılanma süresi-Yıl", "C) Işınlama dozu-Coulomb/kilogram", "D) Doz eşdeğeri-Sievert", "E) Soğurulma dozu-Gray CEVAP AN"],ans:"B) Yarılanma süresi-Yıl",exp:"",exams:["2021-2022 Final"]},
+{id:33,q:"Aşağıdaki kavramlardan hangisi büyük zarar veya yok olmaya yol açabilecek durumu tanımlar?",options:["A) Risk", "B) Tehlike", "C) Endişe", "D) Bilgisizlik", "E) Kayıp"],ans:"B) Tehlike",exp:"",exams:["2021-2022 Final"]},
+{id:34,q:"Aşağıdaki kavramlardan hangisi “belirli bir zaman aralığında, hedeflenen bir sonuca ulaşamama, kayba ya da zarara uğrama olasılığı” tanımının karşılığıdır?",options:["A) Kaza", "B) Tehlike", "C) Risk", "D) İflas", "E) Hastalık"],ans:"C) Risk",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:35,q:"Aşağıdaki kimyasallardan hangisi patlayıcı maddeler sınına dâhil değildir?",options:["A) Trinitrotoluen", "B) Aseton peroksitler", "C) Dinamit", "D) Naalin", "E) Anfo"],ans:"D) Naalin",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:36,q:"Aşağıdaki kişisel koruyucu donanım sınıflarından hangisi kinek enerjiyi absorbe eden frenleme ekipmanı içerir?",options:["A) Vücut", "B) Solunum", "C) Ayak", "D) El", "E) Göz"],ans:"A) Vücut",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:37,q:"Aşağıdaki tehlikeli gazların yaygın adı ve tehlikelilik sını eşleşrmelerinden hangisi yanlışr?",options:["A) Oksijen: Yanıcı olmayan, aşındırıcı olmayan, düşük toksinli gazlar", "B) Azot: Aşındırıcı olmayan, yanıcı, düşük toksinli gazlar", "C) Karbonmonoksit: Yanıcı, aşındırıcı ve/veya toksin gazlar", "D) Amonyak: Yanıcı olmayan, aşındırıcı ve/veya toksin gazlar", "E) Azotdioksit: Aşırı toksin gazlar olmayan, Düşük toksinli Gazlar Helyum, Kripton, Neon, Azot, Nitroz oksit. Oksijen, Sülfür hekzaflorür, Ksenon Yani azot gazı yanıcı değildir."],ans:"B) Azot: Aşındırıcı olmayan, yanıcı, düşük toksinli gazlar",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:38,q:"Aşağıdaki tehlikeli kimyasallardan hangisi için verilen mesleki maruziyet sınır değeri en yüksekr?",options:["A) Cıva oksit ve cıva klorid dâhil olmak üzere cıva ve iki değerlikli inorganik", "B) Kalay (Kalay olarak inorganik bileşikleri)", "C) Formik asit", "D) Aseton", "E) Butanon ppm ile diğerlerinden en yüksekr."],ans:"D) Aseton",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:39,q:"Aşağıdakilerden hangisi TNT patlayıcısının tam adıdır?",options:["A) Pikrik asit", "B) Trinitrogliserin", "C) Trinitrotoluen", "D) Tetranitrürtriklorür", "E) Triklornitrotoluen"],ans:"C) Trinitrotoluen",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:40,q:"Aşağıdakilerden hangisi bacak koruyucu donanımdır?",options:["A) Hava beslemeli maske", "B) Bone", "C) Yüz siperi", "D) Tozluk", "E) Tam akusk baret CEVAP AN"],ans:"D) Tozluk",exp:"",exams:["2023-2024 Final"]},
+{id:41,q:"Aşağıdakilerden hangisi basınçlı gaz tüpleri depolanırken dikkat edilmesi gereken hususlar arasında yer almaz?",options:["A) Dolu ve boş tüpler ayrı yerlerde depolanmalıdır.", "B) Tüpler, taşıma esnasında veya kullanılmadıklarında kapakları kapalı tutulmalıdır.", "C) Gaz tüpleri, ısı ve alev kaynağına yakın tutulmalıdır.", "D) Dolu tüpler sıcaklık değişmelerine, güneşin dik ışınlarına, radyasyon ısısına, soğuğa ve neme karşı korunmalıdır.", "E) Depolama sahasına tüplerdeki gazların cinsine göre uyarı levhaları asılmalıdır."],ans:"C) Gaz tüpleri, ısı ve alev kaynağına yakın tutulmalıdır.",exp:"",exams:["2024-2025 Final"]},
+{id:42,q:"Aşağıdakilerden hangisi bir cilt koruyucudur?",options:["A) Hava beslemeli maske", "B) Kep", "C) Merhem", "D) Akusk baret", "E) Tozluk CEVAP AN"],ans:"C) Merhem",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:43,q:"Aşağıdakilerden hangisi bir karın koruyucu donanımdır?",options:["A) Vücut kuşağı", "B) Eldiven", "C) Toz maskesi", "D) Miğferli siper", "E) Bone"],ans:"A) Vücut kuşağı",exp:"",exams:["2024-2025 Final"]},
+{id:44,q:"Aşağıdakilerden hangisi bir nükleer enerji santrali kazası değildir?",options:["A) Three Mile Island", "B) Fukuşima", "C) Çernobil", "D) Windscale", "E) Akkuyu"],ans:"E) Akkuyu",exp:"",exams:["2023-2024 Final"]},
+{id:45,q:"Aşağıdakilerden hangisi bir ortamda oluşabilecek bir patlamanın temel sebebi değildir?",options:["A) Kızgın cisim", "B) Oksijen", "C) Yakıt", "D) Kıvılcım", "E) Fırın"],ans:"E) Fırın",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:46,q:"Aşağıdakilerden hangisi bir risk çeşidi değildir?",options:["A) Kimyasal", "B) Biyolojik", "C) Stak", "D) Çevresel", "E) Fiziksel"],ans:"C) Stak",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:47,q:"Aşağıdakilerden hangisi birincil patlayıcılar sınında yer almaz?",options:["A) Kurşun azit", "B) Tetrazen", "C) TNT", "D) DDNP", "E) Kurşun stefenat"],ans:"C) TNT",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:48,q:"Aşağıdakilerden hangisi halojenli çözücüler sınına girmez?",options:["A) Metanol", "B) Kloroform", "C) Karbontetrabromür", "D) Karbontetraklorür", "E) Diklorometan"],ans:"A) Metanol",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:49,q:"Aşağıdakilerden hangisi iş sağlığı ve güvenliği profesyoneli görevlendirme yükümlülüğünün yürürlüğe girmediği iş yerleri için risk değerlendirmesi yerine geçmeyip çalışma ortamını iyileşrmek için kullanılır?",options:["A) Kontrol listeleri", "B) İş kazası bildirim formları", "C) Değerlendirme raporları", "D) Sağlık raporları", "E) Malzeme güvenlik bilgi formları"],ans:"A) Kontrol listeleri",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:50,q:"Aşağıdakilerden hangisi kimyasal maddelerin tehlike özellikleri arasında yer almaz?",options:["A) Koku", "B) Zehirlilik", "C) Tutuşabilme", "D) Reakvite", "E) Korozyon"],ans:"A) Koku",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:51,q:"Aşağıdakilerden hangisi kimyasal maddelerin tehlikeli özelliklerinden biri değildir?",options:["A) Bileşim", "B) Tutuşabilme", "C) Korozyon", "D) Reakvite", "E) Zehirlilik"],ans:"A) Bileşim",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:52,q:"Aşağıdakilerden hangisi kimyasalların uygun depolanması için etkili olan nedenlerden biri değildir?",options:["A) Yangın riskini azaltmak", "B) Aşındırıcı ve zehirli kimyasallara maruz kalma riskini en aza indirmek", "C) Acil durumlarda yanlışlıkla karışmasını önlemek", "D) Çalışılan ortamın güzel görünmesini sağlamak", "E) Kimyasalların etkin yönemini sağlamak NAHTARI"],ans:"D) Çalışılan ortamın güzel görünmesini sağlamak",exp:"",exams:["2024-2025 Final"]},
+{id:53,q:"Aşağıdakilerden hangisi oksitleyici kimyasallardan biri değildir?",options:["A) Nitratlar", "B) Perboratlar", "C) Kloratlar", "D) Rezonatlar", "E) Dikromatlar"],ans:"D) Rezonatlar",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:54,q:"Aşağıdakilerden hangisi parlayıcı bir sıvıdır?",options:["A) Çam yağı", "B) Anilin", "C) Nitrobenzen", "D) Benzen", "E) Bül selosolve"],ans:"D) Benzen",exp:"",exams:["2023-2024 Final"]},
+{id:55,q:"Aşağıdakilerden hangisi polisiye mücadele ve göz yaşarcı olarak kullanılan gazlardandır?",options:["A) Kloroasetofenon (CN)", "B) Karbonmonoksit Gazı", "C) VX Gazı", "D) Sarin Gazı", "E) Hardal Gazı"],ans:"A) Kloroasetofenon (CN)",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:56,q:"Aşağıdakilerden hangisi radyasyonlu ortamlarda el koruması için önerilebilecek bir kişisel koruyucu donanımdır?",options:["A) Lask eldiven", "B) Deri eldiven", "C) Kurşun emdirilmiş lask eldiven", "D) Cam elyandan ürelmiş eldiven", "E) Kauçuk eldiven"],ans:"C) Kurşun emdirilmiş lask eldiven",exp:"",exams:["2023-2024 Final"]},
+{id:57,q:"Aşağıdakilerden hangisi risk alnda bulunan vücut genel bölgelerinden biri değildir?",options:["A) Baş", "B) Alt beden", "C) Diğer kısımlar", "D) Diz", "E) Üst beden CEVAP AN"],ans:"D) Diz",exp:"",exams:["2024-2025 Final"]},
+{id:58,q:"Aşağıdakilerden hangisi tehlikeli aklar için uygulanan bertaraf işlemlerinden biri değildir?",options:["A) Sürekli depolama", "B) Ayırma", "C) Kimyasal ön işlemler", "D) Fiziksel ön işlemler", "E) Derine enjeksiyon"],ans:"B) Ayırma",exp:"",exams:["2023-2024 Final"]},
+{id:59,q:"Aşağıdakilerden hangisi tehlikeli kimyasal maddeler taşınırken yapılması gerekenler arasında yer almaz?",options:["A) Bütün tehlikeli kimyasallar birlikte taşınabilir.", "B) Tehlikeli maddeler asansör ile taşınırken asansöre başka kişilerin binmesine izin verilmemelidir.", "C) Taşıma görevlisi tehlikeli maddenin risklerine göre kişisel koruyucu donanım (KKD) giymelidir.", "D) Tehlikeli maddeler kucakta, elde değil; tekerlekli ve kenarları destekli yük taşıma arabaları veya kapları ile taşınmalıdır.", "E) Taşıma görevlisi tehlikeli maddenin riskleri hakkında bilgilendirilmelidir."],ans:"A) Bütün tehlikeli kimyasallar birlikte taşınabilir.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:60,q:"Aşağıdakilerden hangisi tehlikeli kimyasal maddeler taşınırken yapılması gerekenler arasında yer alır?",options:["A) Bütün tehlikeli kimyasallar birlikte taşınmalıdır.", "B) Gaz tüpleri taşınırken vanaları açık olmalıdır.", "C) Kimyasal maddeler, kullanılmasa dahi çalışılacak masalar üzerinde durmalıdır.", "D) Tehlikeli maddeler yük arabalarından depolara taşınırken çalışanların olduğu bölümden depolara taşınmalıdır.", "E) Tehlikeli maddeler kucakta, elde değil; tekerlekli ve kenarları destekli yük taşıma arabaları veya kapları ile taşınmalıdır."],ans:"E) Tehlikeli maddeler kucakta, elde değil; tekerlekli ve kenarları destekli yük taşıma arabaları veya kapları ile taşınmalıdır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:61,q:"Aşağıdakilerden hangisi tehlikeli kimyasal maddelerin kontrol hiyerarşisi içinde yer almaz?",options:["A) Kişisel koruyucu donanımlar", "B) İşveren önerileri", "C) Mühendislik kontrolleri", "D) İdari veya iş yeri uygulama denemleri", "E) Eleme veya ikame NAHTARI"],ans:"B) İşveren önerileri",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:62,q:"Aşağıdakilerden hangisi tehlikeli kimyasal maddelerin risk durumlarına göre uluslararası sınıflandırmalardan biri değildir?",options:["A) Patlayıcılar", "B) Oksitleyici maddeler", "C) Gazlar", "D) Aşındırıcı maddeler", "E) Tuz çözelleri"],ans:"E) Tuz çözelleri",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:63,q:"Aşağıdakilerden hangisi tehlikeli kimyasal maddelerle çalışmalarda çalışanların sağlık ve güvenliği yönünden oluşacak riskleri ortadan kaldırmak veya azaltmak için alınan önlemler arasında yer almaz?",options:["A) İş yerinde uygun düzenleme ve iş organizasyonu yapılmalı", "B) İş yeri bina ve eklenleri her zaman düzenli ve temiz tutulmalı", "C) Çalışanların kişisel temizlikleri için uygun ve yeterli şartlar sağlanmalı", "D) Çalışanların tehlikeli kimyasal maddeleri kullanmaması sağlanmalı", "E) Tehlikeli kimyasal maddelerle çalışmalar, en az sayıda çalışan ile yapılmalı"],ans:"D) Çalışanların tehlikeli kimyasal maddeleri kullanmaması sağlanmalı",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:64,q:"Aşağıdakilerden hangisi tehlikeli kimyasallara örnek değildir?",options:["A) Temizlik maddeleri", "B) Boya kaynaklı buharlar", "C) Tutkallar", "D) Reçineler", "E) Parazitler"],ans:"E) Parazitler",exp:"",exams:["2023-2024 Final"]},
+{id:65,q:"Aşağıdakilerden hangisi yanıcı bir malzeme değildir?",options:["A) Nitrik asit", "B) Nitrobenzen", "C) Anilin", "D) Benzil alkol", "E) Benzaldehit"],ans:"A) Nitrik asit",exp:"",exams:["2024-2025 Final"]},
+{id:66,q:"Aşağıdakilerden hangisi çalışanlarca karşılaşılan büyük risklerden biri değildir?",options:["A) Sıkışma/ezilme", "B) Elektrik çarpması", "C) Yüksekten düşme", "D) Yangın/patlama", "E) Ham madde sıkınsı"],ans:"E) Ham madde sıkınsı",exp:"",exams:["2024-2025 Final"]},
+{id:67,q:"Aşağıdakilerin hangisi yanıcı bir madde için tutuşturucu olarak nitelendirilmez?",options:["A) Kıvılcım", "B) Barutun dövülmesi", "C) Kızgın demir", "D) Elektrik arkı", "E) Odun talaşı"],ans:"E) Odun talaşı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:68,q:"Bir atom simgesinin sol alt köşesine yazılan sayı (7N örneğinde olduğu gibi) neyi ifade eder?",options:["A) Elektron sayısı", "B) Proton sayısı", "C) Nötron sayısı", "D) Nükleon sayısı", "E) Yük"],ans:"B) Proton sayısı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:69,q:"Bir atomun bağ elektronunu çekme gücü aşağıdakilerden hangisiyle ifade edilir?",options:["A) Elektron ilgisi", "B) Tepkime entalpisi", "C) Kimyasal enerji", "D) Elektronegaflik", "E) İyonlaşma enerjisi"],ans:"D) Elektronegaflik",exp:"",exams:["2023-2024 Final"]},
+{id:70,q:"Bir atomun çekirdeğindeki proton sayısı nötron sayısına eşitse aşağıdakilerden hangisi doğrudur?",options:["A) Kendiliğinden parçalanır.", "B) Kararlı olup ışıma yapmaz.", "C) Tanecik yayınlar.", "D) Daha kararlı atomlara dönüşür.", "E) Işıma yapar."],ans:"B) Kararlı olup ışıma yapmaz.",exp:"",exams:["2024-2025 Final"]},
+{id:71,q:"Bir sıvının buharlarının tutuşabileceği minimum sıcaklığa ne ad verilir?",options:["A) İşaret feneri", "B) Flaş buharı", "C) Yanma", "D) Flaş lambası", "E) Parlama noktası"],ans:"E) Parlama noktası",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:72,q:"CLP Tüzüğünde, ürünün potansiyel tehlikesi konusunda uyarıda bulunurken “Daha az ciddi uyarı” anlamında kullanılması önerilen kelime aşağıdakilerden hangisidir?",options:["A) Sakının", "B) Tehlike", "C) Uyarı", "D) Risk", "E) Dikkat NAHTARI"],ans:"E) Dikkat NAHTARI",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:73,q:"Detonasyon hızı kısaca patlatmanın büyüklüğünün bir ölçüsüdür. Buna göre detonasyon hızı aşağıdakilerden hangisi ile ters oranlı olarak değişir?",options:["A) Yoğunluk", "B) Sıkışrma etkisi", "C) Parkül boyutu", "D) Şarj çapı", "E) Patlama büyüklüğü"],ans:"C) Parkül boyutu",exp:"",exams:["2024-2025 Final"]},
+{id:74,q:"Diğer tehlikeli kimyasallar ile ilgili olarak aşağıdakilerin hangisi yanlışr?",options:["A) Diğer adı Sınıf 9 kimyasallarıdır.", "B) Diğer sınıflar ile kesişği kimyasallar vardır.", "C) Asbest bu sınıf kimyasallardandır.", "D) Sembolünün arka planında, beyaz olan eken üst yarısında yedi siyah dikey çizgiyle birlikte al beyaz çizgi olmalıdır.", "E) Mıknaslanmış kimyasallar bu sınıfa dâhildir."],ans:"B) Diğer sınıflar ile kesişği kimyasallar vardır.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:75,q:"Dünya Sağlık Örgütü (WHO) tarandan içme sularının dezenfeksiyonunda kullanılması uygun görülmeyen, doğaya zararlı olarak nitelendirilen madde aşağıdakilerden hangisidir?",options:["A) Güneş ışığı", "B) Amonyak", "C) Ozon", "D) Klor gazı", "E) Oksijen"],ans:"D) Klor gazı",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:76,q:"Dünya Sağlık Örgütü (WHO) tarandan yapılan sınıflandırmada; klorun içme sularında dezenfektan olarak kullanımı sonucu oluşturduğu ve kanserojen sınına giren bileşik sını aşağıdakilerden hangisidir?",options:["A) Peroksit", "B) Hipoklorit", "C) Trihalometan", "D) Amonyak", "E) Kloroamin"],ans:"C) Trihalometan",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:77,q:"Ev kimyasallarından olan çamaşır deterjanlarının en toksik olanı hangi türüdür?",options:["A) Non-İyonik", "B) Anyonik", "C) Katyonik", "D) Hipoklorit", "E) Toksik"],ans:"C) Katyonik",exp:"",exams:["2023-2024 Final"]},
+{id:78,q:"Fiziksel ve kimyasal olayların her ikisinin de oluşumunda değişmeyen nicelik aşağıdakilerden hangisidir?",options:["A) Moleküllerin sayısı", "B) Maddenin cinsi", "C) Toplam hacim", "D) Toplam basınç", "E) Atomların cinsi"],ans:"E) Atomların cinsi",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:79,q:"GHS'de kullanılan H ifadeleri aşağıdakilerden hangisini belirtmektedir?",options:["A) Güvenlik", "B) Zarar", "C) Uçuculuk", "D) Tehlike", "E) Risk"],ans:"D) Tehlike",exp:"",exams:["2024-2025 Final"]},
+{id:80,q:"Günlük hayamızda sürekli olarak kullandığımız kimyasalların çoğu tehlikelidir. Yukarıdakilerden hangisi ya da hangileri ev dışarısında kullanılan kimyasallar arasında yer almaz?",options:["A) Anfriz", "B) Oto camı yıkama sıvısı", "C) Motor yağı", "D) Bahçe ve havuz dezenfektanları", "E) Lavabo açıcılar"],ans:"E) Lavabo açıcılar",exp:"",exams:["2024-2025 Final"]},
+{id:81,q:"Gürültü maruziye en yüksek hangi değere ulaşğında kulak koruyucuları kullanılmalıdır?",options:["A) 50 dB", "B) 60 dB", "C) 70 dB", "D) 85 dB", "E) 95 dB"],ans:"D) 85 dB",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:82,q:"I. 1,8 g H gazı II. 1,8 g HO gazı III. 10 tane CO gazı Normal Şartlar Alnda (NŞA) tüm gazların eşit hacimlerinde eşit sayıda tanecik bulunur. Buna göre NŞA; yukarıda verilen maddelerin hacimleri arasındaki ilişki aşağıdakilerden hangisinde doğru verilmişr? (H=1; C=12; O=16)",options:["A) I&gt;II&gt;III", "B) I=II&gt;III", "C) I=II=III", "D) I&gt;III&gt;II", "E) I&gt;II=III"],ans:"A) I&gt;II&gt;III",exp:"",exams:["2024-2025 Final"]},
+{id:83,q:"I. Aseton II. Toluen III. Mel el keton IV. El alkol Yukarıdakilerden hangisi ya da hangileri yaygın olarak kullanılan çözücüler arasında yer almaz?",options:["A) I, II ve III", "B) II ve IV", "C) I, II, III ve IV", "D) Yalnız I", "E) Yalnız IV"],ans:"E) Yalnız IV",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:84,q:"I. Geçici ve kalıcı kontrollerin değerlendirilmesi ve seçilmesi II. Kalıcı (mühendislik) kontroller yürürlüğe girene kadar geçici önlemlerin uygulanması III. Makul derecede uygulanabilir olduğunda kalıcı kontrollerin uygulanması Yukarıdaki kontrol yöntemi seçmek için kullanılan uygulamalardan hangisi ya da hangileri doğrudur?",options:["A) I ve II", "B) I, II ve III", "C) II ve III", "D) Yalnız I", "E) I ve III"],ans:"B) I, II ve III",exp:"",exams:["2024-2025 Final"]},
+{id:85,q:"I. Katyon ile elektron bulutu çekimiyle oluşur. II. Elektronların ortak kullanılması ile oluşur. III. Elektron alışverişi ile oluşur. İyonik, kovalent ve metalik bağların oluşumu ile ilgili yukarıda verilen oluşum şekilleri aşağıdakilerden hangisinde doğru olarak eşleşrilmişr?",options:["A) Kovalent - III", "B) Kovalent - I", "C) Metalik - I", "D) Metalik - II", "E) İyonik - II"],ans:"C) Metalik - I",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:86,q:"I. Nitro bileşikleri II. Azitleri III. Peroksitler Yukarıdakilerden hangisi ya da hangileri potansiyel patlayıcı sınına girer?",options:["A) Yalnız I", "B) Yalnız II", "C) Yalnız III", "D) I ve III", "E) I, II ve III"],ans:"E) I, II ve III",exp:"",exams:["2021-2022 Final"]},
+{id:87,q:"I. Potasyum (K) II. Lityum (Li) III. Sodyum (Na) Yukarıdaki metallerden hangisi ya da hangilerinin suyla teması patlamaya yol açar?",options:["A) Yalnız III", "B) I ve III", "C) I, II ve III", "D) Yalnız I", "E) Yalnız II"],ans:"C) I, II ve III",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:88,q:"I. TNT II. Tahıl tozu III. Karbondioksit Yukarıdaki kimyasallardan hangisi ya da hangileri potansiyel patlayıcılar arasında yer almaz?",options:["A) Yalnız II", "B) II ve III", "C) Yalnız III", "D) Yalnız I", "E) I, II ve III"],ans:"C) Yalnız III",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:89,q:"I. Çekirdekte bulunurlar. II- İkisine birden nükleon denir. III- İkisi birlikte Z ile simgelenirler. Bir atomdaki proton ve nötronlarla ilgili yukarıda verilenlerden hangisi ya da hangileri doğrudur?",options:["A) Yalnız I", "B) I, II ve III", "C) Yalnız III", "D) I ve II", "E) II ve III"],ans:"D) I ve II",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:90,q:"I. Çok toksik II. Toksik III. Zararlı IV. Çok zararlı Yukarıda verilenlerden hangisi ya da hangileri Avrupa Birliği toksik seviyesine göre kimyasalların sınıflandırılmasıdır?",options:["A) Yalnız I", "B) I ve II", "C) II ve III", "D) I, II ve III", "E) I, II, III ve IV CEVAP AN"],ans:"D) I, II ve III",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:91,q:"I. Çok toksik II. Toksik III. Zararlı IV. Çok zararlı Yukarıda verilenlerden hangisi ya da hangileri Avrupa Birliği toksik seviyesine göre kimyasalların sınıflandırılmasında yer alır?",options:["A) I, II, III ve IV", "B) I, II ve III", "C) II ve III", "D) I ve II", "E) Yalnız I"],ans:"B) I, II ve III",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:92,q:"I. İnsan sağlığı ile ilgili bbi ürünler II. Veterinerlikle ilgili bbi ürünler III. İnsan sağlığı ile ilgili temizlik ürünleri IV. İş yerinde bulunan, kullanılan veya herhangi bir şekilde işlem gören kimyasal maddeler Kimyasal maddelerin zararlarıyla ilgili kanun ve yönetmelikler son kullanıcıya nihai ürün olarak ulaşan yukarıdaki madde ve karışımlardan hangisi ya da hangilerini kapsamaz?",options:["A) Yalnız I", "B) II ve III", "C) I ve II", "D) II, III ve IV", "E) I, II, III ve IV"],ans:"C) I ve II",exp:"",exams:["2021-2022 Final"]},
+{id:93,q:"I. İnsan sağlığı ile ilgili bbi ürünler II. Veterinerlikle ilgili bbi ürünler III. İnsan sağlığı ile ilgili temizlik ürünleri Kimyasal maddelerin zararlarıyla ilgili kanun ve yönetmelikler son kullanıcıya nihai ürün olarak ulaşan yukarıdaki madde ve karışımlardan hangisi ya da hangilerini kapsamaz?",options:["A) Yalnız I", "B) Yalnız III", "C) I ve II", "D) I ve III", "E) II ve III"],ans:"C) I ve II",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:94,q:"I. İyonik bağ II. Dipol-dipol etkileşimi bağ III. Hidrojen bağı Yukarıdakilerden hangisi ya da hangileri kimyasal bağ çeşididir?",options:["A) Yalnız I", "B) Yalnız III", "C) I ve II", "D) I ve III", "E) II ve III paragraflarda yer almaktadır."],ans:"A) Yalnız I",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:95,q:"Kimyasal bir maddeden zehirlendiği bilinen birine aşağıdakilerden hangisi yapılamaz?",options:["A) Zehirli maddeye temas eden kısım bol suyla yıkanır.", "B) Zehirlenme gazdan kaynaklanıyorsa, kişi hemen açık havaya çıkarılır.", "C) Zehirlenme ağız yoluyla gerçekleşmiş ise kişiye bol su veya süt içirilir.", "D) Zehirlenmeye neden olan madde asit ise kişiye limon suyu içirilir.", "E) Zehirlenmeye sebep olan madde tahriş edici bir türden ise kişiye kusturma işlemi uygulanmaz."],ans:"D) Zehirlenmeye neden olan madde asit ise kişiye limon suyu içirilir.",exp:"",exams:["2021-2022 Final"]},
+{id:96,q:"Kimyasal maddeler için hazırlanan Güvenlik Formu'nda aşağıdakilerden hangisi yer almaz?",options:["A) İlk yardım bilgileri", "B) Kişisel korunma bilgileri", "C) Kimyasal maddenin saş fiya", "D) İmha etme bilgileri", "E) Üreci firma bilgileri Malzeme Güvenlik Formunda bulunmaz"],ans:"C) Kimyasal maddenin saş fiya",exp:"",exams:["2021-2022 Final"]},
+{id:97,q:"Kimyasal maddeler ve karışımların Avrupa Birliği Sınıflandırma, Eketlendirme ve Paketleme Sistemi (CLP) ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Piktogramlar, tehlikeli bir ürünün kullanımıyla bağlanlı tehlikenin doğasını ifade eder.", "B) Birleşmiş Milletler Global Uyumluluk Sistemi ile uyumlandırılmışr.", "C) Uyarı kelimesi, ürünün potansiyel bir tehlikesi konusunda uyarıda bulunmak için tehlikenin göreli ciddiyet seviyesini belirr.", "D) Önlem (P) ifadeleri, ürünün sadece güvenli taşınması ile ilgilidir.", "E) Tehlike (H) ifadeleri, tehlikeli bir ürünün tehlikesinin doğasını açıklar, buna uygun olan yerlerde tehlikenin derecesi de dâhildir."],ans:"D) Önlem (P) ifadeleri, ürünün sadece güvenli taşınması ile ilgilidir.",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:98,q:"Kimyasal maddelerin eketlerinde tehlike ve önlem sembolleri hangileridir?",options:["A) T ve Ö", "B) D ve T", "C) D ve Ö", "D) H ve P", "E) A ve B"],ans:"D) H ve P",exp:"",exams:["2024-2025 Final"]},
+{id:99,q:"Kimyasal maddelerin güvenlik formlarında aşağıdakilerden hangisi bulunmaz?",options:["A) İlk yardım bilgisi", "B) Depolama bilgisi", "C) Nerede kullanılacağı bilgisi", "D) Taşıma bilgisi", "E) İsim ve içerik bilgisi"],ans:"C) Nerede kullanılacağı bilgisi",exp:"",exams:["2023-2024 Final"]},
+{id:100,q:"Kimyasal maddelerin özelliklerini açıklayan forma ne ad verilir?",options:["A) Üreci formu", "B) İsim formu", "C) Taşıma formu", "D) Mevzuat formu", "E) Güvenlik formu"],ans:"E) Güvenlik formu",exp:"",exams:["2023-2024 Final"]},
+{id:101,q:"Kimyasalların taşıdıkları özel faktörleri hakkında kullanıcıyı bilgilendirmek üzere, eketlerinde \"R\" kodlara ne ad verilir?",options:["A) Güvenlik kodları", "B) Risk kodları", "C) Uçuculuk kodları", "D) Tehlike kodları", "E) Ayrım kodları"],ans:"B) Risk kodları",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:102,q:"Kinek enerjiyi absorbe eden frenleme ekipmanı hangi p kişisel koruyucu donanım sınına girer?",options:["A) Vücut", "B) Göz", "C) Ayak", "D) El", "E) Solunum"],ans:"A) Vücut",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:103,q:"Kriyojenik bir sıvıyla ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Kaynama noktası -90oC'nin alndadır.", "B) Kaynama buharı insan dokusuna zarar vermez.", "C) Buharlaşğında büyük miktarlarda gaz ürer.", "D) Kapalı bir alanda buharlaşrılması boğulmaya neden olabilir.", "E) Depolanması için özel kaplar kullanılır. kaynama buharı insan dokusunu hızlı bir şekilde dondurur."],ans:"B) Kaynama buharı insan dokusuna zarar vermez.",exp:"",exams:["2021-2022 Final"]},
+{id:104,q:"Müdahale amaçlı önlem ifadeleri ve kodları aşağıdaki serilerden hangisidir?",options:["A) P100", "B) P200", "C) P300", "D) P400", "E) P500 NAHTARI"],ans:"C) P300",exp:"",exams:["2022-2023 Yaz Okulu"]},
+{id:105,q:"Normal şartlar alnda bir tutuşma kaynağı varlığında kolayca alev alabilen veya ufak bir sürtünme hâlinde bile yangına sebep olabilen, maddenin ka fazında bulunan her türlü malzeme yanıcı ka olarak bilinir. Verilen bilgilere göre aşağıdaki sınıflandırmalardan hangisi yanıcı kalar için geçerli değildir?",options:["A) Kendiliğinden yanabilen kalar", "B) Hassasiye giderilmiş patlayıcılar", "C) Patlalarak yanabilen kalar", "D) Suyla temas eğinde tehlike arz eden kalar", "E) Kolayca tutuşabilen kalar"],ans:"C) Patlalarak yanabilen kalar",exp:"",exams:["2024-2025 Final"]},
+{id:106,q:"Ocak 2009'da yürürlüğe giren CLP Tüzüğü'nün gerdiği yeniliklerden biri, ürünün potansiyel bir tehlikesi konusunda uyarıda bulunmak ve tehlikenin göreli ciddiyet seviyesini belirtmek için “Uyarı” kelimesi kullanılmasıdır. “Daha az ciddi uyarı” için kullanılması önerilen kelime aşağıdakilerden hangisidir?",options:["A) Dikkat", "B) Uyarı", "C) Tehlike", "D) Risk", "E) Sakının"],ans:"A) Dikkat",exp:"",exams:["2023-2024 Final"]},
+{id:107,q:"Patlayıcı maddelerin depolanması ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Patlayıcı, parlayıcı ve yanıcı kimyasallar tüm ateşleme kaynaklarından uzak tutulur.", "B) Patlayıcı kimyasallar için özel depolar yapılır ve bunların kullanıldığı ortamlarda gerekli tedbirler alınır.", "C) Patlayıcı maddeleri kullanan görevlilere eğim verilir.", "D) Birbiri ile temas etmemesi gereken kimyasalların ayrı raf veya bölmelerde muhafaza edilmesi gerekir.", "E) Patlayıcı maddeler yasal olarak karanlık alanlarda tutulmalıdır. alanlarda tutulma zorunluluğu yoktur."],ans:"E) Patlayıcı maddeler yasal olarak karanlık alanlarda tutulmalıdır. alanlarda tutulma zorunluluğu yoktur.",exp:"",exams:["2021-2022 Bütünleme"]},
+{id:108,q:"Solvent maruziyenden, sinir sisteminin zarar görmesine ............... adı verilir. Cümlede boş bırakılan yere aşağıdakilerden hangisi gerilmelidir?",options:["A) yanma", "B) koma", "C) nörotoksisite", "D) bunama", "E) kriz"],ans:"C) nörotoksisite",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:109,q:"Sıcaklık alev alma noktasının alna zor düşürüldüğü ya da düşürülemediği için söndürülmesi zor olup bu tür yangınları söndürebilmek için, yanan kısmın üzeri baaniye, köpük, karbondioksit veya alev almayan başka bir sıvıyla örtülerek havanın oksijen ile olan temasının kesilmesi gereken yangınlar hangi p yangınlardır?",options:["A) A sını yangınlar", "B) C sını yangınlar", "C) B sını yangınlar", "D) E sını yangınlar", "E) D sını yangınlar"],ans:"C) B sını yangınlar",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:110,q:"Sıcaklık alev alma noktasının alna zor düşürüldüğü ya da düşürülemediği için söndürülmesi zor olup bu tür yangınları söndürebilmek için, yanan kısmın üzeri baaniye, köpük, karbondioksit veya alev almayan başka bir sıvıyla örtülerek havanın oksijen ile olan temasının kesilmesi gereken yangınlardır. Paragraa bahsedilen yangın pi aşağıdakilerden hangisidir?",options:["A) E sını yangınlar", "B) D sını yangınlar", "C) C sını yangınlar", "D) B sını yangınlar", "E) A sını yangınlar"],ans:"D) B sını yangınlar",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:111,q:"Sıvı hâlde 100 °C veya üzerinde taşınan ve bu konumdayken onların parlama noktasından düşük parlama noktasına sahip olan veya taşıma için teslim alınan maddeleri kapsar. Bunlar ayrıca 240 °C veya üzerinde taşınan veya taşıma için teslim edilen kaları kapsar. Paragraa verilen bilgiler Sınıf 9 kimyasallarının hangisine air?",options:["A) Çevreye zararlı kimyasallar", "B) Yangın durumunda dioksin oluşturabilen maddeler ve aparatlar", "C) İnce toz şeklinde solunduğunda sağlığı tehlikeye sokabilen maddeler", "D) Artan sıcaklığa sahip maddeler (Yüksellmiş sıcaklık maddeleri)", "E) Ev kimyasalları"],ans:"D) Artan sıcaklığa sahip maddeler (Yüksellmiş sıcaklık maddeleri)",exp:"",exams:["2024-2025 Final"]},
+{id:112,q:"TWA kelimesinin anlamı aşağıdakilerden hangisidir?",options:["A) Avrupa Mevcut Ticari Kimyasal Maddeler Envanteri", "B) Kimyasal maddelerin servis kayıt numarası", "C) Başka bir süre belirlmedikçe, 15 dakikalık bir süre için aşılmaması gereken maruziyet üst sınır değeri", "D) 8 saatlik belirlenen referans süre için ölçülen veya hesaplanan zaman ağırlıklı ortalama", "E) Sağlığa etkileri konusunda, sınırlı bilimsel veri bulunan maddeler referans süre için ölçülen veya hesaplanan zaman ağırlıklı ortalama."],ans:"D) 8 saatlik belirlenen referans süre için ölçülen veya hesaplanan zaman ağırlıklı ortalama",exp:"",exams:["2021-2022 Final"]},
+{id:113,q:"Taşıma sırasında M1 olarak kodlanan Sınıf 9 kimyasal grubu aşağıdakilerden hangisidir?",options:["A) Çevresel açıdan tehlikeli mallar", "B) Alevlenir buhar yayan maddeler", "C) Lityum piller", "D) İnce toz şeklinde, solunduğunda sağlığı tehlikeye sokabilen maddeler", "E) Cankurtaran araç - gereçler"],ans:"D) İnce toz şeklinde, solunduğunda sağlığı tehlikeye sokabilen maddeler",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:114,q:"Tehlikeli kimyasal maddelerin kullanıldığı iş yerlerinde çalışanları sağlık ve güvenlik yönünden tehdit eden riskler çeşitli önlemlerle en aza indirilebilir veya yok edilebilir. Bu önlemler arasında aşağıdakilerden hangisi yer almaz?",options:["A) İş yeri bina ve eklenleri her zaman düzenli ve temiz tutulur.", "B) Çalışanların kişisel temizlikleri için uygun ve yeterli şartlar sağlanır.", "C) İş yerinde kullanılması gereken kimyasal madde miktarı en az düzeyde tutulur.", "D) Tehlikeli kimyasal maddelerle en çok sayıda çalışan ile çalışmalar yapılır.", "E) İş yerinde uygun düzenleme ve iş organizasyonu yapılır."],ans:"D) Tehlikeli kimyasal maddelerle en çok sayıda çalışan ile çalışmalar yapılır.",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:115,q:"Tehlikeli kimyasalların depolanması ile ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Kimyasalların alevlenebilme, bir arada bulunabilme özellikleri ve sıcaklık, havalandırma gibi faktörler depolamada dikkat edilecek hususlar arasında yer alır.", "B) Kötü veya yanlış depolama uygulamaları, patlama, yangın ya da zarar verme potansiyeli olan uyumsuz malzemeler arasında istenmeyen reaksiyonlara yol açabilir.", "C) Kimyasal maddeler depolanırken dikkat edilmesi gereken önemli bir etken ortam sıcaklığıdır.", "D) Tüm kimyasallar, birbirine karışmaması gereken maddelerin karışmasını ya da reakf buhar oluşumunu önleyecek şekilde muhafaza edilmelidir.", "E) Doğru depolamanın genel amacı iş yerinde güzel görüntü sağlamakr."],ans:"E) Doğru depolamanın genel amacı iş yerinde güzel görüntü sağlamakr.",exp:"",exams:["2023-2024 Final"]},
+{id:116,q:"Tehlikeli maddeler risk durumlarına göre uluslararası sınıflandırmada 9 sınıfa ayrılmışr. Aşağıdakilerden hangisi bu sınıflar arasında yer almaz?",options:["A) Radyoakf maddeler", "B) Yanıcı sıvılar", "C) Mutajenler", "D) Oksitleyici maddeler ve organik peroksitler", "E) Aşındırıcı (korozif) maddeler"],ans:"C) Mutajenler",exp:"",exams:["2023-2024 Yaz Okulu"]},
+{id:117,q:"Toz maskelerin kullanımıyla ilgili olarak aşağıdakilerden hangisi yanlışr?",options:["A) Selülozik elyaan yapılmış basit maskelerdir.", "B) Oksijen yetersizliği durumunda yararlıdır.", "C) 0,2 – 5.0 mikron arasındaki tozlara karşı kullanılır.", "D) Kullanma süresi çok kısadır.", "E) Sadece ağız ve burun bölgesini kapar. sorularından 10. sorudur."],ans:"B) Oksijen yetersizliği durumunda yararlıdır.",exp:"",exams:["2021-2022 Final"]},
+{id:118,q:"Vücut koruyucu malzemelerden olan “tam akusk baretler” vücudun hangi bölgesinin korunması amacıyla kullanılır?",options:["A) Solunum sistemi", "B) Baş", "C) Yüz", "D) Cilt", "E) Kulak CEVAP AN"],ans:"E) Kulak CEVAP AN",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:119,q:"Yangın karosunda bulunan renklerden hangisi maddenin kimyasal tepkime ihmalini (maddenin kararsızlığını) gösterir?",options:["A) Beyaz bölüm", "B) Kırmızı bölüm", "C) Turuncu bölüm", "D) Mavi bölüm", "E) Sarı bölüm"],ans:"E) Sarı bölüm",exp:"",exams:["2024-2025 Final"]},
+{id:120,q:"Yanıcı kalar iki kategoriye ayrılırlar. Yanıcı kaların kategorilere ayrılması aşağıdakilerden hangisine göre yapılır?",options:["A) Parkül büyüklüğü ölçümü", "B) Yoğunluk tes", "C) Parlama noktası tes", "D) Yanma hızı tes", "E) Yakıcılık tes"],ans:"D) Yanma hızı tes",exp:"",exams:["2023-2024 Bütünleme"]},
+{id:121,q:"Yarılanma süresi aşağıdakilerden hangisini belirr?",options:["A) Radyoakf atom başlangıç miktarının artmasını", "B) Radyoakf atom başlangıç miktarının azalmasını", "C) Radyoakf atom başlangıç miktarının yarıya inmesini", "D) Radyoakf atom başlangıç miktarının kararlı olmasını", "E) Radyoakf atom başlangıç miktarının hızlı azaldığını"],ans:"A) Radyoakf atom başlangıç miktarının artmasını",exp:"",exams:["2024-2025 Bütünleme"]},
+{id:122,q:"Çevresel zarar ifadeleri ve kodları aşağıdaki serilerden hangisidir?",options:["A) H200", "B) P200", "C) P500", "D) P400", "E) H400"],ans:"E) H400",exp:"",exams:["2024-2025 Final"]},
+{id:123,q:"İş yerinde kimyasal maddelerin kullanımı veya varlığından kaynaklanan riskleri değerlendirme ve gerekli önlemleri alma sorumluluğu aşağıdakilerden hangisine air?",options:["A) Çalışan", "B) İşveren", "C) İş sağlığı ve güvenliği uzmanı", "D) İş yeri hekimi", "E) Taşeron firma"],ans:"B) İşveren",exp:"",exams:["2021-2022 Final"]}
+];
+const pdfMap={"2021-2022 Bütünleme": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2021-2022_Butunleme.pdf", "2021-2022 Final": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2021-2022_Final.pdf", "2022-2023 Yaz Okulu": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2022-2023_Yaz_Okulu.pdf", "2023-2024 Bütünleme": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2023-2024_Butunleme.pdf", "2023-2024 Final": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2023-2024_Final.pdf", "2023-2024 Yaz Okulu": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2023-2024_Yaz_Okulu.pdf", "2024-2025 Bütünleme": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2024-2025_Butunleme.pdf", "2024-2025 Final": "pdfs/Kimyasal_Maddeler_ve_Tehlikeleri/2024-2025_Final.pdf"};
+const PROGRESS_KEY="auzef-progress-Kimyasal Maddeler ve Tehlikeleri";
+
+let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
+function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
+function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+function shortenLabel(e){
+  return e
+    .replace(/(\d{4})-(\d{4})/g,(_,a,b)=>a.slice(2)+'-'+b.slice(2))
+    .replace(/^(\d{4}) /,(_,y)=>y.slice(2)+' ')
+    .replace('Bütünleme','Büt');
+}
+function tagCssClass(e){
+  if(e.includes('Kez Çıktı')) return 'freq-tag';
+  if(e.includes('Üç Ders'))   return 'uc-tag';
+  if(e.includes('Yaz Okulu')) return 'yaz-tag';
+  if(e.includes('Vize'))      return 'vize-tag';
+  if(e.includes('Final'))     return 'fin-tag';
+  if(e.includes('Bütünleme')) return 'but-tag';
+  return '';
+}
+function tagTfiClass(e){
+  if(e.includes('Üç Ders'))   return 'tfi-uc';
+  if(e.includes('Yaz Okulu')) return 'tfi-yaz';
+  if(e.includes('Vize'))      return 'tfi-vize';
+  if(e.includes('Final'))     return 'tfi-fin';
+  if(e.includes('Bütünleme')) return 'tfi-but';
+  return 'tfi-other';
+}
+function highlightNeg(text){
+  var L='[a-zA-ZçğışöüÇĞİIŞÖÜ]';
+  return text.replace(
+    new RegExp(
+      // Çok kelimeli kalıplar önce
+      'doğru\\s+değil'+L+'*'
+      +'|yanlış\\s+değil'+L+'*'
+      +'|uygun\\s+değil'+L+'*'
+      +'|gerekli\\s+değil'+L+'*'
+      +'|mümkün\\s+değil'+L+'*'
+      +'|'+L+'+mamas'+L+'\\s+gerek'+L+'*'
+      +'|'+L+'+memes'+L+'\\s+gerek'+L+'*'
+      +'|değil\\s+midir?'
+      +'|değil\\s+mi(?!'+L+')'
+      // Tek kelime negatifleri
+      +'|değildir'
+      +'|yanlıştır'
+      +'|yoktur(?!'+L+')'
+      +'|olamaz(?!'+L+')'
+      +'|olmaz(?!'+L+')'
+      // -mamaktadır/-memektedir (süregelen olumsuz)
+      +'|'+L+'+mamaktadır'+L+'*'
+      +'|'+L+'+memektedir'+L+'*'
+      // -mamalıdır/-memelidir (zorunluluk olumsuz)
+      +'|'+L+'+mamalıdır'
+      +'|'+L+'+memelidir'
+      +'|'+L+'+mamalı(?!'+L+')'
+      +'|'+L+'+memeli(?!'+L+')'
+      // -maz/-mez geniş (tüm Türkçe geniş zaman olumsuz)
+      +'|'+L+'+maz(?!'+L+')'
+      +'|'+L+'+mez(?!'+L+')',
+      'gi'
+    ),
+    function(m){return '<u class="neg-hl">'+m+'</u>';}
+  );
+}
+function getProgress(){try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'{}');}catch(e){return {};}}
+function saveProgress(qid,result){
+  var p=getProgress();p[String(qid)]=result;
+  localStorage.setItem(PROGRESS_KEY,JSON.stringify(p));
+  updateProgressBar();
+  var icon=document.getElementById('prev-'+qid);
+  if(icon){icon.className='q-prev '+(result==='correct'?'q-prev-correct':'q-prev-wrong');icon.textContent=result==='correct'?'✓ Doğru':'✗ Yanlış';}
+}
+function updateProgressBar(){
+  var p=getProgress();var total=sorular.length;
+  var done=Object.keys(p).filter(function(k){return parseInt(k)<total;}).length;
+  var el=document.getElementById('prog-done');if(el)el.textContent=done;
+  var et=document.getElementById('prog-total');if(et)et.textContent=total;
+  var fill=document.getElementById('prog-fill');if(fill)fill.style.width=(total?(done/total*100):0)+'%';
+}
+function resetProgress(){
+  if(!confirm('Bu ders için tüm ilerleme sıfırlansın mı?'))return;
+  localStorage.removeItem(PROGRESS_KEY);
+  updateProgressBar();
+  var activeTab=document.querySelector('.tab-btn.active');
+  if(activeTab)activeTab.click();
+}
+function updateStatsBar(){
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function applyTagFilter(fullLabel,tfiClass){
+  document.querySelectorAll('.question-card').forEach(card=>{
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    card.classList.toggle('tag-hidden',!exams.includes(fullLabel));
+  });
+  updateStatsBar();
+  const ind=document.getElementById('tag-filter-indicator');
+  ind.className='visible '+tfiClass;
+  ind.querySelector('.tfi-label').textContent=shortenLabel(fullLabel)+' Görüntüleniyor';
+  document.querySelector('.sidebar').classList.add('tag-filter-active');
+  // PDF button
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const val=pdfMap[fullLabel];
+    if(val){
+      const ids=Array.isArray(val)?val:[val];
+      pdfBtn.dataset.pdfIds=JSON.stringify(ids);
+      pdfBtn.dataset.pdfLabels=JSON.stringify([fullLabel]);
+      pdfBtn.dataset.pdfLabel=shortenLabel(fullLabel);
+      pdfBtn.classList.add('visible');
+    } else pdfBtn.classList.remove('visible');
+  }
+}
+function clearTagFilter(){
+  document.querySelectorAll('.question-card').forEach(c=>c.classList.remove('tag-hidden'));
+  updateStatsBar();
+  document.getElementById('tag-filter-indicator').className='';
+  document.querySelector('.sidebar').classList.remove('tag-filter-active');
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn)pdfBtn.classList.remove('visible');
+}
+let _pdfIds=[],_pdfLabels=[],_pdfIdx=0;
+function _pdfLoad(idx){
+  const frames=document.getElementById('pdfModalFrames');
+  frames.innerHTML='';
+  const f=document.createElement('iframe');
+  const _src=_pdfIds[idx];
+  // Local path (contains '/' or ends with '.pdf') or legacy Google Drive ID
+  f.src=(_src.includes('/')||_src.endsWith('.pdf'))?_src:'https://drive.google.com/file/d/'+_src+'/preview';
+  f.allowFullscreen=true;
+  frames.appendChild(f);
+  const counter=document.getElementById('pdfCounter');
+  if(_pdfIds.length>1){counter.textContent=(_pdfIdx+1)+' / '+_pdfIds.length;}
+  else{counter.textContent='';}
+  // Modal başlığını her PDF'e göre güncelle
+  const lbl=_pdfLabels[idx]?shortenLabel(_pdfLabels[idx]):null;
+  document.getElementById('pdfModalTitle').textContent=(lbl||document.getElementById('pdfOpenBtn').dataset.pdfLabel||'Sınav')+' Sınav Kağıdı';
+  document.getElementById('pdfPrev').disabled=idx===0;
+  document.getElementById('pdfNext').disabled=idx===_pdfIds.length-1;
+}
+function pdfNav(dir){
+  const next=_pdfIdx+dir;
+  if(next<0||next>=_pdfIds.length)return;
+  _pdfIdx=next;_pdfLoad(_pdfIdx);
+}
+function openPdfModal(){
+  const btn=document.getElementById('pdfOpenBtn');
+  if(!btn)return;
+  _pdfIds=JSON.parse(btn.dataset.pdfIds||'[]');
+  _pdfLabels=JSON.parse(btn.dataset.pdfLabels||'[]');
+  if(!_pdfIds.length)return;
+  _pdfIdx=0;
+  document.getElementById('pdfPrev').style.display=_pdfIds.length>1?'':'none';
+  document.getElementById('pdfNext').style.display=_pdfIds.length>1?'':'none';
+  _pdfLoad(0);
+  document.getElementById('pdfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePdfModal(){
+  document.getElementById('pdfModal').classList.remove('open');
+  document.getElementById('pdfModalFrames').innerHTML='';
+  document.body.style.overflow='';
+}
+
+function renderQuestions(filter){
+  const container=document.getElementById('quiz-container');
+  container.innerHTML='';resetScore();
+  const examCount=s=>s.exams.filter(e=>!e.includes('Kez')).length;
+  let filtered;
+  if(filter==='all') filtered=[...sorular];
+  else if(filter==='banko') filtered=sorular.filter(s=>examCount(s)>=2);
+  else if(filter==='review'){const p=getProgress();filtered=sorular.filter(s=>p[String(s.id)]!=='correct');}
+  else filtered=sorular.filter(s=>s.exams.some(e=>e.includes(filter)));
+  filtered.sort((a,b)=>examCount(b)-examCount(a));
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center;color:#888;padding:30px;">Bu kategoride soru bulunamadı.</p>';document.getElementById('stats-bar').innerHTML=`<span>0<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>`;return;}
+  filtered.forEach((soru,idx)=>{
+    const card=document.createElement('div');card.className='question-card';
+    card.dataset.exams=JSON.stringify(soru.exams);
+    const tagsHTML=soru.exams.map(e=>{
+      const css=tagCssClass(e);
+      const isFreq=e.includes('Kez Çıktı');
+      const clickable=isFreq?'':' tag-clickable';
+      const data=isFreq?'':` data-full="${e.replace(/"/g,'&quot;')}" data-tfi="${tagTfiClass(e)}"`;
+      return `<span class="exam-tag${css?' '+css:''}${clickable}"${data}>${shortenLabel(e)}</span>`;
+    }).join('');
+    const ansLetter=soru.ans?soru.ans.trim().charAt(0):'';
+    const optionsHTML=soru.options.map(o=>{
+      const isCorrect=ansLetter&&o.trim().startsWith(ansLetter+')');
+      return `<li${isCorrect?' data-correct="true"':''} onclick="selectOption(this)">${o}</li>`;
+    }).join('');
+    const answerId=`answer-${idx}-${filter}`;
+    card.dataset.qid=soru.id;
+    const prevResult=getProgress()[String(soru.id)];
+    const prevHTML=prevResult?`<span class="q-prev ${prevResult==='correct'?'q-prev-correct':'q-prev-wrong'}" id="prev-${soru.id}">${prevResult==='correct'?'✓ Doğru':'✗ Yanlış'}</span>`:`<span class="q-prev" id="prev-${soru.id}"></span>`;
+    card.innerHTML=`
+      <div class="q-header">
+        <div class="q-meta"><span class="q-num">Soru ${idx+1}</span>${prevHTML}</div>
+        <div class="exam-tags">${tagsHTML}</div>
+      </div>
+      <div class="question-text">${highlightNeg(soru.q)}</div>
+      <ul class="options">${optionsHTML}</ul>
+      <button class="btn-toggle" onclick="toggleAnswer('${answerId}',this)">Cevabı Göster</button>
+      <div class="answer-area" id="${answerId}" style="${allAnswersVisible?'display:block':''}">
+        <p class="correct-ans">✔ Doğru Cevap: ${soru.ans}</p>
+        <p class="exp-text">${soru.exp}</p>
+      </div>`;
+    if(allAnswersVisible){const cl=card.querySelector('.options li[data-correct="true"]');if(cl)cl.classList.add('correct-highlight');card.querySelector('.btn-toggle').textContent='Cevabı Gizle';}
+    card.querySelectorAll('.exam-tag.tag-clickable').forEach(tag=>{
+      tag.addEventListener('click',()=>applyTagFilter(tag.dataset.full,tag.dataset.tfi));
+    });
+    card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
+    container.appendChild(card);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
+function searchQuestions(q){
+  q=(q||'').trim().toLowerCase();
+  var cards=document.querySelectorAll('#quiz-container .question-card');
+  var visible=0;
+  cards.forEach(function(card){
+    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    var text=(card.querySelector('.question-text')||{}).textContent||'';
+    var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
+    var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
+    card.style.display=match?'':'none';
+    if(match)visible++;
+  });
+  document.getElementById('stats-bar').innerHTML='<span>'+visible+'<span class="stats-full"> soru gösteriliyor</span><span class="stats-short"> Soru</span></span>';
+}
+function setCorrectHighlight(card,visible){card.querySelectorAll('.options li[data-correct="true"]').forEach(li=>li.classList.toggle('correct-highlight',visible));}
+function selectOption(li){
+  const card=li.closest('.question-card');if(card.dataset.answered)return;
+  card.dataset.answered='true';const isCorrect=li.dataset.correct==='true';
+  if(isCorrect){li.classList.add('correct-highlight');card.dataset.answeredResult='correct';scoreCorrect++;}
+  else{li.classList.add('wrong-highlight');card.querySelectorAll('.options li[data-correct="true"]').forEach(l=>l.classList.add('correct-highlight'));card.dataset.answeredResult='wrong';scoreWrong++;}
+  saveProgress(card.dataset.qid,isCorrect?'correct':'wrong');
+  updateScore();
+  const area=card.querySelector('.answer-area');
+  if(area&&area.style.display!=='block'){area.style.display='block';const btn=card.querySelector('.btn-toggle');if(btn)btn.textContent='Cevabı Gizle';}
+}
+function toggleAnswer(id,btn){
+  const area=document.getElementById(id);const card=btn.closest('.question-card');
+  if(area.style.display==='none'||area.style.display===''){
+    area.style.display='block';btn.textContent='Cevabı Gizle';setCorrectHighlight(card,true);
+  }else{
+    area.style.display='none';btn.textContent='Cevabı Göster';setCorrectHighlight(card,false);
+    card.querySelectorAll('.options li.wrong-highlight').forEach(li=>li.classList.remove('wrong-highlight'));
+    if(card.dataset.answeredResult==='correct')scoreCorrect=Math.max(0,scoreCorrect-1);
+    else if(card.dataset.answeredResult==='wrong')scoreWrong=Math.max(0,scoreWrong-1);
+    delete card.dataset.answered;delete card.dataset.answeredResult;updateScore();
+  }
+}
+function toggleAllAnswers(){
+  allAnswersVisible=!allAnswersVisible;
+  document.getElementById('toggleAllBtn').textContent=allAnswersVisible?'Tüm Cevapları Gizle':'Tüm Cevapları Göster';
+  document.querySelectorAll('.answer-area').forEach(a=>a.style.display=allAnswersVisible?'block':'none');
+  document.querySelectorAll('.btn-toggle').forEach(b=>b.textContent=allAnswersVisible?'Cevabı Gizle':'Cevabı Göster');
+  document.querySelectorAll('.question-card').forEach(c=>setCorrectHighlight(c,allAnswersVisible));
+}
+function filterQuestions(filter,clickedBtn){
+  clearTagFilter();
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  clickedBtn.classList.add('active');allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  renderQuestions(filter);
+  // Sekme filtresi için PDF butonunu güncelle
+  const pdfBtn=document.getElementById('pdfOpenBtn');
+  if(pdfBtn){
+    const TAB_FILTERS=['Final','Bütünleme','Yaz Okulu','Vize','Üç Ders'];
+    const isTabFilter=TAB_FILTERS.some(k=>filter===k||filter.includes(k));
+    if(isTabFilter){
+      const tabIds=[],tabLabels=[];
+      // pdfMap anahtarlarını filtre anahtar kelimesine göre filtrele, kronolojik sırala
+      Object.keys(pdfMap).sort().forEach(label=>{
+        if(label.includes(filter)){
+          const val=pdfMap[label];
+          const ids=Array.isArray(val)?val:[val];
+          ids.forEach(id=>{tabIds.push(id);tabLabels.push(label);});
+        }
+      });
+      if(tabIds.length){
+        pdfBtn.dataset.pdfIds=JSON.stringify(tabIds);
+        pdfBtn.dataset.pdfLabels=JSON.stringify(tabLabels);
+        pdfBtn.dataset.pdfLabel=filter;
+        pdfBtn.classList.add('visible');
+      } else {
+        pdfBtn.classList.remove('visible');
+      }
+    } else {
+      pdfBtn.classList.remove('visible');
+    }
+  }
+}
+renderQuestions('all');
+updateProgressBar();
+(function(){
+  var _tb=document.querySelector('.site-topbar');
+  var _sb=document.querySelector('.sidebar');
+  var _qc=document.getElementById('quiz-container');
+  function syncPad(){
+    if(!_sb||!_qc)return;
+    if(window.innerWidth<=720){
+      var tbH=_tb?_tb.offsetHeight:48;
+      _sb.style.top=tbH+'px';
+      _qc.style.paddingTop=_sb.offsetHeight+'px';
+    } else {
+      _sb.style.top='';
+      _qc.style.paddingTop='';
+    }
+  }
+  syncPad();
+  window.addEventListener('resize',syncPad,{passive:true});
+  var mq=window.matchMedia('(max-width:720px)');
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      if(_sb)_sb.classList.toggle('scroll-collapsed',window.scrollY>90);
+      ticking=false;
+    });
+  }
+  function setup(){
+    if(mq.matches){window.addEventListener('scroll',onScroll,{passive:true});}
+    else{window.removeEventListener('scroll',onScroll);if(_sb)_sb.classList.remove('scroll-collapsed');syncPad();}
+  }
+  if(mq.addEventListener)mq.addEventListener('change',setup);
+  else mq.addListener(setup);
+  setup();
+})();
+
+/* ── Dark Mode ── */
+(function(){
+  var toggle=document.getElementById('darkModeToggle');
+  if(!toggle)return;
+  var KEY='auzef-dark-mode';
+  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var saved=localStorage.getItem(KEY);
+  var isDark=saved!==null?saved==='true':prefersDark;
+  if(isDark)document.body.classList.add('dark-mode');
+  toggle.textContent=isDark?'☀️':'🌙';
+  toggle.addEventListener('click',function(){
+    document.body.classList.toggle('dark-mode');
+    var nowDark=document.body.classList.contains('dark-mode');
+    localStorage.setItem(KEY,String(nowDark));
+    toggle.textContent=nowDark?'☀️':'🌙';
+  });
+})();
+// Tekrar Et toggle
+function toggleReview(btn){
+  var isActive=btn.classList.contains('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  allAnswersVisible=false;
+  document.getElementById('toggleAllBtn').textContent='Tüm Cevapları Göster';
+  clearTagFilter();
+  if(isActive){
+    var allBtn=document.querySelector('.tab-btn:first-child');
+    if(allBtn)allBtn.classList.add('active');
+    renderQuestions('all');
+  } else {
+    btn.classList.add('active');
+    renderQuestions('review');
+  }
+}
+
+</script>
+</body>
+</html>
