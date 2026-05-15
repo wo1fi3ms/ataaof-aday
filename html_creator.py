@@ -1284,7 +1284,7 @@ def generate_html(course, emoji, questions, tabs, home_url="index.html", pdfs=No
 <div class="site-topbar">
   <div class="topbar-left">
     <a href="{home_url}" class="topbar-home">← Ana Sayfa</a>
-    <span class="topbar-uni">İstanbul Üniversitesi · AUZEF · Yönetim Bilişim Sistemleri</span>
+    <span class="topbar-uni">Atatürk Üniversitesi · ATA AÖF · Acil Durum ve Afet Yönetimi</span>
   </div>
   <div class="topbar-right">
     <span class="topbar-course">{emoji} {ec}</span>
@@ -1293,7 +1293,7 @@ def generate_html(course, emoji, questions, tabs, home_url="index.html", pdfs=No
 </div>
 
 <div class="header">
-  <div class="header-badge">{emoji} AUZEF Soru Havuzu</div>
+  <div class="header-badge">{emoji} ATA-AÖF Soru Havuzu</div>
   <h1>{ec}</h1>
   <p class="header-subtitle">{es}</p>
 </div>
