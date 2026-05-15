@@ -791,12 +791,12 @@ body.dark-mode .q-prev-wrong{background:#2a0808;color:#f08888;border:1px solid #
 .but-tag{background:#fef3c7;color:#7a5800;border:1px solid var(--gold);}
 .yaz-tag{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
 .freq-tag{background:var(--banko);color:#fff;}
-body.dark-mode .uc-tag{background:#1e1540;color:#9474cc;}
-body.dark-mode .vize-tag{background:#0e1e3c;color:#5a8fcc;}
-body.dark-mode .fin-tag{background:#112c1c;color:#5aaa7a;}
-body.dark-mode .but-tag{background:#28210a;color:#b88c30;}
-body.dark-mode .yaz-tag{background:#281808;color:#b87030;}
-body.dark-mode .freq-tag{background:#2c1010;color:#b85858;}
+body.dark-mode .uc-tag,
+body.dark-mode .vize-tag,
+body.dark-mode .fin-tag,
+body.dark-mode .but-tag,
+body.dark-mode .yaz-tag{background:#1c2148;color:#7882b0;border:none;}
+body.dark-mode .freq-tag{background:#1c2148;color:#9098c8;border:none;}
 .exam-tag.tag-clickable{cursor:pointer;transition:transform .15s,opacity .15s;}
 .exam-tag.tag-clickable:hover{transform:scale(1.08);opacity:.75;}
 .question-card.tag-hidden{display:none;}
@@ -813,11 +813,11 @@ body.dark-mode .freq-tag{background:#2c1010;color:#b85858;}
 #tag-filter-indicator.tfi-uc{background:#ede9fe;color:#4c1d95;}
 #tag-filter-indicator.tfi-yaz{background:#ffedd5;color:#9a3412;border:1px solid #fb923c;}
 #tag-filter-indicator.tfi-other{background:var(--bg);color:#444;border:1px solid var(--border);}
-body.dark-mode #tag-filter-indicator.tfi-fin{background:#112c1c;color:#5aaa7a;border:1px solid #1e4830;}
-body.dark-mode #tag-filter-indicator.tfi-vize{background:#0e1e3c;color:#5a8fcc;border:1px solid #1a3460;}
-body.dark-mode #tag-filter-indicator.tfi-but{background:#28210a;color:#b88c30;border:1px solid #483808;}
-body.dark-mode #tag-filter-indicator.tfi-uc{background:#1e1540;color:#9474cc;border:1px solid #362060;}
-body.dark-mode #tag-filter-indicator.tfi-yaz{background:#281808;color:#b87030;border:1px solid #483018;}
+body.dark-mode #tag-filter-indicator.tfi-fin,
+body.dark-mode #tag-filter-indicator.tfi-vize,
+body.dark-mode #tag-filter-indicator.tfi-but,
+body.dark-mode #tag-filter-indicator.tfi-uc,
+body.dark-mode #tag-filter-indicator.tfi-yaz{background:#1c2148;color:#9098c8;border:1px solid #2c3260;}
 body.dark-mode #tag-filter-indicator.tfi-other{color:var(--text);}
 .question-text{font-size:1.05em;font-weight:600;color:var(--text);margin:0 0 14px;white-space:pre-line;line-height:1.55;}
 .neg-hl{text-decoration:underline;text-decoration-style:wavy;text-decoration-color:var(--banko);text-underline-offset:3px;font-weight:700;}
