@@ -121,9 +121,34 @@ DERS_CONFIG = {
         "emoji":  "🌐",
     },
     "Yönetim ve Organizasyon": {
-        "excel":  "Data/Yonetim_ve_Organizasyon_Soru_Bankasi.xlsx",
-        "output": "1_sinif/bahar/Yonetim_ve_Organizasyon_Soru_Bankasi.html",
-        "emoji":  "🏢",
+        "excel":   "2_sinif/guz/Yonetim_ve_Organizasyon_Soru_Bankasi.xlsx",
+        "output":  "2_sinif/guz/Yonetim_ve_Organizasyon_Soru_Bankasi.html",
+        "emoji":   "🏢",
+        "pdf_dir": "2_sinif/guz/pdfs/Yonetim_ve_Organizasyon",
+    },
+    "Acil Durum ve Afet Psikolojisi": {
+        "excel":   "2_sinif/guz/Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.xlsx",
+        "output":  "2_sinif/guz/Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.html",
+        "emoji":   "🧠",
+        "pdf_dir": "2_sinif/guz/pdfs/Acil_Durum_ve_Afet_Psikolojisi",
+    },
+    "Bina Yönetim Sistemleri": {
+        "excel":   "2_sinif/guz/Bina_Yonetim_Sistemleri_Soru_Bankasi.xlsx",
+        "output":  "2_sinif/guz/Bina_Yonetim_Sistemleri_Soru_Bankasi.html",
+        "emoji":   "🏗️",
+        "pdf_dir": "2_sinif/guz/pdfs/Bina_Yonetim_Sistemleri",
+    },
+    "Doğada Yaşam ve Hayatta Kalma": {
+        "excel":   "2_sinif/guz/Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.xlsx",
+        "output":  "2_sinif/guz/Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.html",
+        "emoji":   "🌲",
+        "pdf_dir": "2_sinif/guz/pdfs/Dogada_Yasam_ve_Hayatta_Kalma",
+    },
+    "Harita Bilgisi ve Coğrafi Bilgi Sistemleri": {
+        "excel":   "2_sinif/guz/Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.xlsx",
+        "output":  "2_sinif/guz/Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.html",
+        "emoji":   "🗺️",
+        "pdf_dir": "2_sinif/guz/pdfs/Harita_Bilgisi_ve_CBS",
     },
     # ── 2. Sınıf Güz ──────────────────────────────────────────────────────────
     "Muhasebe": {
@@ -533,6 +558,8 @@ _PDF_SINAV_MAP = {
     "Butunleme": "Bütünleme",
     "Final":     "Final",
     "Yaz_Okulu": "Yaz Okulu",
+    "Vize":      "Vize",
+    "Uc_Ders":   "Üç Ders",
 }
 
 def discover_pdfs(pdf_dir, output_path):
