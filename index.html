@@ -62,6 +62,9 @@ body{font-family:'Open Sans','Segoe UI',Tahoma,sans-serif;background:var(--bg);c
 .class-tab .tab-label{display:block;font-size:.72em;font-weight:400;color:inherit;opacity:.7;margin-top:2px;}
 .class-tab.tab-ready{color:var(--accent);border-left:1px solid var(--border);}
 .class-tab.tab-ready.active{background:var(--green-lt);border-bottom-color:var(--accent);}
+.class-tab.tab-current{color:var(--accent);border-right:1px solid var(--border);}
+.class-tab.tab-current.active{background:var(--green-lt);border-bottom-color:var(--accent);}
+.class-tab.tab-current:hover{color:var(--accent);background:var(--green-lt);}
 #class-ready .course-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
 
 /* ── Content ── */
@@ -146,6 +149,10 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
 
 <nav class="class-nav">
   <div class="class-tabs">
+    <button class="class-tab tab-current active" onclick="showDerslerim(this)">
+      ⭐ Derslerim
+      <span class="tab-label">Bu dönem</span>
+    </button>
     <button class="class-tab" onclick="showClass(1,this)">
       1. Sınıf
       <span class="tab-label">1–2. Yarıyıl</span>
@@ -154,7 +161,7 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
       2. Sınıf
       <span class="tab-label">3–4. Yarıyıl</span>
     </button>
-    <button class="class-tab tab-ready active" onclick="showReady(this)">
+    <button class="class-tab tab-ready" onclick="showReady(this)">
       ✓ Hazır
       <span class="tab-label">Soru Bankası</span>
     </button>
@@ -173,8 +180,73 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
     <div class="stat"><span class="stat-val">2</span><span class="stat-lbl">Sınıf · 4 Yarıyıl</span></div>
   </div>
 
+  <!-- ════════════════════════════════════════════ DERSLERİM PANEL -->
+  <div class="class-panel active" id="class-derslerim">
+
+    <div class="semester">
+      <div class="semester-header">
+        <span class="semester-title">3. Yarıyıl</span>
+        <span class="semester-badge">2025-2026 Güz · 7 Ders</span>
+        <div class="semester-line"></div>
+      </div>
+      <div class="course-grid">
+
+        <a href="2_sinif/guz/Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">🧘</div>
+          <div class="card-code">ADY2001</div>
+          <div class="card-name">Acil Durum ve Afet Psikolojisi</div>
+          <span class="card-badge badge-ready">✓ 480 Soru</span>
+        </a>
+
+        <a href="2_sinif/guz/ORT2001_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">🏛️</div>
+          <div class="card-code">ORT2001</div>
+          <div class="card-name">Atatürk İlkeleri ve İnkılap Tarihi I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/Bina_Yonetim_Sistemleri_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">🏢</div>
+          <div class="card-code">ADY2009</div>
+          <div class="card-name">Bina Yönetim Sistemleri</div>
+          <span class="card-badge badge-ready">✓ 484 Soru</span>
+        </a>
+
+        <a href="2_sinif/guz/Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">🌲</div>
+          <div class="card-code">ADY2003</div>
+          <div class="card-name">Doğada Yaşam ve Hayatta Kalma</div>
+          <span class="card-badge badge-ready">✓ 486 Soru</span>
+        </a>
+
+        <a href="2_sinif/guz/Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">🗺️</div>
+          <div class="card-code">ADY2007</div>
+          <div class="card-name">Harita Bilgisi ve Coğrafi Bilgi Sistemleri</div>
+          <span class="card-badge badge-ready">✓ 482 Soru</span>
+        </a>
+
+        <a href="2_sinif/guz/ORT2003_Soru_Bankasi.html" class="course-card soon">
+          <div class="card-emoji">📖</div>
+          <div class="card-code">ORT2003</div>
+          <div class="card-name">Türk Dili I</div>
+          <span class="card-badge badge-soon">⏳ Yakında</span>
+        </a>
+
+        <a href="2_sinif/guz/Yonetim_ve_Organizasyon_Soru_Bankasi.html" class="course-card ready">
+          <div class="card-emoji">🏗️</div>
+          <div class="card-code">ADY2005</div>
+          <div class="card-name">Yönetim ve Organizasyon</div>
+          <span class="card-badge badge-ready">✓ 498 Soru</span>
+        </a>
+
+      </div>
+    </div><!-- /3. Yarıyıl Derslerim -->
+
+  </div><!-- /class-derslerim -->
+
   <!-- ═══════════════════════════════════════════════ HAZIR PANEL -->
-  <div class="class-panel active" id="class-ready">
+  <div class="class-panel" id="class-ready">
     <div class="course-grid" id="ready-grid"></div>
     <div class="empty-ready" id="empty-ready" style="display:none;">
       <div class="empty-icon">📚</div>
@@ -318,11 +390,11 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
       </div>
       <div class="course-grid">
 
-        <a href="2_sinif/guz/ADY2001_Soru_Bankasi.html" class="course-card soon">
+        <a href="2_sinif/guz/Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.html" class="course-card ready">
           <div class="card-emoji">🧘</div>
           <div class="card-code">ADY2001</div>
           <div class="card-name">Acil Durum ve Afet Psikolojisi</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
+          <span class="card-badge badge-ready">✓ 480 Soru</span>
         </a>
 
         <a href="2_sinif/guz/ORT2001_Soru_Bankasi.html" class="course-card soon">
@@ -332,25 +404,25 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
           <span class="card-badge badge-soon">⏳ Yakında</span>
         </a>
 
-        <a href="2_sinif/guz/ADY2009_Soru_Bankasi.html" class="course-card soon">
+        <a href="2_sinif/guz/Bina_Yonetim_Sistemleri_Soru_Bankasi.html" class="course-card ready">
           <div class="card-emoji">🏢</div>
           <div class="card-code">ADY2009</div>
           <div class="card-name">Bina Yönetim Sistemleri</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
+          <span class="card-badge badge-ready">✓ 484 Soru</span>
         </a>
 
-        <a href="2_sinif/guz/ADY2003_Soru_Bankasi.html" class="course-card soon">
+        <a href="2_sinif/guz/Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.html" class="course-card ready">
           <div class="card-emoji">🌲</div>
           <div class="card-code">ADY2003</div>
           <div class="card-name">Doğada Yaşam ve Hayatta Kalma</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
+          <span class="card-badge badge-ready">✓ 486 Soru</span>
         </a>
 
-        <a href="2_sinif/guz/ADY2007_Soru_Bankasi.html" class="course-card soon">
+        <a href="2_sinif/guz/Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.html" class="course-card ready">
           <div class="card-emoji">🗺️</div>
           <div class="card-code">ADY2007</div>
           <div class="card-name">Harita Bilgisi ve Coğrafi Bilgi Sistemleri</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
+          <span class="card-badge badge-ready">✓ 482 Soru</span>
         </a>
 
         <a href="2_sinif/guz/ORT2003_Soru_Bankasi.html" class="course-card soon">
@@ -360,11 +432,11 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
           <span class="card-badge badge-soon">⏳ Yakında</span>
         </a>
 
-        <a href="2_sinif/guz/ADY2005_Soru_Bankasi.html" class="course-card soon">
+        <a href="2_sinif/guz/Yonetim_ve_Organizasyon_Soru_Bankasi.html" class="course-card ready">
           <div class="card-emoji">🏗️</div>
           <div class="card-code">ADY2005</div>
           <div class="card-name">Yönetim ve Organizasyon</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
+          <span class="card-badge badge-ready">✓ 498 Soru</span>
         </a>
 
       </div>
@@ -435,6 +507,14 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
 </div><!-- /content -->
 
 <script>
+function showDerslerim(btn) {
+  document.querySelectorAll('.class-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.class-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('class-derslerim').classList.add('active');
+  btn.classList.add('active');
+  sessionStorage.setItem('activeClass', 'derslerim');
+}
+
 function showClass(n, btn) {
   document.querySelectorAll('.class-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.class-tab').forEach(t => t.classList.remove('active'));
@@ -449,7 +529,7 @@ function showReady(btn) {
   const grid   = document.getElementById('ready-grid');
   const empty  = document.getElementById('empty-ready');
   grid.innerHTML = '';
-  document.querySelectorAll('.class-panel:not(#class-ready) .course-card.ready').forEach(card => {
+  document.querySelectorAll('.class-panel:not(#class-ready):not(#class-derslerim) .course-card.ready').forEach(card => {
     grid.appendChild(card.cloneNode(true));
   });
   const hasReady = grid.children.length > 0;
@@ -481,19 +561,23 @@ function showReady(btn) {
 /* ── Sayfa geçişlerinde session yönetimi ── */
 (function(){
   const saved = sessionStorage.getItem('activeClass');
-  if (saved && saved !== 'ready') {
-    const btn = document.querySelectorAll('.class-tab')[parseInt(saved) - 1];
-    if (btn) showClass(parseInt(saved), btn);
-  } else {
+  if (saved === '1' || saved === '2') {
+    const n = parseInt(saved);
+    const btn = document.querySelectorAll('.class-tab')[n]; // Derslerim=0, 1.Sınıf=1, 2.Sınıf=2
+    if (btn) showClass(n, btn);
+  } else if (saved === 'ready') {
     const btn = document.querySelector('.class-tab.tab-ready');
     if (btn) showReady(btn);
+  } else {
+    const btn = document.querySelector('.class-tab.tab-current');
+    if (btn) showDerslerim(btn);
   }
 })();
 
 /* ── İstatistik sayacını DOM'dan otomatik hesapla ── */
 (function(){
-  const ready = document.querySelectorAll('.class-panel:not(#class-ready) .course-card.ready').length;
-  const soon  = document.querySelectorAll('.course-card.soon').length;
+  const ready = document.querySelectorAll('.class-panel:not(#class-ready):not(#class-derslerim) .course-card.ready').length;
+  const soon  = document.querySelectorAll('.class-panel:not(#class-ready):not(#class-derslerim) .course-card.soon').length;
   document.getElementById('stat-ready').textContent = ready;
   document.getElementById('stat-soon').textContent  = soon;
 })();
