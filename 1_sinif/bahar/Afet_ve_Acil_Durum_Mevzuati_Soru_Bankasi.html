@@ -95,6 +95,12 @@ body.dark-mode .score-wrong-item{background:#1e1414;color:#9a6868;border-color:#
 .search-box{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;transition:border-color .2s;box-sizing:border-box;}
 .search-box:focus{border-color:var(--accent);}
 .search-box::placeholder{color:#aaa;}
+.year-filter-wrap{display:flex;flex-direction:column;gap:3px;}
+.year-select{width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.83em;font-family:inherit;background:var(--card-bg);color:var(--text);outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaa'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+.year-select:focus{border-color:var(--accent);}
+.year-select.active{border-color:var(--green);background-color:var(--green-lt);font-weight:700;}
+body.dark-mode .year-select{background-color:#111830;border-color:#252d60;color:#d8daec;}
+body.dark-mode .year-select.active{background-color:#1a2060;border-color:#303860;}
 .tab-btn.tab-review{color:#92400e;border-color:#d97706;background:#fff8ec;position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .tab-btn.tab-review:hover{background:#fde68a;color:#78350f;}
 .tab-btn.tab-review.active{background:#d97706!important;color:#fff!important;border-color:#d97706!important;box-shadow:0 3px 8px rgba(217,119,6,.35)!important;}
@@ -148,6 +154,7 @@ body.dark-mode .q-prev-wrong{background:#1e1414;color:#9a6868;border:1px solid #
   .sidebar.scroll-collapsed .progress-wrap{flex-shrink:0;}
   .sidebar.scroll-collapsed .toggle-all-btn{display:none;}
   .sidebar.scroll-collapsed .search-box{display:none;}
+  .sidebar.scroll-collapsed .year-filter-wrap{display:none;}
   .sidebar.scroll-collapsed #tag-filter-indicator{display:none;}
   .sidebar.scroll-collapsed .prog-label{display:none;}
   .sidebar.scroll-collapsed .score-label{display:none;}
@@ -286,6 +293,12 @@ body.dark-mode .options li.correct-highlight{background:#131d18;border-color:#1e
       </nav>
 
       <input class="search-box" id="searchBox" type="search" placeholder="🔍 Sorularda ara..." oninput="searchQuestions(this.value)">
+
+      <div class="year-filter-wrap">
+        <select id="yearFilter" class="year-select" onchange="applyYearFilter(this.value)" title="Yıl Filtresi">
+          <option value="0">🗓 Tüm Yıllar</option>
+        </select>
+      </div>
 
       <div id="tag-filter-indicator">
         <span class="tfi-label"></span>
@@ -465,6 +478,21 @@ const PROGRESS_KEY="auzef-progress-Afet ve Acil Durum Mevzuat\u0131";
 let allAnswersVisible=false,scoreCorrect=0,scoreWrong=0;
 function updateScore(){document.getElementById('score-correct').textContent=scoreCorrect;document.getElementById('score-wrong').textContent=scoreWrong;}
 function resetScore(){scoreCorrect=0;scoreWrong=0;updateScore();}
+
+let currentYearFilter=0;
+function examYear(e){const m=e.match(/^(\d{4})/);return m?parseInt(m[1]):0;}
+function applyYearFilter(minYear){
+  currentYearFilter=parseInt(minYear)||0;
+  const sel=document.getElementById('yearFilter');
+  if(sel){sel.value=String(currentYearFilter);sel.classList.toggle('active',currentYearFilter>0);}
+  document.querySelectorAll('#quiz-container .question-card').forEach(card=>{
+    if(!currentYearFilter){card.classList.remove('year-hidden');return;}
+    const exams=JSON.parse(card.dataset.exams||'[]');
+    const hasRecent=exams.some(e=>!e.includes('Kez')&&examYear(e)>=currentYearFilter);
+    card.classList.toggle('year-hidden',!hasRecent);
+  });
+  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+}
 
 function shortenLabel(e){
   return e
@@ -673,14 +701,14 @@ function renderQuestions(filter){
     card.querySelectorAll('.question-text table').forEach(t=>{t.classList.add('q-table');if(!t.parentNode.classList.contains('q-table-wrap')){var w=document.createElement('div');w.className='q-table-wrap';t.parentNode.insertBefore(w,t);w.appendChild(t);}});
     container.appendChild(card);
   });
-  searchQuestions(document.getElementById('searchBox')?document.getElementById('searchBox').value:'');
+  applyYearFilter(currentYearFilter);
 }
 function searchQuestions(q){
   q=(q||'').trim().toLowerCase();
   var cards=document.querySelectorAll('#quiz-container .question-card');
   var visible=0;
   cards.forEach(function(card){
-    if(card.classList.contains('tag-hidden')){card.style.display='none';return;}
+    if(card.classList.contains('tag-hidden')||card.classList.contains('year-hidden')){card.style.display='none';return;}
     var text=(card.querySelector('.question-text')||{}).textContent||'';
     var opts=Array.from(card.querySelectorAll('.options li')).map(function(li){return li.textContent;}).join(' ');
     var match=!q||text.toLowerCase().includes(q)||opts.toLowerCase().includes(q);
@@ -755,6 +783,20 @@ function filterQuestions(filter,clickedBtn){
 }
 renderQuestions('all');
 updateProgressBar();
+(function(){
+  const yrs=new Set();
+  sorular.forEach(s=>s.exams.forEach(e=>{
+    if(e.includes('Kez'))return;
+    const m=e.match(/^(\d{4})/);if(m)yrs.add(parseInt(m[1]));
+  }));
+  const sorted=Array.from(yrs).sort((a,b)=>b-a);
+  const sel=document.getElementById('yearFilter');if(!sel)return;
+  sorted.forEach(y=>{
+    const o=document.createElement('option');
+    o.value=y;o.textContent='📅 '+y+' ve Sonrası';
+    sel.appendChild(o);
+  });
+})();
 (function(){
   var _tb=document.querySelector('.site-topbar');
   var _sb=document.querySelector('.sidebar');
