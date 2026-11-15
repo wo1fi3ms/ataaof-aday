@@ -18,8 +18,9 @@ import pandas as pd
 from pathlib import Path
 
 # ─────────────────────────── PATHS ─────────────────────────────────────────
-FINALLER_DIR = Path("/Users/kurter/Library/CloudStorage/GoogleDrive-kurter@gmail.com/My Drive/_____University/Atatürk/Kurter/2025-2026/Bahar/Finaller - Çıkmış")
-EXCEL_DIR    = Path("/Users/kurter/Library/CloudStorage/GoogleDrive-kurter@gmail.com/My Drive/_____University/Atatürk/Kurter/2025-2026/Bahar/Finaller - Çıkmış/AI_Study_ADAY/1_sinif/bahar")
+FINALLER_DIR    = Path("/Users/kurter/Library/CloudStorage/GoogleDrive-kurter@gmail.com/My Drive/_____University/Atatürk/Kurter/2025-2026/Bahar/Finaller - Çıkmış")
+EXCEL_DIR       = Path("/Users/kurter/Library/CloudStorage/GoogleDrive-kurter@gmail.com/My Drive/_____University/Atatürk/Kurter/2025-2026/Bahar/Finaller - Çıkmış/AI_Study_ADAY/1_sinif/bahar")
+EXCEL_DIR_2_GUZ = Path("/Users/kurter/Library/CloudStorage/GoogleDrive-kurter@gmail.com/My Drive/_____University/Atatürk/Kurter/2025-2026/Bahar/Finaller - Çıkmış/AI_Study_ADAY/2_sinif/guz")
 
 # Course → (pdf_prefix, excel_filename)
 # pdf_prefix is the leading part of the PDF filename in FINALLER_DIR
@@ -47,6 +48,32 @@ COURSE_CONFIG = {
     "Temel Bilgi Teknolojileri II": {
         "pdf_prefix": "Temel Bilgi Teknolojileri II ",
         "excel": "Temel_Bilgi_Teknolojileri_II_Soru_Bankasi.xlsx",
+    },
+    # ── 2. Sınıf Güz ──────────────────────────────────────────────────────────
+    "Acil Durum ve Afet Psikolojisi": {
+        "pdf_prefix": "Acil Durum ve Afet Psikolojisi ",
+        "excel":      "Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.xlsx",
+        "excel_dir":  EXCEL_DIR_2_GUZ,
+    },
+    "Bina Yönetim Sistemleri": {
+        "pdf_prefix": "Bina Yönetim Sistemleri ",
+        "excel":      "Bina_Yonetim_Sistemleri_Soru_Bankasi.xlsx",
+        "excel_dir":  EXCEL_DIR_2_GUZ,
+    },
+    "Doğada Yaşam ve Hayatta Kalma": {
+        "pdf_prefix": "Doğada Yaşam ve Hayatta Kalma ",
+        "excel":      "Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.xlsx",
+        "excel_dir":  EXCEL_DIR_2_GUZ,
+    },
+    "Harita Bilgisi ve Coğrafi Bilgi Sistemleri": {
+        "pdf_prefix": "Harita Bilgisi ve Coğrafi Bilgi Sistemleri ",
+        "excel":      "Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.xlsx",
+        "excel_dir":  EXCEL_DIR_2_GUZ,
+    },
+    "Yönetim ve Organizasyon": {
+        "pdf_prefix": "Yönetim ve Organizasyon ",
+        "excel":      "Yonetim_ve_Organizasyon_Soru_Bankasi.xlsx",
+        "excel_dir":  EXCEL_DIR_2_GUZ,
     },
 }
 
@@ -208,7 +235,8 @@ def norm_opt(text: str) -> str:
 # ─────────────────────────── MAIN ──────────────────────────────────────────
 
 def process_course(course_name: str, cfg: dict):
-    excel_path = EXCEL_DIR / cfg["excel"]
+    excel_dir  = cfg.get("excel_dir", EXCEL_DIR)
+    excel_path = Path(excel_dir) / cfg["excel"]
     prefix     = cfg["pdf_prefix"]
 
     # Find all PDFs for this course
