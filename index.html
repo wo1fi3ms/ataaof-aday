@@ -128,6 +128,34 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
 @media(max-width:400px){
   .course-grid{grid-template-columns:1fr;}
 }
+
+/* ── Derslerim ── */
+.my-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.my-hint{font-size:.85em;opacity:.7;}
+.my-btn{background:var(--green);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-weight:700;font-size:.85em;cursor:pointer;font-family:inherit;transition:opacity .15s;}
+.my-btn.alt{background:var(--green-lt);color:var(--green);border:1px solid #c5caee;}
+.my-btn.alt:hover{opacity:.8;}
+.card-score{position:absolute;top:12px;right:12px;text-align:center;line-height:1.1;padding:5px 9px;border-radius:10px;border:1px solid currentColor;font-size:.78em;font-weight:700;background:var(--card-bg);}
+.card-score b{display:block;font-size:1.55em;font-weight:800;}
+.card-score small{display:block;font-size:.8em;font-weight:600;opacity:.85;}
+.card-score.hi{color:#1b7a43;}
+.card-score.mid{color:#b7791f;}
+.card-score.lo{color:#c0392b;}
+body.dark-mode .card-score.hi{color:#4caf78;}
+body.dark-mode .card-score.mid{color:#e8b830;}
+body.dark-mode .card-score.lo{color:#e85d4a;}
+.card-prog{font-size:.74em;line-height:1.5;margin-top:2px;opacity:.9;}
+.card-prog b{font-weight:700;}
+.card-prog .ok{color:#1b7a43;}
+.card-prog .bad{color:#c0392b;}
+body.dark-mode .card-prog .ok{color:#4caf78;}
+body.dark-mode .card-prog .bad{color:#e85d4a;}
+.my-empty{text-align:center;padding:36px 12px;opacity:.7;font-size:.92em;line-height:1.7;}
+.my-pick{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:20px;}
+.my-pick h4{margin:12px 0 6px;font-size:.85em;color:var(--green);font-weight:700;}
+.my-pick h4:first-child{margin-top:0;}
+.my-pick label{display:flex;align-items:center;gap:8px;padding:5px 2px;font-size:.88em;cursor:pointer;}
+.my-pick input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex:none;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -182,67 +210,12 @@ body.dark-mode .badge-soon{background:#2a2010;color:#e8c840;border-color:#5a4a10
 
   <!-- ════════════════════════════════════════════ DERSLERİM PANEL -->
   <div class="class-panel active" id="class-derslerim">
-
-    <div class="semester">
-      <div class="semester-header">
-        <span class="semester-title">3. Yarıyıl</span>
-        <span class="semester-badge">2025-2026 Güz · 7 Ders</span>
-        <div class="semester-line"></div>
-      </div>
-      <div class="course-grid">
-
-        <a href="2_sinif/guz/Acil_Durum_ve_Afet_Psikolojisi_Soru_Bankasi.html" class="course-card ready">
-          <div class="card-emoji">🧘</div>
-          <div class="card-code">ADY2001</div>
-          <div class="card-name">Acil Durum ve Afet Psikolojisi</div>
-          <span class="card-badge badge-ready">✓ 480 Soru</span>
-        </a>
-
-        <a href="2_sinif/guz/ORT2001_Soru_Bankasi.html" class="course-card soon">
-          <div class="card-emoji">🏛️</div>
-          <div class="card-code">ORT2001</div>
-          <div class="card-name">Atatürk İlkeleri ve İnkılap Tarihi I</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
-        </a>
-
-        <a href="2_sinif/guz/Bina_Yonetim_Sistemleri_Soru_Bankasi.html" class="course-card ready">
-          <div class="card-emoji">🏢</div>
-          <div class="card-code">ADY2009</div>
-          <div class="card-name">Bina Yönetim Sistemleri</div>
-          <span class="card-badge badge-ready">✓ 484 Soru</span>
-        </a>
-
-        <a href="2_sinif/guz/Dogada_Yasam_ve_Hayatta_Kalma_Soru_Bankasi.html" class="course-card ready">
-          <div class="card-emoji">🌲</div>
-          <div class="card-code">ADY2003</div>
-          <div class="card-name">Doğada Yaşam ve Hayatta Kalma</div>
-          <span class="card-badge badge-ready">✓ 486 Soru</span>
-        </a>
-
-        <a href="2_sinif/guz/Harita_Bilgisi_ve_Cografi_Bilgi_Sistemleri_Soru_Bankasi.html" class="course-card ready">
-          <div class="card-emoji">🗺️</div>
-          <div class="card-code">ADY2007</div>
-          <div class="card-name">Harita Bilgisi ve Coğrafi Bilgi Sistemleri</div>
-          <span class="card-badge badge-ready">✓ 482 Soru</span>
-        </a>
-
-        <a href="2_sinif/guz/ORT2003_Soru_Bankasi.html" class="course-card soon">
-          <div class="card-emoji">📖</div>
-          <div class="card-code">ORT2003</div>
-          <div class="card-name">Türk Dili I</div>
-          <span class="card-badge badge-soon">⏳ Yakında</span>
-        </a>
-
-        <a href="2_sinif/guz/Yonetim_ve_Organizasyon_Soru_Bankasi.html" class="course-card ready">
-          <div class="card-emoji">🏗️</div>
-          <div class="card-code">ADY2005</div>
-          <div class="card-name">Yönetim ve Organizasyon</div>
-          <span class="card-badge badge-ready">✓ 498 Soru</span>
-        </a>
-
-      </div>
-    </div><!-- /3. Yarıyıl Derslerim -->
-
+    <div class="my-bar">
+      <span class="my-hint" id="my-hint"></span>
+      <button class="my-btn alt" id="my-edit">Ders seç</button>
+    </div>
+    <div class="my-pick" id="my-pick" hidden></div>
+    <div class="course-grid" id="mine-grid"></div>
   </div><!-- /class-derslerim -->
 
   <!-- ═══════════════════════════════════════════════ HAZIR PANEL -->
@@ -513,6 +486,12 @@ function showDerslerim(btn) {
   document.getElementById('class-derslerim').classList.add('active');
   btn.classList.add('active');
   sessionStorage.setItem('activeClass', 'derslerim');
+  myRender();
+  // Auto-open picker on first visit
+  if (!myGet().length) {
+    var box = document.getElementById('my-pick');
+    if (box && box.hidden) { myPickBuild(); box.hidden = false; myRender(); }
+  }
 }
 
 function showClass(n, btn) {
@@ -539,6 +518,110 @@ function showReady(btn) {
   btn.classList.add('active');
   sessionStorage.setItem('activeClass', 'ready');
 }
+
+/* ── Derslerim ── */
+var MY_KEY = 'ataaof-aday-my-courses';
+function myGet(){ try{ return JSON.parse(localStorage.getItem(MY_KEY)||'[]'); }catch(e){ return []; } }
+function mySetLocal(a){ try{ localStorage.setItem(MY_KEY,JSON.stringify(a)); }catch(e){} }
+
+function myDecorate(){
+  document.querySelectorAll('#mine-grid .course-card').forEach(function(c){
+    var nm = c.querySelector('.card-name');
+    if (!nm) return;
+    var course = nm.textContent.trim();
+    var prog = {};
+    try{ prog = JSON.parse(localStorage.getItem('auzef-progress-'+course)||'{}'); }catch(e){}
+    var keys = Object.keys(prog);
+    var ok  = keys.filter(function(k){ return prog[k]==='correct'; }).length;
+    var bad = keys.filter(function(k){ return prog[k]==='wrong'; }).length;
+    var solved = ok + bad;
+    var oldP = c.querySelector('.card-prog'); if (oldP) oldP.remove();
+    var oldS = c.querySelector('.card-score'); if (oldS) oldS.remove();
+    var d = document.createElement('div');
+    d.className = 'card-prog';
+    if (solved) {
+      d.innerHTML = '<b>'+solved+'</b> soru çözüldü &middot; <span class="ok"><b>'+ok+'</b> doğru</span> &middot; <span class="bad"><b>'+bad+'</b> yanlış</span>';
+    } else {
+      d.textContent = 'Henüz soru çözülmedi';
+    }
+    c.appendChild(d);
+    if (solved) {
+      var score = Math.max(0, (ok - bad*0.25) / Math.max(solved,20) * 100);
+      var sc = document.createElement('div');
+      sc.className = 'card-score ' + (score >= 70 ? 'hi' : score >= 40 ? 'mid' : 'lo');
+      sc.title = 'Başarı puanı: ('+ok+' doğru − '+bad+' yanlış × 0,25) ÷ '+Math.max(solved,20)+' × 100';
+      sc.innerHTML = '<b>'+Math.round(score)+'</b><small>puan</small>';
+      c.appendChild(sc);
+    }
+  });
+}
+
+function myPickBuild(){
+  var box = document.getElementById('my-pick');
+  var sel = new Set(myGet());
+  var h = '';
+  document.querySelectorAll('.class-panel:not(#class-ready):not(#class-derslerim) .semester').forEach(function(sm){
+    var titleEl = sm.querySelector('.semester-title');
+    var badgeEl = sm.querySelector('.semester-badge');
+    var title = titleEl ? titleEl.textContent : '';
+    var badge = badgeEl ? ' <small style="font-weight:400;opacity:.7">'+badgeEl.textContent+'</small>' : '';
+    if (title) h += '<h4>'+title+badge+'</h4>';
+    sm.querySelectorAll('.course-card.ready').forEach(function(c){
+      var href = c.getAttribute('href');
+      var nmEl = c.querySelector('.card-name');
+      var emEl = c.querySelector('.card-emoji');
+      var nm = nmEl ? nmEl.textContent : '';
+      var em = emEl ? emEl.textContent : '';
+      h += '<label><input type="checkbox" data-h="'+href.replace(/"/g,'&quot;')+'"'+(sel.has(href)?' checked':'')+'/> <span>'+em+' '+nm+'</span></label>';
+    });
+  });
+  if (!h) h = '<p style="font-size:.85em;opacity:.7">Henüz hazır soru bankası bulunmuyor.</p>';
+  box.innerHTML = h;
+  box.querySelectorAll('input[type=checkbox]').forEach(function(i){
+    i.addEventListener('change', function(){
+      var cur = new Set(myGet());
+      if (i.checked) cur.add(i.dataset.h); else cur.delete(i.dataset.h);
+      mySetLocal(Array.from(cur));
+      myRender();
+    });
+  });
+}
+
+function myRender(){
+  var sel = new Set(myGet());
+  var grid = document.getElementById('mine-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  document.querySelectorAll('.class-panel:not(#class-ready):not(#class-derslerim) .course-card.ready').forEach(function(c){
+    if (sel.has(c.getAttribute('href'))) grid.appendChild(c.cloneNode(true));
+  });
+  var n = grid.children.length;
+  var hint = document.getElementById('my-hint');
+  if (hint) hint.textContent = n ? n + ' ders seçili' : '';
+  if (!n) {
+    var empty = document.createElement('div');
+    empty.className = 'my-empty';
+    empty.style.gridColumn = '1/-1';
+    empty.innerHTML = 'Henüz ders seçmedin.<br><span style="opacity:.8">"Ders seç" düğmesiyle bu dönem aldığın dersleri işaretle; burada hızlıca ulaşırsın.</span>';
+    grid.appendChild(empty);
+  }
+  if (n) myDecorate();
+  var box = document.getElementById('my-pick');
+  var editBtn = document.getElementById('my-edit');
+  if (editBtn && box) editBtn.textContent = box.hidden ? 'Ders seç' : 'Kapat';
+}
+
+(function(){
+  var editBtn = document.getElementById('my-edit');
+  if (editBtn) {
+    editBtn.addEventListener('click', function(){
+      var box = document.getElementById('my-pick');
+      if (box.hidden) { myPickBuild(); box.hidden = false; }
+      else { box.hidden = true; }
+      myRender();
+    });
+  }
+})();
 
 /* ── Dark Mode Toggle ── */
 (function(){
